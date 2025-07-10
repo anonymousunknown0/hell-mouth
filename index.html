@@ -4,147 +4,123 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hunter Hardon: Virtual Spiral Notebook</title>
+  <title>HELL-MOUTH: Virtual Spiral Notebook</title>
   <style>
     body {
       margin: 0;
-      font-family: monospace;
-      background: url('https://upload.wikimedia.org/wikipedia/commons/0/08/NGC_4414_%28NASA-med%29.jpg') no-repeat center center fixed;
+      font-family: Courier, monospace;
+      background: url('assets/hubble.jpg') no-repeat center center fixed;
       background-size: cover;
       color: white;
     }
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      grid-gap: 10px;
+      gap: 10px;
       padding: 20px;
     }
     .tile {
-      background: rgba(0, 0, 0, 0.7);
-      padding: 30px;
+      background-color: rgba(50, 50, 50, 0.9);
+      border: 1px solid white;
+      padding: 20px;
       text-align: center;
+      font-size: 1rem;
       cursor: pointer;
-      transition: 0.3s;
-    }
-    .tile:hover {
-      background: rgba(255, 255, 255, 0.1);
     }
     .modal {
       position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0,0,0,0.9);
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.95);
       display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-    }
-    .modal video {
-      max-width: 90vw;
-      max-height: 90vh;
-    }
-    .script-modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background: black;
-      color: white;
-      z-index: 999;
-      display: flex;
       flex-direction: row;
+      align-items: stretch;
     }
-    .script-left {
+    .left, .right {
       flex: 1;
       padding: 20px;
-      overflow-y: scroll;
-      font-family: "Courier New", Courier, monospace;
+      overflow-y: auto;
+    }
+    .left {
+      background-color: #111;
+      color: #0f0;
       white-space: pre-wrap;
     }
-    .script-right {
-      flex: 1;
+    .right {
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
     }
     .spiral {
       width: 80%;
       height: 80%;
       border-radius: 50%;
-      background: conic-gradient(white 10%, black 10% 20%, white 20% 30%, black 30% 40%, white 40% 50%, black 50% 60%, white 60% 70%, black 70% 80%, white 80% 90%, black 90%);
-      animation: spin 5s linear infinite;
+      border: 10px solid white;
+      animation: spin 10s linear infinite;
     }
     @keyframes spin {
-      0% { transform: rotate(0deg);}
-      100% { transform: rotate(360deg);}
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
-
-<div class="grid">
-  <div class="tile" onclick="openModal('The Surveillance Tape.mp4')">the surveillance tapes</div>
-  <div class="tile" onclick="openModal('lunch_w_narrator_smaller.mp4')">choose your player</div>
-  <div class="tile" onclick="openModal('hellmouth part one.mp4')">night walk</div>
-  <div class="tile" onclick="openModal('hellmouth part one_1.mp4')">gaga's private jet</div>
-  <div class="tile" onclick="openModal('333_leaked_therapy_smaller.mp4')">333 leaked therapy session</div>
-  <div class="tile" onclick="openScript()">lunch with the narrator</div>
-</div>
-
-<div class="modal" id="videoModal" onclick="this.style.display='none'">
-  <video id="modalVideo" controls autoplay></video>
-</div>
-
-<div class="script-modal" id="scriptModal">
-  <div class="script-left" id="scriptContent">
-    <!-- script content gets typed in here -->
+  <div class="grid">
+    <div class="tile" onclick="openScript()">Lunch with the Narrator</div>
+    <div class="tile" onclick="playMedia('assets/hellmouth part one.mp4')">Night Walk</div>
+    <div class="tile" onclick="playMedia('assets/hellmouth part one_1.mp4')">Gaga's Private Jet</div>
+    <div class="tile" onclick="playMedia('assets/333_leaked_therapy_smaller.mp4')">333 Leaked Therapy Session</div>
+    <div class="tile" onclick="playMedia('assets/lunch_w_narrator_smaller.mp4')">Choose Your Player</div>
+    <div class="tile" onclick="playMedia('assets/The Surveillance Tape.mp4')">The Surveillance Tapes</div>
+    <div class="tile">Coming Soon</div>
+    <div class="tile">Coming Soon</div>
+    <div class="tile">Coming Soon</div>
   </div>
-  <div class="script-right">
-    <div class="spiral"></div>
+
+  <div id="modal" class="modal">
+    <div class="left" id="script"></div>
+    <div class="right"><div class="spiral"></div></div>
+    <audio id="voice" autoplay></audio>
   </div>
-</div>
 
-<script>
-function openModal(filename) {
-  const modal = document.getElementById('videoModal');
-  const video = document.getElementById('modalVideo');
-  video.src = filename;
-  modal.style.display = 'flex';
-}
+  <script>
+    const scriptText = `INT. LIMINAL DINING ROOM – TIME UNRAVELS POLITELY
 
-function openScript() {
-  const scriptText = `INT. LIMINAL DINING ROOM – TIME UNRAVELS POLITELY
-
-A table for two.  
-Silver so polished it gaslights the eye.  
+A table for two.
+Silver so polished it gaslights the eye.
 Ghostlight pours in from nowhere.
 
-THE NARRATOR sits across from YOU.  
-Yes — you.  
-Don’t look around.  
+THE NARRATOR sits across from YOU.
+Yes — you.
+Don’t look around.
 You’ve been summoned. You cannot leave until dessert.
 
-... [TRUNCATED FOR BREVITY – INSERT FULL SCRIPT HERE] ...
+... (truncated for brevity, include full script here)
 `;
-  const modal = document.getElementById('scriptModal');
-  const container = document.getElementById('scriptContent');
-  container.innerHTML = '';
-  let i = 0;
 
-  function typeWriter() {
-    if (i < scriptText.length) {
-      container.innerHTML += scriptText.charAt(i);
-      i++;
-      setTimeout(typeWriter, 10);
+    function openScript() {
+      const modal = document.getElementById('modal');
+      const scriptBox = document.getElementById('script');
+      const audio = document.getElementById('voice');
+
+      modal.style.display = 'flex';
+      scriptBox.textContent = '';
+
+      let i = 0;
+      function typeWriter() {
+        if (i < scriptText.length) {
+          scriptBox.textContent += scriptText.charAt(i);
+          i++;
+          setTimeout(typeWriter, 25);
+        }
+      }
+      typeWriter();
+
+      audio.src = 'assets/lunch_with_the_narrator_voiceover.mp3';
     }
-  }
 
-  modal.style.display = 'flex';
-  typeWriter();
-}
-</script>
-
+    function playMedia(file) {
+      window.open(file, '_blank');
+    }
+  </script>
 </body>
 </html>
