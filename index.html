@@ -1,57 +1,136 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>HELL-MOUTH: VIRTUAL SPIRAL NOTEBOOK</title>
-    <style>
-        body {
-            margin: 0;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/4/4e/Hubble_ultra_deep_field_high_rez_edit1.jpg') no-repeat center center fixed;
-            background-size: cover;
-            font-family: Courier, monospace;
-            color: white;
-        }
-        #spiral {
-            position: fixed;
-            top: 0; right: 0; bottom: 0; left: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        #spiral::after {
-            content: "";
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            border: 5px solid white;
-            animation: spin 20s linear infinite;
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        #script {
-            width: 50%;
-            padding: 20px;
-            white-space: pre-wrap;
-            overflow-y: auto;
-            height: 100vh;
-            box-sizing: border-box;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HELL-MOUTH: Virtual Spiral Notebook</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Courier, monospace;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/4/4e/Hubble_ultra_deep_field_high_rez_edit1.jpg') no-repeat center center fixed;
+      background-size: cover;
+      overflow: hidden;
+      color: white;
+    }
+    #splash {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+    #splash h1 {
+      font-size: 2em;
+      color: white;
+    }
+    #container {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: row;
+    }
+    #script {
+      width: 50%;
+      padding: 20px;
+      overflow-y: scroll;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+    #spiral {
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    .spiral {
+      width: 300px;
+      height: 300px;
+      border: 5px solid white;
+      border-radius: 50%;
+      animation: spin 20s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
+  <div id="splash">
+    <h1>Loading Spiral...</h1>
+  </div>  <div id="container">
+    <div id="script">
+      <h2>Lunch with the Narrator</h2>
+      <pre id="typewriter"></pre>
+    </div>
+    <div id="spiral">
+      <div class="spiral"></div>
+    </div>
+    <audio autoplay src="lunch_with_the_narrator_voiceover.mp3"></audio>
+  </div>  <script>
+    const fullScript = `INT. LIMINAL DINING ROOM – TIME UNRAVELS POLITELY
 
-<div id="script">
-    <h2>Lunch with the Narrator</h2>
-    <p>INT. LIMINAL DINING ROOM – TIME UNRAVELS POLITELY</p>
-    <p>(FULL SCRIPT TYPES OUT HERE...)</p>
-</div>
-<div id="spiral"></div>
+A table for two. Silver so polished it gaslights the eye. Ghostlight pours in from nowhere.
 
-<audio autoplay>
-    <source src="lunch_with_the_narrator_voiceover.mp3" type="audio/mpeg">
-</audio>
+THE NARRATOR sits across from YOU. Yes — you. Don’t look around. You’ve been summoned. You cannot leave until dessert.
 
-</body>
+A SINGLE GLASS CLOCHE covers the plate before him. Steam curls like a whispered insult.
+
+NARRATOR (V.O.)
+    Shall we?
+
+He lifts the lid. REVEAL:
+
+— Sous-vide chicken breast, cut precisely into five coins
+— Glazed with a mirror-shine reduction of bone marrow and regret
+— Nested atop a saffron risotto so yellow it screams
+— Dotted with blood orange gel and shaved truffle from a war zone
+— Served on black ceramic hand-fired in the ruins of a failed marriage
+
+He slices the first coin like surgery. Chews with reverence. A moan, nearly imperceptible.
+
+NARRATOR (V.O.) (CONT'D)
+    You can tell a man’s worth by how he seasons his breakdown.
+    Bon appétit.
+
+YOU HAVE NO PLATE. You are here to witness, not consume.
+
+NARRATOR (V.O.) (CONT'D)
+    Welcome to the Spiral Index.
+
+— 12:00 AM: Midnight Transmission. Shame. Sleep paralysis. A loop of men he should’ve blocked.
+— 1:00 AM: Tabloid Hour. Gossip dressed as gospel. The hour that stains your search history.
+— 2:00 AM: The Jack Channel. Exes on replay. Alternate endings sold separately.
+— 3:00 AM: Silent Spiral. White screen. Black spiral. You scream. It stares.
+— 4:00 AM: Infomercials for Personality Traits. Buy confidence now. Three breakdowns and a blood pact away.
+— 5:00 AM: Public Apologies. Sponsored by fear and the screenshot you forgot to delete.
+— 6:00 AM: Degenerate Radio: Morning Spiral. Weather: horny, with a chance of delusion.
+— 7:00 AM: Workout with Daddy Collapse. Why cry alone when you can cry in plank?
+— 8:00 AM: Hunter’s Presidential Address. He makes laws. Bans reality. Cums patriotically.
+
+...`; // shorten here if needed
+
+    let i = 0;
+    const speed = 15;
+    const typewriter = document.getElementById("typewriter");
+
+    function typeLine() {
+      if (i < fullScript.length) {
+        typewriter.innerHTML += fullScript.charAt(i);
+        i++;
+        setTimeout(typeLine, speed);
+      }
+    }
+
+    window.onload = () => {
+      setTimeout(() => {
+        document.getElementById("splash").style.display = "none";
+        document.getElementById("container").style.display = "flex";
+        typeLine();
+      }, 1000);
+    };
+  </script></body>
 </html>
