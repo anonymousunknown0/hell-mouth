@@ -4,112 +4,118 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HUNTER HARDON: VIRTUAL SPIRAL NOTEBOOK</title>
+  <title>Hunter Hardon: Virtual Spiral Notebook</title>
   <style>
     body {
       margin: 0;
-      font-family: Courier, monospace;
-      background: url('hubble_background.jpg') no-repeat center center fixed;
+      font-family: monospace;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/0/08/NGC_4414_%28NASA-med%29.jpg') no-repeat center center fixed;
       background-size: cover;
-      overflow-x: hidden;
+      color: white;
     }
-
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-gap: 10px;
-      padding: 10px;
-    }
-
-    .tile {
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid #ccc;
-      color: white;
       padding: 20px;
+    }
+    .tile {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 30px;
       text-align: center;
-      font-size: 14px;
       cursor: pointer;
-      height: 150px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      transition: 0.3s;
     }
-
     .tile:hover {
-      background: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.1);
     }
-
-    #spiralScene {
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .modal video {
+      max-width: 90vw;
+      max-height: 90vh;
+    }
+    .script-modal {
       display: none;
       position: fixed;
       top: 0; left: 0;
       width: 100%;
       height: 100%;
       background: black;
-      z-index: 999;
-    }
-
-    .spiral {
-      position: absolute;
-      right: 0;
-      width: 50%;
-      height: 100%;
-      background: black;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .spiral::before {
-      content: '';
-      width: 200px;
-      height: 200px;
-      border: 5px solid white;
-      border-radius: 50%;
-      animation: spin 10s linear infinite;
-    }
-
-    .script {
-      width: 50%;
-      padding: 30px;
       color: white;
-      white-space: pre-wrap;
-      overflow-y: auto;
-      height: 100%;
+      z-index: 999;
+      display: flex;
+      flex-direction: row;
     }
-
+    .script-left {
+      flex: 1;
+      padding: 20px;
+      overflow-y: scroll;
+      font-family: "Courier New", Courier, monospace;
+      white-space: pre-wrap;
+    }
+    .script-right {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .spiral {
+      width: 80%;
+      height: 80%;
+      border-radius: 50%;
+      background: conic-gradient(white 10%, black 10% 20%, white 20% 30%, black 30% 40%, white 40% 50%, black 50% 60%, white 60% 70%, black 70% 80%, white 80% 90%, black 90%);
+      animation: spin 5s linear infinite;
+    }
     @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
     }
   </style>
 </head>
 <body>
 
-<audio id="clickSound" src="click.mp3" preload="auto"></audio>
-
 <div class="grid">
-  <div class="tile" onclick="openSpiralScene()">Lunch with the Narrator</div>
-  <div class="tile">Coming Soon</div>
-  <div class="tile">Coming Soon</div>
-  <div class="tile">The Surveillance Tape</div>
-  <div class="tile">Coming Soon</div>
-  <div class="tile">Coming Soon</div>
-  <div class="tile">Coming Soon</div>
-  <div class="tile">Coming Soon</div>
-  <div class="tile">Coming Soon</div>
+  <div class="tile" onclick="openModal('The Surveillance Tape.mp4')">the surveillance tapes</div>
+  <div class="tile" onclick="openModal('lunch_w_narrator_smaller.mp4')">choose your player</div>
+  <div class="tile" onclick="openModal('hellmouth part one.mp4')">night walk</div>
+  <div class="tile" onclick="openModal('hellmouth part one_1.mp4')">gaga's private jet</div>
+  <div class="tile" onclick="openModal('333_leaked_therapy_smaller.mp4')">333 leaked therapy session</div>
+  <div class="tile" onclick="openScript()">lunch with the narrator</div>
 </div>
 
-<div id="spiralScene">
-  <div class="script" id="scriptText"></div>
-  <div class="spiral"></div>
-  <audio id="narratorAudio" src="lunch_with_the_narrator_voiceover.mp3" autoplay></audio>
+<div class="modal" id="videoModal" onclick="this.style.display='none'">
+  <video id="modalVideo" controls autoplay></video>
+</div>
+
+<div class="script-modal" id="scriptModal">
+  <div class="script-left" id="scriptContent">
+    <!-- script content gets typed in here -->
+  </div>
+  <div class="script-right">
+    <div class="spiral"></div>
+  </div>
 </div>
 
 <script>
-const scriptText = `LUNCH WITH THE NARRATOR
+function openModal(filename) {
+  const modal = document.getElementById('videoModal');
+  const video = document.getElementById('modalVideo');
+  video.src = filename;
+  modal.style.display = 'flex';
+}
 
-INT. LIMINAL DINING ROOM – TIME UNRAVELS POLITELY
+function openScript() {
+  const scriptText = `INT. LIMINAL DINING ROOM – TIME UNRAVELS POLITELY
 
 A table for two.  
 Silver so polished it gaslights the eye.  
@@ -120,24 +126,23 @@ Yes — you.
 Don’t look around.  
 You’ve been summoned. You cannot leave until dessert.
 
-...
-
-FADE TO BLACK.  
-WINE GLASS CLINKS.  
-THE SPIRAL SPINS.
+... [TRUNCATED FOR BREVITY – INSERT FULL SCRIPT HERE] ...
 `;
+  const modal = document.getElementById('scriptModal');
+  const container = document.getElementById('scriptContent');
+  container.innerHTML = '';
+  let i = 0;
 
-function openSpiralScene() {
-  document.getElementById('clickSound').play();
-  document.getElementById('spiralScene').style.display = 'flex';
-  typeScript(scriptText, 0);
-}
-
-function typeScript(text, i) {
-  if (i < text.length) {
-    document.getElementById('scriptText').innerHTML += text.charAt(i);
-    setTimeout(() => typeScript(text, i + 1), 15);
+  function typeWriter() {
+    if (i < scriptText.length) {
+      container.innerHTML += scriptText.charAt(i);
+      i++;
+      setTimeout(typeWriter, 10);
+    }
   }
+
+  modal.style.display = 'flex';
+  typeWriter();
 }
 </script>
 
