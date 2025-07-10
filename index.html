@@ -1,190 +1,81 @@
-<!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hunter Hardon: Virtual Spiral Notebook</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: url('spiral.gif') no-repeat center center fixed;
-      background-size: cover;
-      font-family: monospace;
-      color: white;
-      overflow-x: hidden;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 12px;
-      padding: 24px;
-    }
-    .tile {
-      background-color: rgba(0, 0, 0, 0.7);
-      border-radius: 8px;
-      padding: 16px;
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-    .tile:hover {
-      transform: scale(1.05);
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-    iframe, video {
-      width: 100%;
-      max-height: 70vh;
-      margin-top: 16px;
-    }
-    .content {
-      padding: 24px;
-      max-width: 900px;
-      margin: auto;
-      background: rgba(0, 0, 0, 0.85);
-      border-radius: 8px;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
-</head>
-<body>
-  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
-  <div class="grid">
-    <div class="tile" onclick="playClick();loadVideo('The Surveillance Tape.mp4')">the surveillance tapes</div>
-    <div class="tile" onclick="playClick();loadVideo('lunch_w_narrator_smaller.mp4')">choose your player</div>
-    <div class="tile" onclick="playClick();loadVideo('hellmouth part one.mp4')">night walk</div>
-    <div class="tile" onclick="playClick();loadVideo('hellmouth part one_1.mp4')">gaga's private jet</div>
-    <div class="tile" onclick="playClick();loadVideo('333_leaked_therapy_smaller.mp4')">333 leaked therapy session</div>
-    <div class="tile" onclick="playClick();loadLunchScript()">lunch with the narrator</div>
-  </div>  <div id="display" class="content hidden"></div>  <script>
-    function playClick() {
-      document.getElementById('clickSound').play();
-    }
-
-    function loadVideo(filename) {
-      const container = document.getElementById('display');
-      container.innerHTML = `<video controls autoplay><source src="${filename}" type="video/mp4">Your browser does not support the video tag.</video>`;
-      container.classList.remove('hidden');
-    }
-
-    function loadLunchScript() {
-      fetch('lunch.html')
-        .then(response => response.text())
-        .then(html => {
-          const container = document.getElementById('display');
-          container.innerHTML = html;
-          container.classList.remove('hidden');
-        });
-    }
-  </script></body>
-</html>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lunch with the Narrator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HUNTER HARDON: VIRTUAL SPIRAL NOTEBOOK</title>
   <style>
     body {
       margin: 0;
-      background-color: #000;
-      color: #fff;
       font-family: 'Courier New', monospace;
-      padding: 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    #script {
-      white-space: pre-wrap;
-      line-height: 1.5;
-      z-index: 2;
-      position: relative;
-    }
-
-    #spiral {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: url("spiral.gif") center center no-repeat;
+      background: black url('spiral.gif') center center fixed;
       background-size: cover;
-      opacity: 0.27;
-      z-index: 1;
-      pointer-events: none;
+      color: white;
+      overflow-x: hidden;
+    }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding: 20px;
+    }
+    .tile {
+      background: rgba(20, 20, 20, 0.85);
+      border-radius: 10px;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.3s;
+      border: 1px solid white;
+    }
+    .tile:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    audio {
+      display: block;
+      margin: 30px auto 0 auto;
+      width: 80%;
+      max-width: 400px;
     }
   </style>
 </head>
 <body>
-  <div id="spiral"></div>
-  <div id="script"></div>
-  <audio autoplay>
-    <source src="lunch_with_the_narrator_voiceover.mp3" type="audio/mp3">
-  </audio>
+
+  <audio id="click-sound" src="click.mp3" preload="auto"></audio>
+
+  <div class="grid">
+    <div class="tile" onclick="playSound(); openLink('The%20Surveillance%20Tape.mp4')">the surveillance tapes</div>
+    <div class="tile" onclick="playSound(); openLink('lunch_w_narrator_smaller.mp4')">choose your player</div>
+    <div class="tile" onclick="playSound(); openLink('hellmouth%20part%20one.mp4')">night walk</div>
+    <div class="tile" onclick="playSound(); openLink('hellmouth%20part%20one_1.mp4')">gaga's private jet</div>
+    <div class="tile" onclick="playSound(); openLink('333_leaked_therapy_smaller.mp4')">333 leaked therapy session</div>
+    <div class="tile" onclick="playSound(); playNarratorAudio()">lunch with the narrator</div>
+  </div>
+
+  <audio id="narrator-audio" src="lunch with the narrator.mp3" controls style="display:none"></audio>
 
   <script>
-    const scriptText = `HELL-MOUTH  
-INSERT SCENE – LUNCH WITH THE NARRATOR
-
-INT. LIMINAL DINING ROOM – TIME UNRAVELS POLITELY
-
-A table for two.  
-Silver so polished it gaslights the eye.  
-Ghostlight pours in from nowhere.
-
-THE NARRATOR sits across from YOU.  
-Yes — you.  
-Don’t look around.  
-You’ve been summoned. You cannot leave until dessert.
-
-A SINGLE GLASS CLOCHE covers the plate before him.  
-Steam curls like a whispered insult.
-
-                        NARRATOR (V.O.)
-            Shall we?
-
-He lifts the lid.
-
-REVEAL:
-
-— Sous-vide chicken breast, cut precisely into five coins  
-— Glazed with a mirror-shine reduction of bone marrow and regret  
-— Nested atop a saffron risotto so yellow it screams  
-— Dotted with blood orange gel and shaved truffle from a war zone  
-— Served on black ceramic hand-fired in the ruins of a failed marriage
-
-He slices the first coin like surgery.  
-Chews with reverence. A moan, nearly imperceptible.
-
-                        NARRATOR (V.O.) (CONT'D)
-            You can tell a man’s worth  
-            by how he seasons his breakdown.
-
-                        (beat)
-            Bon appétit.
-
-YOU HAVE NO PLATE.  
-You are here to witness, not consume.
-
-... (TRUNCATED HERE FOR BREVITY – FULL SCRIPT CONTINUES)
-`;
-
-    let index = 0;
-    const speed = 8;
-    const scriptDiv = document.getElementById("script");
-
-    function typeWriter() {
-      if (index < scriptText.length) {
-        scriptDiv.innerHTML += scriptText.charAt(index);
-        index++;
-        setTimeout(typeWriter, speed);
-      }
+    function playSound() {
+      const audio = document.getElementById('click-sound');
+      audio.currentTime = 0;
+      audio.play();
     }
 
-    typeWriter();
+    function openLink(file) {
+      window.open(file, '_blank');
+    }
+
+    function playNarratorAudio() {
+      // Hide all other <audio> or video elements if you have them
+      // Show and play the narrator audio
+      const audio = document.getElementById('narrator-audio');
+      audio.style.display = 'block';
+      audio.currentTime = 0;
+      audio.play();
+      audio.scrollIntoView({behavior: "smooth"});
+    }
   </script>
+
 </body>
 </html>
