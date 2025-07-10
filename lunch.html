@@ -1,46 +1,29 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>Lunch with the Narrator</title>
   <style>
     body {
-      margin: 0;
-      background-color: #000;
-      color: #fff;
-      font-family: 'Courier New', monospace;
-      padding: 2rem;
-      position: relative;
-      overflow: hidden;
-    }#script {
-  white-space: pre-wrap;
-  line-height: 1.5;
-  z-index: 2;
-  position: relative;
-}
-
-#spiral {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: url("spiral.gif") center center no-repeat;
-  background-size: cover;
-  opacity: 0.27;
-  z-index: 1;
-  pointer-events: none;
-}
-
+      background: black;
+      color: white;
+      font-family: Courier, monospace;
+      padding: 40px;
+      background: url('assets/spiral.gif') no-repeat center center fixed;
+      background-size: cover;
+      line-height: 1.6;
+    }
+    .script {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-left: 3px solid white;
+      white-space: pre-wrap;
+    }
   </style>
 </head>
 <body>
-  <div id="spiral"></div>
-  <div id="script"></div>
-  <audio autoplay>
-    <source src="lunch_with_the_narrator_voiceover.mp3" type="audio/mp3">
-  </audio>  <script>
-    const scriptText = `HELL-MOUTH  
+  <div class="script">
+HELL-MOUTH  
 INSERT SCENE – LUNCH WITH THE NARRATOR
 
 INT. LIMINAL DINING ROOM – TIME UNRAVELS POLITELY
@@ -61,44 +44,9 @@ Steam curls like a whispered insult.
             Shall we?
 
 He lifts the lid.
+...
+(Full script continues)
 
-REVEAL:
-
-— Sous-vide chicken breast, cut precisely into five coins  
-— Glazed with a mirror-shine reduction of bone marrow and regret  
-— Nested atop a saffron risotto so yellow it screams  
-— Dotted with blood orange gel and shaved truffle from a war zone  
-— Served on black ceramic hand-fired in the ruins of a failed marriage
-
-He slices the first coin like surgery.  
-Chews with reverence. A moan, nearly imperceptible.
-
-                        NARRATOR (V.O.) (CONT'D)
-            You can tell a man’s worth  
-            by how he seasons his breakdown.
-
-                        (beat)
-            Bon appétit.
-
-YOU HAVE NO PLATE.  
-You are here to witness, not consume.
-
-... (TRUNCATED HERE FOR BREVITY – FULL SCRIPT CONTINUES)
-`;
-
-    let index = 0;
-    const speed = 8;
-    const scriptDiv = document.getElementById("script");
-
-    function typeWriter() {
-      if (index < scriptText.length) {
-        scriptDiv.innerHTML += scriptText.charAt(index);
-        index++;
-        setTimeout(typeWriter, speed);
-      }
-    }
-
-    typeWriter();
-  </script></body>
-</html>
+  </div>
+</body>
 </html>
