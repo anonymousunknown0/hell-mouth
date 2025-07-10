@@ -51,6 +51,39 @@
       border-color: #ffd700;
       z-index: 10;
     }
+    .tile-num {
+      position: absolute;
+      top: 8px;
+      left: 14px;
+      font-size: 2.3em;
+      font-weight: bold;
+      color: #ffd700;
+      text-shadow: 2px 2px 6px #000, 0 0 14px #fff9;
+      z-index: 4;
+      pointer-events: none;
+      letter-spacing: -2px;
+      font-family: 'Arial Black', Arial, Impact, sans-serif;
+      user-select: none;
+    }
+    .tile-filename {
+      position: absolute;
+      left: 10px;
+      bottom: 6px;
+      width: 92%;
+      color: #fff;
+      font-size: 0.85em;
+      font-family: monospace;
+      font-weight: bold;
+      background: rgba(0,0,0,0.45);
+      padding: 2px 5px 1px 5px;
+      border-radius: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      pointer-events: none;
+      z-index: 5;
+      user-select: none;
+    }
     #content {
       display: none;
       min-height: 100vh;
@@ -107,6 +140,9 @@
       #content video, #content audio {
         width: 97vw;
         max-width: 97vw;
+      }
+      .tile-filename {
+        font-size: 0.95em;
       }
     }
   </style>
@@ -210,10 +246,14 @@ function closeContent() {
 function displayTiles() {
   let grid = document.getElementById('puzzle-grid');
   grid.innerHTML = "";
-  for (let file of files) {
+  for (let i = 0; i < files.length; i++) {
+    let num = i + 1;
+    let filename = files[i];
     grid.innerHTML += `
-      <button class="tile" onclick="openFile('${file}')">
+      <button class="tile" onclick="openFile('${filename}')">
         <img src="spiral.gif" alt="spiral" />
+        <span class="tile-num">${num}</span>
+        <span class="tile-filename">${filename}</span>
       </button>`;
   }
 }
