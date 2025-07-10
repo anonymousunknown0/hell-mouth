@@ -1,57 +1,75 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HELL-MOUTH</title>
+  <title>HUNTER HARDON: VIRTUAL SPIRAL NOTEBOOK</title>
   <style>
     body {
       margin: 0;
-      background: #000;
-      color: #ccc;
-      font-family: monospace;
+      font-family: 'Courier New', monospace;
+      background: black url('spiral.gif') center center fixed;
+      background-size: cover;
+      color: white;
+      overflow-x: hidden;
     }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 5px;
-      padding: 10px;
-    }
-    .piece {
-      background: #555;
-      color: #eee;
-      height: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+
+    h1 {
       text-align: center;
+      font-size: 1rem;
+      padding: 1rem;
+      letter-spacing: 0.05em;
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding: 20px;
+    }
+
+    .tile {
+      background: rgba(20, 20, 20, 0.85);
+      border-radius: 10px;
+      padding: 10px 15px;
       cursor: pointer;
+      font-size: 0.9rem;
       transition: background 0.3s;
+      border: 1px solid white;
     }
-    .piece:hover {
-      background: #888;
-    }
-    a {
-      text-decoration: none;
-      color: inherit;
-      display: block;
-      width: 100%;
-      height: 100%;
+
+    .tile:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
   </style>
 </head>
 <body>
+
+  <h1>HUNTER HARDON: VIRTUAL SPIRAL NOTEBOOK</h1>
+
+  <audio id="click-sound" src="click.mp3" preload="auto"></audio>
+
   <div class="grid">
-    <div class="piece"><a href="lunch.html">Lunch with the Narrator</a></div>
-    <div class="piece"><a href="surveillance.html">The Surveillance Tapes</a></div>
-    <div class="piece"><a href="choose.html">Choose Your Player</a></div>
-    <div class="piece"><a href="nightwalk.html">Night Walk</a></div>
-    <div class="piece"><a href="jet.html">Gaga's Private Jet</a></div>
-    <div class="piece"><a href="therapy.html">333 Leaked Therapy Session</a></div>
-    <div class="piece">Coming Soon</div>
-    <div class="piece">Coming Soon</div>
-    <div class="piece">Coming Soon</div>
+    <div class="tile" onclick="playSound(); openLink('The%20Surveillance%20Tape.mp4')">the surveillance tapes</div>
+    <div class="tile" onclick="playSound(); openLink('lunch_w_narrator_smaller.mp4')">choose your player</div>
+    <div class="tile" onclick="playSound(); openLink('hellmouth%20part%20one.mp4')">night walk</div>
+    <div class="tile" onclick="playSound(); openLink('hellmouth%20part%20one_1.mp4')">gaga's private jet</div>
+    <div class="tile" onclick="playSound(); openLink('333_leaked_therapy_smaller.mp4')">333 leaked therapy session</div>
+    <div class="tile" onclick="playSound(); openLink('lunch.html')">lunch with the narrator</div>
   </div>
+
+  <script>
+    function playSound() {
+      const audio = document.getElementById('click-sound');
+      audio.currentTime = 0;
+      audio.play();
+    }
+
+    function openLink(file) {
+      window.open(file, '_blank');
+    }
+  </script>
+
 </body>
 </html>
