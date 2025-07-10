@@ -2,140 +2,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Virtual Spiral Notebook</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: monospace;
-            background: url('assets/hubble.jpg') no-repeat center center fixed;
-            background-size: cover;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            padding: 20px;
-        }
-        .tile {
-            background-color: rgba(0, 0, 0, 0.6);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 16px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-        }
-        .modal video {
-            max-width: 90%;
-            max-height: 90%;
-        }
-        .script-mode {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: black;
-            color: white;
-            font-family: monospace;
-            display: flex;
-            flex-direction: row;
-        }
-        .left {
-            width: 50%;
-            padding: 20px;
-            overflow-y: auto;
-            background-color: #111;
-        }
-        .right {
-            width: 50%;
-            background-color: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .spiral {
-            width: 200px;
-            height: 200px;
-            border: 10px solid white;
-            border-radius: 50%;
-            animation: spin 5s linear infinite;
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HELL-MOUTH</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #ccc;
+      font-family: monospace;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      padding: 10px;
+    }
+    .piece {
+      background: #555;
+      color: #eee;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .piece:hover {
+      background: #888;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
 </head>
 <body>
-    <div class="grid">
-        <div class="tile" onclick="showVideo('The Surveillance Tape.mp4')">The Surveillance Tapes</div>
-<div class="tile" onclick="showVideo('lunch_w_narrator_smaller.mp4')">Choose Your Player</div>
-<div class="tile" onclick="showVideo('hellmouth part one.mp4')">Night Walk</div>
-<div class="tile" onclick="showVideo('hellmouth part one_1.mp4')">Gagas Private Jet</div>
-<div class="tile" onclick="showVideo('333_leaked_therapy_smaller.mp4')">Leaked Therapy Session</div>
-<div class="tile" onclick="showScript()">Lunch with the Narrator</div>
-
-    </div>
-
-    <div class="modal" id="videoModal">
-        <video id="modalVideo" controls></video>
-    </div>
-
-    <div class="script-mode" id="scriptMode">
-        <div class="left" id="scriptText"></div>
-        <div class="right">
-            <div class="spiral"></div>
-        </div>
-    </div>
-
-    <script>
-        const videos = {'The Surveillance Tape.mp4': 'The Surveillance Tapes', 'lunch_w_narrator_smaller.mp4': 'Choose Your Player', 'hellmouth part one.mp4': 'Night Walk', 'hellmouth part one_1.mp4': 'Gagas Private Jet', '333_leaked_therapy_smaller.mp4': 'Leaked Therapy Session'};
-        const script = `INT. LIMINAL DINING ROOM – TIME UNRAVELS POLITELY
-
-A table for two...
-[Script continues here...]
-`;
-
-        function showVideo(filename) {
-            const modal = document.getElementById('videoModal');
-            const video = document.getElementById('modalVideo');
-            video.src = 'assets/' + filename;
-            modal.style.display = 'flex';
-        }
-
-        function showScript() {
-            const scriptMode = document.getElementById('scriptMode');
-            const scriptText = document.getElementById('scriptText');
-            scriptMode.style.display = 'flex';
-            let i = 0;
-            function typeWriter() {
-                if (i < script.length) {
-                    scriptText.innerHTML += script.charAt(i);
-                    i++;
-                    setTimeout(typeWriter, 10);
-                }
-            }
-            typeWriter();
-        }
-
-        window.onclick = function(e) {
-            if (e.target.id === 'videoModal') {
-                document.getElementById('modalVideo').pause();
-                document.getElementById('videoModal').style.display = 'none';
-            }
-        }
-    </script>
+  <div class="grid">
+    <div class="piece"><a href="lunch.html">Lunch with the Narrator</a></div>
+    <div class="piece"><a href="surveillance.html">The Surveillance Tapes</a></div>
+    <div class="piece"><a href="choose.html">Choose Your Player</a></div>
+    <div class="piece"><a href="nightwalk.html">Night Walk</a></div>
+    <div class="piece"><a href="jet.html">Gaga's Private Jet</a></div>
+    <div class="piece"><a href="therapy.html">333 Leaked Therapy Session</a></div>
+    <div class="piece">Coming Soon</div>
+    <div class="piece">Coming Soon</div>
+    <div class="piece">Coming Soon</div>
+  </div>
 </body>
 </html>
