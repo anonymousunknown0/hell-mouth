@@ -1,95 +1,104 @@
-
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lunch with the Narrator</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
-      background-color: black;
-      color: white;
-      font-family: Courier, monospace;
-      display: flex;
-      height: 100vh;
+      background-color: #000;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      padding: 2rem;
+      position: relative;
       overflow: hidden;
-    }
-    .left {
-      width: 50%;
-      padding: 20px;
-      overflow-y: auto;
-    }
-    .right {
-      width: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .spiral {
-      border: 4px solid white;
-      border-radius: 50%;
-      width: 100px;
-      height: 100px;
-      animation: spin 3s linear infinite;
-    }
-    @keyframes spin {
-      from {transform: rotate(0deg);}
-      to {transform: rotate(360deg);}
-    }
-    audio {
-      display: none;
-    }
+    }#script {
+  white-space: pre-wrap;
+  line-height: 1.5;
+  z-index: 2;
+  position: relative;
+}
+
+#spiral {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url("spiral.gif") center center no-repeat;
+  background-size: cover;
+  opacity: 0.27;
+  z-index: 1;
+  pointer-events: none;
+}
+
   </style>
 </head>
 <body>
-  <div class="left">
-    <pre id="script">
-    </pre>
-  </div>
-  <div class="right">
-    <div class="spiral"></div>
-  </div>
+  <div id="spiral"></div>
+  <div id="script"></div>
   <audio autoplay>
-    <source src="lunch_with_the_narrator_voiceover.mp3" type="audio/mpeg" />
-  </audio>
-  <script>
-    const scriptText = `INT. LIMINAL DINING ROOM – ENDLESS TWILIGHT
+    <source src="lunch_with_the_narrator_voiceover.mp3" type="audio/mp3">
+  </audio>  <script>
+    const scriptText = `HELL-MOUTH  
+INSERT SCENE – LUNCH WITH THE NARRATOR
 
-A table for two. Silverware glows. A single candle fights the dark.
+INT. LIMINAL DINING ROOM – TIME UNRAVELS POLITELY
 
-THE NARRATOR sits across from you.
+A table for two.  
+Silver so polished it gaslights the eye.  
+Ghostlight pours in from nowhere.
 
-A SINGLE GLASS CLOCHE.
+THE NARRATOR sits across from YOU.  
+Yes — you.  
+Don’t look around.  
+You’ve been summoned. You cannot leave until dessert.
 
-            NARRATOR (V.O.)
-    Shall we?
+A SINGLE GLASS CLOCHE covers the plate before him.  
+Steam curls like a whispered insult.
 
-He lifts the lid. REVEAL:
+                        NARRATOR (V.O.)
+            Shall we?
 
-– Sous-vide chicken breast
-– Glazed with a mirror of bone broth
-– Nested atop a saffron risotto
-– Dotted with blood orange reduction
-– Served on black ceramic
+He lifts the lid.
 
-He slices the first corner, deliberately.
+REVEAL:
 
-            NARRATOR (V.O.) (CONT’D)
-    You can tell a man by how he plates desire.
+— Sous-vide chicken breast, cut precisely into five coins  
+— Glazed with a mirror-shine reduction of bone marrow and regret  
+— Nested atop a saffron risotto so yellow it screams  
+— Dotted with blood orange gel and shaved truffle from a war zone  
+— Served on black ceramic hand-fired in the ruins of a failed marriage
 
-Bon appétit.`;
+He slices the first coin like surgery.  
+Chews with reverence. A moan, nearly imperceptible.
 
-    let i = 0;
+                        NARRATOR (V.O.) (CONT'D)
+            You can tell a man’s worth  
+            by how he seasons his breakdown.
+
+                        (beat)
+            Bon appétit.
+
+YOU HAVE NO PLATE.  
+You are here to witness, not consume.
+
+... (TRUNCATED HERE FOR BREVITY – FULL SCRIPT CONTINUES)
+`;
+
+    let index = 0;
+    const speed = 8;
+    const scriptDiv = document.getElementById("script");
+
     function typeWriter() {
-      if (i < scriptText.length) {
-        document.getElementById("script").innerText += scriptText.charAt(i);
-        i++;
-        setTimeout(typeWriter, 40);
+      if (index < scriptText.length) {
+        scriptDiv.innerHTML += scriptText.charAt(index);
+        index++;
+        setTimeout(typeWriter, speed);
       }
     }
-    window.onload = typeWriter;
-  </script>
-</body>
+
+    typeWriter();
+  </script></body>
+</html>
 </html>
