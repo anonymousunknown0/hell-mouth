@@ -1,226 +1,225 @@
-<p>&lt;!DOCTYPE html&gt;</p>
-<p>&lt;html lang=&quot;en&quot;&gt;</p>
-<p>&lt;head&gt;</p>
-<p>&nbsp; &lt;**** charset=&quot;UTF-8&quot;/&gt;</p>
-<p>&nbsp; &lt;**** name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;/&gt;</p>
-<p>&nbsp; &lt;title&gt;Virtual Spiral Notebook&lt;/title&gt;</p>
-<p>&nbsp; &lt;style&gt;</p>
-<p>&nbsp; &nbsp; body {</p>
-<p>&nbsp; &nbsp; &nbsp; margin: 0;</p>
-<p>&nbsp; &nbsp; &nbsp; background: #111 url(&apos;spiral.gif&apos;) center ****** fixed;</p>
-<p>&nbsp; &nbsp; &nbsp; background-size: cover;</p>
-<p>&nbsp; &nbsp; &nbsp; font-family: monospace;</p>
-<p>&nbsp; &nbsp; &nbsp; color: white;</p>
-<p>&nbsp; &nbsp; &nbsp; overflow-x: hidden;</p>
-<p>&nbsp; &nbsp; &nbsp; min-height: 100vh;</p>
-<p>&nbsp; &nbsp; }</p>
-<p>&nbsp; &nbsp; .puzzle-grid {</p>
-<p>&nbsp; &nbsp; &nbsp; display: flex;</p>
-<p>&nbsp; &nbsp; &nbsp; flex-wrap: wrap;</p>
-<p>&nbsp; &nbsp; &nbsp; justify-content: center;</p>
-<p>&nbsp; &nbsp; &nbsp; gap: 16px;</p>
-<p>&nbsp; &nbsp; &nbsp; padding: 3*** 10px 60px 10px;</p>
-<p>&nbsp; &nbsp; &nbsp; z-index: 2;</p>
-<p>&nbsp; &nbsp; }</p>
-<p>&nbsp; &nbsp; .tile {</p>
-<p>&nbsp; &nbsp; &nbsp; background: rgba(0,0,0,0.15);</p>
-<p>&nbsp; &nbsp; &nbsp; border-radius: 20px;</p>
-<p>&nbsp; &nbsp; &nbsp; border: 2** solid #fff;</p>
-<p>&nbsp; &nbsp; &nbsp; box-shadow: 0 0 16px #000a;</p>
-<p>&nbsp; &nbsp; &nbsp; width: 190px;</p>
-<p>&nbsp; &nbsp; &nbsp; height: 106px;</p>
-<p>&nbsp; &nbsp; &nbsp; overflow: hidden;</p>
-<p>&nbsp; &nbsp; &nbsp; margin: 0;</p>
-<p>&nbsp; &nbsp; &nbsp; padding: 0;</p>
-<p>&nbsp; &nbsp; &nbsp; display: flex;</p>
-<p>&nbsp; &nbsp; &nbsp; align-items: center;</p>
-<p>&nbsp; &nbsp; &nbsp; justify-content: center;</p>
-<p>&nbsp; &nbsp; &nbsp; cursor: pointer;</p>
-<p>&nbsp; &nbsp; &nbsp; position: relative;</p>
-<p>&nbsp; &nbsp; &nbsp; transition: transform 0.18s, box-****** 0.18s;</p>
-<p>&nbsp; &nbsp; }</p>
-<p>&nbsp; &nbsp; .tile img {</p>
-<p>&nbsp; &nbsp; &nbsp; width: 100%;</p>
-<p>&nbsp; &nbsp; &nbsp; height: 100%;</p>
-<p>&nbsp; &nbsp; &nbsp; object-fit: cover;</p>
-<p>&nbsp; &nbsp; &nbsp; pointer-events: none;</p>
-<p>&nbsp; &nbsp; &nbsp; display: block;</p>
-<p>&nbsp; &nbsp; }</p>
-<p>&nbsp; &nbsp; .tile:hover, .tile:focus {</p>
-<p>&nbsp; &nbsp; &nbsp; transform: scale(1.08);</p>
-<p>&nbsp; &nbsp; &nbsp; box-shadow: 0 0 26px #fff8;</p>
-<p>&nbsp; &nbsp; &nbsp; border-color: #ffd700;</p>
-<p>&nbsp; &nbsp; &nbsp; z-index: 10;</p>
-<p>&nbsp; &nbsp; }</p>
-<p>&nbsp; &nbsp; #content {</p>
-<p>&nbsp; &nbsp; &nbsp; display: none;</p>
-<p>&nbsp; &nbsp; &nbsp; min-height: 100vh;</p>
-<p>&nbsp; &nbsp; &nbsp; align-items: center;</p>
-<p>&nbsp; &nbsp; &nbsp; justify-content: center;</p>
-<p>&nbsp; &nbsp; &nbsp; flex-direction: column;</p>
-<p>&nbsp; &nbsp; &nbsp; background: rgba(0,0,0,0.87);</p>
-<p>&nbsp; &nbsp; &nbsp; position: fixed;</p>
-<p>&nbsp; &nbsp; &nbsp; inset: 0;</p>
-<p>&nbsp; &nbsp; &nbsp; z-index: 20;</p>
-<p>&nbsp; &nbsp; }</p>
-<p>&nbsp; &nbsp; #content video, #content audio {</p>
-<p>&nbsp; &nbsp; &nbsp; width: 90vw;</p>
-<p>&nbsp; &nbsp; &nbsp; max-width: 700px;</p>
-<p>&nbsp; &nbsp; &nbsp; margin: 24px auto 8px auto;</p>
-<p>&nbsp; &nbsp; &nbsp; display: block;</p>
-<p>&nbsp; &nbsp; &nbsp; background: #000;</p>
-<p>&nbsp; &nbsp; &nbsp; border-radius: 16px;</p>
-<p>&nbsp; &nbsp; &nbsp; box-shadow: 0 0 12** #0008;</p>
-<p>&nbsp; &nbsp; }</p>
-<p>&nbsp; &nbsp; #content .filename {</p>
-<p>&nbsp; &nbsp; &nbsp; color: #ffd700;</p>
-<p>&nbsp; &nbsp; &nbsp; font-size: 1.13rem;</p>
-<p>&nbsp; &nbsp; &nbsp; font-weight: 700;</p>
-<p>&nbsp; &nbsp; &nbsp; letter-spacing: 0.04em;</p>
-<p>&nbsp; &nbsp; &nbsp; margin-top: 12px;</p>
-<p>&nbsp; &nbsp; &nbsp; margin-bottom: 5px;</p>
-<p>&nbsp; &nbsp; &nbsp; text-align: center;</p>
-<p>&nbsp; &nbsp; &nbsp; word-break: break-all;</p>
-<p>&nbsp; &nbsp; }</p>
-<p>&nbsp; &nbsp; #content .close-btn {</p>
-<p>&nbsp; &nbsp; &nbsp; font-size: 1.2rem;</p>
-<p>&nbsp; &nbsp; &nbsp; color: #fff;</p>
-<p>&nbsp; &nbsp; &nbsp; background: rgba(0,0,0,0.6);</p>
-<p>&nbsp; &nbsp; &nbsp; border: *** solid #fff;</p>
-<p>&nbsp; &nbsp; &nbsp; border-radius: 14px;</p>
-<p>&nbsp; &nbsp; &nbsp; padding: 7px 20px;</p>
-<p>&nbsp; &nbsp; &nbsp; cursor: pointer;</p>
-<p>&nbsp; &nbsp; &nbsp; margin: 32px auto 0 auto;</p>
-<p>&nbsp; &nbsp; &nbsp; transition: background 0.16s;</p>
-<p>&nbsp; &nbsp; &nbsp; z-index: 999;</p>
-<p>&nbsp; &nbsp; &nbsp; display: block;</p>
-<p>&nbsp; &nbsp; }</p>
-<p>&nbsp; &nbsp; #content .close-btn:hover {</p>
-<p>&nbsp; &nbsp; &nbsp; background: #e00;</p>
-<p>&nbsp; &nbsp; &nbsp; color: #fff;</p>
-<p>&nbsp; &nbsp; }</p>
-<p>&nbsp; &nbsp; @media (max-width: 800px) {</p>
-<p>&nbsp; &nbsp; &nbsp; .tile {</p>
-<p>&nbsp; &nbsp; &nbsp; &nbsp; width: 92vw;</p>
-<p>&nbsp; &nbsp; &nbsp; &nbsp; height: 20vw;</p>
-<p>&nbsp; &nbsp; &nbsp; &nbsp; min-height: 80px;</p>
-<p>&nbsp; &nbsp; &nbsp; }</p>
-<p>&nbsp; &nbsp; &nbsp; #content video, #content audio {</p>
-<p>&nbsp; &nbsp; &nbsp; &nbsp; width: 97vw;</p>
-<p>&nbsp; &nbsp; &nbsp; &nbsp; max-width: 97vw;</p>
-<p>&nbsp; &nbsp; &nbsp; }</p>
-<p>&nbsp; &nbsp; }</p>
-<p>&nbsp; &lt;/style&gt;</p>
-<p>&lt;/head&gt;</p>
-<p>&lt;body&gt;</p>
-<p><br></p>
-<p>&lt;audio id=&quot;click-sound&quot; src=&quot;click.mp3&quot; preload=&quot;auto&quot;&gt;&lt;/audio&gt;</p>
-<p><br></p>
-<p>&lt;*** class=&quot;puzzle-grid&quot; id=&quot;puzzle-grid&quot;&gt;&lt;/div&gt;</p>
-<p><br></p>
-<p>&lt;div id=&quot;content&quot;&gt;</p>
-<p>&nbsp; &lt;div class=&quot;filename&quot; id=&quot;file-name&quot;&gt;&lt;/div&gt;</p>
-<p>&nbsp; &lt;div id=&quot;content-area&quot;&gt;&lt;/div&gt;</p>
-<p>&nbsp; &lt;button class=&quot;close-btn&quot; onclick=&quot;closeContent()&quot;&gt;CLOSE&lt;/button&gt;</p>
-<p>&lt;/div&gt;</p>
-<p><br></p>
-<p>&lt;script&gt;</p>
-<p>***** files = [</p>
-<p>&nbsp; &quot;The Surveillance Tape.mp4&quot;,</p>
-<p>&nbsp; &quot;****** **** player.mp4&quot;,</p>
-<p>&nbsp; &quot;********* part one.mp4&quot;,</p>
-<p>&nbsp; &quot;********* part one_1.mp4&quot;,</p>
-<p>&nbsp; &quot;333_leaked_therapy_smaller.mp4&quot;,</p>
-<p>&nbsp; &quot;lunch with the narrator.mp3&quot;,</p>
-<p>&nbsp; &quot;3 cock anatomy.mp4&quot;,</p>
-<p>&nbsp; &quot;5 hypnotize.mp4&quot;,</p>
-<p>&nbsp; &quot;6 macbook air.mp4&quot;,</p>
-<p>&nbsp; &quot;7 male body.mp4&quot;,</p>
-<p>&nbsp; &quot;9 microchip.mp4&quot;,</p>
-<p>&nbsp; &quot;11 old school smoking.mp4&quot;,</p>
-<p>&nbsp; &quot;12 sperm microscope.mp4&quot;,</p>
-<p>&nbsp; &quot;17 heart.mp4&quot;,</p>
-<p>&nbsp; &quot;18 diagnosis final.mp4&quot;,</p>
-<p>&nbsp; &quot;23 window trees.mp4&quot;,</p>
-<p>&nbsp; &quot;24 diagnosis 1.mp4&quot;,</p>
-<p>&nbsp; &quot;25 muscle god.mp4&quot;,</p>
-<p>&nbsp; &quot;26 eyes.mp4&quot;,</p>
-<p>&nbsp; &quot;30 diagnosis 3.mp4&quot;,</p>
-<p>&nbsp; &quot;30 shadow man.mp4&quot;,</p>
-<p>&nbsp; &quot;31 *** ***** brain.mp4&quot;,</p>
-<p>&nbsp; &quot;36 warner bros.mp4&quot;,</p>
-<p>&nbsp; &quot;38 ****** expressions.mp4&quot;,</p>
-<p>&nbsp; &quot;41 my body.mp4&quot;,</p>
-<p>&nbsp; &quot;42 diagnosis 2.mp4&quot;,</p>
-<p>&nbsp; &quot;42 the ********* wheel.mp4&quot;,</p>
-<p>&nbsp; &quot;44 *** pimp my truck.mp4&quot;,</p>
-<p>&nbsp; &quot;45 weed.mp4&quot;,</p>
-<p>&nbsp; &quot;47 to write love....mp4&quot;,</p>
-<p>&nbsp; &quot;50 *** police 2.mp4&quot;,</p>
-<p>&nbsp; &quot;53 primetime boomboxx.mp4&quot;,</p>
-<p>&nbsp; &quot;54 77 ******* park.mp4&quot;,</p>
-<p>&nbsp; &quot;55 blu hair ** care.mp4&quot;,</p>
-<p>&nbsp; &quot;61 the statue of david.mp4&quot;,</p>
-<p>&nbsp; &quot;67 fwmukigit.mp4&quot;,</p>
-<p>&nbsp; &quot;72 ***** lesbians.mp4&quot;,</p>
-<p>&nbsp; &quot;74 kylie jenner.mp4&quot;,</p>
-<p>&nbsp; &quot;hot body.mov.mp4&quot;,</p>
-<p>&nbsp; &quot;kim kardashian.mp4&quot;,</p>
-<p>&nbsp; &quot;lizzo.mp4&quot;,</p>
-<p>&nbsp; &quot;**** 1.mov.mp4&quot;,</p>
-<p>&nbsp; &quot;**** 3.mov.mp4&quot;,</p>
-<p>&nbsp; &quot;part 4.mov.mp4&quot;,</p>
-<p>&nbsp; &quot;part 5.mov.mp4&quot;,</p>
-<p>&nbsp; &quot;part 6.mov.mp4&quot;,</p>
-<p>&nbsp; &quot;part 9.mp4&quot;,</p>
-<p>&nbsp; &quot;**** 10.mov.mp4&quot;,</p>
-<p>&nbsp; &quot;stress.mov.mp4&quot;,</p>
-<p>&nbsp; &quot;the crying room.mov.mp4&quot;,</p>
-<p>&nbsp; &quot;the dopeiest of dopeness.mp4&quot;</p>
-<p>];</p>
-<p><br></p>
-<p>function playClick() {</p>
-<p>&nbsp; ***** audio = document.getElementById(&apos;click-sound&apos;);</p>
-<p>&nbsp; audio.currentTime = 0;</p>
-<p>&nbsp; audio.play();</p>
-<p>}</p>
-<p><br></p>
-<p>function openFile(file) {</p>
-<p>&nbsp; playClick();</p>
-<p>&nbsp; document.getElementById(&apos;puzzle-grid&apos;).style.display = &quot;none&quot;;</p>
-<p>&nbsp; const content = document.getElementById(&apos;content&apos;);</p>
-<p>&nbsp; ***** area = document.getElementById(&apos;content-area&apos;);</p>
-<p>&nbsp; const namebox = document.getElementById(&apos;file-name&apos;);</p>
-<p>&nbsp; *** ext = file.split(&apos;.&apos;).pop().toLowerCase();</p>
-<p>&nbsp; area.innerHTML = &quot;&quot;;</p>
-<p>&nbsp; namebox.innerHTML = file;</p>
-<p>&nbsp; if (ext === &apos;mp3&apos; || ext === &apos;wav&apos; || ext === &apos;m4a&apos;) {</p>
-<p>&nbsp; &nbsp; area.innerHTML = `&lt;audio controls autoplay&gt;&lt;source src=&quot;${file}&quot;&gt;&lt;/audio&gt;`;</p>
-<p>&nbsp; } else {</p>
-<p>&nbsp; &nbsp; area.innerHTML = `&lt;video controls autoplay&gt;&lt;source src=&quot;${file}&quot;&gt;&lt;/video&gt;`;</p>
-<p>&nbsp; }</p>
-<p>&nbsp; content.style.display = &quot;flex&quot;;</p>
-<p>&nbsp; content.scrollIntoView({behavior: &quot;smooth&quot;});</p>
-<p>}</p>
-<p>function closeContent() {</p>
-<p>&nbsp; document.getElementById(&apos;content&apos;).style.display = &quot;none&quot;;</p>
-<p>&nbsp; document.getElementById(&apos;puzzle-grid&apos;).style.display = &quot;flex&quot;;</p>
-<p>&nbsp; // **** all ***** playback:</p>
-<p>&nbsp; document.querySelectorAll(&apos;#content-area video, #content-area audio&apos;).forEach(el=&gt;{el.pause &amp;&amp; el.pause();});</p>
-<p>}</p>
-<p>function displayTiles() {</p>
-<p>&nbsp; let **** = document.getElementById(&apos;puzzle-grid&apos;);</p>
-<p>&nbsp; grid.innerHTML = &quot;&quot;;</p>
-<p>&nbsp; for (let file of files) {</p>
-<p>&nbsp; &nbsp; grid.innerHTML += `</p>
-<p>&nbsp; &nbsp; &nbsp; &lt;div class=&quot;tile&quot; onclick=&quot;openFile(&apos;${file}&apos;)&quot;&gt;</p>
-<p>&nbsp; &nbsp; &nbsp; &nbsp; &lt;img src=&quot;spiral.gif&quot; alt=&quot;spiral&quot; /&gt;</p>
-<p>&nbsp; &nbsp; &nbsp; &lt;/div&gt;`;</p>
-<p>&nbsp; }</p>
-<p>}</p>
-<p>displayTiles();</p>
-<p>&lt;/script&gt;</p>
-<p><br></p>
-<p>&lt;/body&gt;</p>
-<p>&lt;/html&gt;</p>
-<div style="color: red">Word to HTML trial - please <a href="https://wordtohtml.net/site/payment">Go PRO</a> to get whole HTML.</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Virtual Spiral Notebook</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111 url('spiral.gif') center center fixed;
+      background-size: cover;
+      font-family: monospace;
+      color: white;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    .puzzle-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      padding: 30px 10px 60px 10px;
+      z-index: 2;
+    }
+    .tile {
+      background: rgba(0,0,0,0.15);
+      border-radius: 20px;
+      border: 2px solid #fff;
+      box-shadow: 0 0 16px #000a;
+      width: 190px;
+      height: 106px;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.18s, box-shadow 0.18s;
+    }
+    .tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+      display: block;
+    }
+    .tile:hover, .tile:focus {
+      transform: scale(1.08);
+      box-shadow: 0 0 26px #fff8;
+      border-color: #ffd700;
+      z-index: 10;
+    }
+    #content {
+      display: none;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background: rgba(0,0,0,0.87);
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+    }
+    #content video, #content audio {
+      width: 90vw;
+      max-width: 700px;
+      margin: 24px auto 8px auto;
+      display: block;
+      background: #000;
+      border-radius: 16px;
+      box-shadow: 0 0 12px #0008;
+    }
+    #content .filename {
+      color: #ffd700;
+      font-size: 1.13rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-top: 12px;
+      margin-bottom: 5px;
+      text-align: center;
+      word-break: break-all;
+    }
+    #content .close-btn {
+      font-size: 1.2rem;
+      color: #fff;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid #fff;
+      border-radius: 14px;
+      padding: 7px 20px;
+      cursor: pointer;
+      margin: 32px auto 0 auto;
+      transition: background 0.16s;
+      z-index: 999;
+      display: block;
+    }
+    #content .close-btn:hover {
+      background: #e00;
+      color: #fff;
+    }
+    @media (max-width: 800px) {
+      .tile {
+        width: 92vw;
+        height: 20vw;
+        min-height: 80px;
+      }
+      #content video, #content audio {
+        width: 97vw;
+        max-width: 97vw;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<audio id="click-sound" src="click.mp3" preload="auto"></audio>
+
+<div class="puzzle-grid" id="puzzle-grid"></div>
+
+<div id="content">
+  <div class="filename" id="file-name"></div>
+  <div id="content-area"></div>
+  <button class="close-btn" onclick="closeContent()">CLOSE</button>
+</div>
+
+<script>
+const files = [
+  "The Surveillance Tape.mp4",
+  "choose your player.mp4",
+  "hellmouth part one.mp4",
+  "hellmouth part one_1.mp4",
+  "333_leaked_therapy_smaller.mp4",
+  "lunch with the narrator.mp3",
+  "3 cock anatomy.mp4",
+  "5 hypnotize.mp4",
+  "6 macbook air.mp4",
+  "7 male body.mp4",
+  "9 microchip.mp4",
+  "11 old school smoking.mp4",
+  "12 sperm microscope.mp4",
+  "17 heart.mp4",
+  "18 diagnosis final.mp4",
+  "23 window trees.mp4",
+  "24 diagnosis 1.mp4",
+  "25 muscle god.mp4",
+  "26 eyes.mp4",
+  "30 diagnosis 3.mp4",
+  "30 shadow man.mp4",
+  "31 the human brain.mp4",
+  "36 warner bros.mp4",
+  "38 facial expressions.mp4",
+  "41 my body.mp4",
+  "42 diagnosis 2.mp4",
+  "42 the emotional wheel.mp4",
+  "44 ups pimp my truck.mp4",
+  "45 weed.mp4",
+  "47 to write love....mp4",
+  "50 gay police 2.mp4",
+  "53 primetime boomboxx.mp4",
+  "54 77 johnson park.mp4",
+  "55 blu hair do care.mp4",
+  "61 the statue of david.mp4",
+  "67 fwmukigit.mp4",
+  "72 horny lesbians.mp4",
+  "74 kylie jenner.mp4",
+  "hot body.mov.mp4",
+  "kim kardashian.mp4",
+  "lizzo.mp4",
+  "part 1.mov.mp4",
+  "part 3.mov.mp4",
+  "part 4.mov.mp4",
+  "part 5.mov.mp4",
+  "part 6.mov.mp4",
+  "part 9.mp4",
+  "part 10.mov.mp4",
+  "stress.mov.mp4",
+  "the crying room.mov.mp4",
+  "the dopeiest of dopeness.mp4"
+];
+
+function playClick() {
+  const audio = document.getElementById('click-sound');
+  audio.currentTime = 0;
+  audio.play();
+}
+
+function openFile(file) {
+  playClick();
+  document.getElementById('puzzle-grid').style.display = "none";
+  const content = document.getElementById('content');
+  const area = document.getElementById('content-area');
+  const namebox = document.getElementById('file-name');
+  let ext = file.split('.').pop().toLowerCase();
+  area.innerHTML = "";
+  namebox.innerHTML = file;
+  if (ext === 'mp3' || ext === 'wav' || ext === 'm4a') {
+    area.innerHTML = `<audio controls autoplay><source src="${file}"></audio>`;
+  } else {
+    area.innerHTML = `<video controls autoplay><source src="${file}"></video>`;
+  }
+  content.style.display = "flex";
+  content.scrollIntoView({behavior: "smooth"});
+}
+function closeContent() {
+  document.getElementById('content').style.display = "none";
+  document.getElementById('puzzle-grid').style.display = "flex";
+  // Stop all media playback:
+  document.querySelectorAll('#content-area video, #content-area audio').forEach(el=>{el.pause && el.pause();});
+}
+function displayTiles() {
+  let grid = document.getElementById('puzzle-grid');
+  grid.innerHTML = "";
+  for (let file of files) {
+    grid.innerHTML += `
+      <div class="tile" onclick="openFile('${file}')">
+        <img src="spiral.gif" alt="spiral" />
+      </div>`;
+  }
+}
+displayTiles();
+</script>
+
+</body>
+</html>
