@@ -1,118 +1,133 @@
-<!DOCTYPE html><html lang="en">
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hunter Hardon: Virtual Spiral Notebook</title>
   <style>
-    html, body {
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
+      font-family: Courier, monospace;
       background: url('hubble_background.jpg') no-repeat center center fixed;
       background-size: cover;
-      font-family: Courier, monospace;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(3, 1fr);
-      gap: 8px;
-      height: 100%;
-      padding: 10px;
-    }
-    .puzzle-piece {
-      background: rgba(0, 0, 0, 0.5);
-      border: 2px solid white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       color: white;
-      font-size: 14px;
-      text-align: center;
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 50px;
+    }
+
+    .tile {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      margin: 10px;
+      border: 1px solid white;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: transform 0.2s;
     }
-    .puzzle-piece:hover {
-      background: rgba(255, 255, 255, 0.2);
+
+    .tile:hover {
+      transform: scale(1.05);
     }
-    #overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: black;
+
+    .experience {
       display: none;
+      height: 100vh;
+      display: flex;
       flex-direction: row;
     }
-    .script-section {
+
+    .script {
       width: 50%;
       padding: 20px;
-      color: white;
+      background-color: rgba(0, 0, 0, 0.85);
       overflow-y: scroll;
-      background-color: rgba(0,0,0,0.85);
     }
-    .spiral-section {
-      width: 50%;
-      background-color: black;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+
     .spiral {
-      width: 80vw;
-      height: 80vw;
-      background: radial-gradient(circle, white 10%, transparent 11%),
-                  radial-gradient(circle, transparent 10%, black 11%);
-      background-size: 20% 20%;
-      animation: spin 10s linear infinite;
-      border-radius: 50%;
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: black;
     }
+
+    .spiral::before {
+      content: '';
+      width: 200px;
+      height: 200px;
+      border: 8px solid white;
+      border-top: 8px solid black;
+      border-radius: 50%;
+      animation: spin 3s linear infinite;
+    }
+
     @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
+  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+  <audio id="voiceover" src="lunch_with_the_narrator_voiceover.mp3" preload="auto"></audio>
+
   <div class="grid">
-    <div class="puzzle-piece" onclick="launchScene()">Lunch with the Narrator</div>
-    <div class="puzzle-piece">Coming Soon</div>
-    <div class="puzzle-piece">Coming Soon</div>
-    <div class="puzzle-piece">Coming Soon</div>
-    <div class="puzzle-piece">Coming Soon</div>
-    <div class="puzzle-piece">Coming Soon</div>
-    <div class="puzzle-piece">Coming Soon</div>
-    <div class="puzzle-piece">Coming Soon</div>
-    <div class="puzzle-piece">Coming Soon</div>
-  </div>  <div id="overlay">
-    <div class="script-section" id="script"></div>
-    <div class="spiral-section">
-      <div class="spiral"></div>
+    <div class="tile" onclick="startExperience()">Lunch with the Narrator</div>
+  </div>
+
+  <div class="experience hidden" id="experience">
+    <div class="script" id="scriptText">
+      <h2>Lunch with the Narrator</h2>
+      <pre id="typedText"></pre>
     </div>
-    <audio id="voiceover" src="lunch_with_the_narrator_voiceover.mp3" autoplay></audio>
-  </div><audio id="click" src="click.mp3"></audio>
+    <div class="spiral"></div>
+  </div>
 
   <script>
-    const scriptText = `LUNCH WITH THE NARRATOR\n\nINT. LIMINAL DINING ROOM – TIME UNRAVELS POLITELY\n\nA table for two. ... (full script continues here)`;
+    const fullScript = `INT. LIMINAL DINING ROOM – TIME UNRAVELS POLITELY
 
-    function launchScene() {
-      document.getElementById('click').play();
-      document.querySelector('.grid').style.display = 'none';
-      const overlay = document.getElementById('overlay');
-      overlay.style.display = 'flex';
-      const scriptContainer = document.getElementById('script');
+A table for two.  
+Silver so polished it gaslights the eye.  
+Ghostlight pours in from nowhere.
 
-      let index = 0;
-      function typeWriter() {
-        if (index < scriptText.length) {
-          scriptContainer.innerHTML += scriptText.charAt(index);
-          index++;
-          setTimeout(typeWriter, 20);
-        }
-      }
-      typeWriter();
+THE NARRATOR sits across from YOU.  
+Yes — you.  
+Don’t look around.  
+You’ve been summoned. You cannot leave until dessert.
+
+...
+
+WHITE SPIRAL ROTATES SLOWLY OVER BLACK.  
+See? Dessert is always the darkest part of the meal.
+
+FADE TO BLACK.  
+WINE GLASS CLINKS.  
+THE SPIRAL SPINS.
+`;
+
+    function startExperience() {
+      document.getElementById('clickSound').play();
+      document.querySelector('.grid').classList.add('hidden');
+      document.getElementById('experience').classList.remove('hidden');
+      document.getElementById('voiceover').play();
+      typeWriter(fullScript, 0);
     }
-  </script></body>
+
+    function typeWriter(text, i) {
+      if (i < text.length) {
+        document.getElementById('typedText').innerText += text.charAt(i);
+        setTimeout(() => typeWriter(text, i + 1), 15);
+      }
+    }
+  </script>
+</body>
 </html>
