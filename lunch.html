@@ -3,78 +3,93 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lunch with the Narrator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       margin: 0;
-      display: flex;
-      font-family: Courier, monospace;
+      padding: 0;
       background-color: black;
       color: white;
+      font-family: Courier, monospace;
+      display: flex;
       height: 100vh;
       overflow: hidden;
     }
-    #script {
-      flex: 1;
+    .left {
+      width: 50%;
       padding: 20px;
       overflow-y: auto;
-      white-space: pre-wrap;
     }
-    #spiral {
-      flex: 1;
+    .right {
+      width: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: black;
     }
     .spiral {
-      width: 80%;
-      aspect-ratio: 1 / 1;
-      border-radius: 50%;
       border: 4px solid white;
-      animation: spin 10s linear infinite;
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      animation: spin 3s linear infinite;
     }
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      from {transform: rotate(0deg);}
+      to {transform: rotate(360deg);}
     }
     audio {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-    }
-    .line {
-      opacity: 0;
-      animation: appear 0.4s forwards;
-    }
-    @keyframes appear {
-      to { opacity: 1; }
+      display: none;
     }
   </style>
 </head>
 <body>
-  <audio src="assets/lunch_with_the_narrator_voiceover.mp3" autoplay controls></audio>
-  <div id="script">
-    <!-- Script will be typed here -->
+  <div class="left">
+    <pre id="script">
+    </pre>
   </div>
-  <div id="spiral">
+  <div class="right">
     <div class="spiral"></div>
   </div>
+  <audio autoplay>
+    <source src="lunch_with_the_narrator_voiceover.mp3" type="audio/mpeg" />
+  </audio>
   <script>
-    const lines = ['INT. LIMINAL DINING ROOM – TIME UNRAVELS POLITELY', 'A table for two.', 'Silver so polished it gaslights the eye.', 'Ghostlight pours in from nowhere.', 'THE NARRATOR sits across from YOU.', 'Don’t look around. You’ve been summoned. You cannot leave until dessert.', 'NARRATOR (V.O.)', 'Shall we?'];
-    const container = document.getElementById('script');
+    const scriptText = `INT. LIMINAL DINING ROOM – ENDLESS TWILIGHT
+
+A table for two. Silverware glows. A single candle fights the dark.
+
+THE NARRATOR sits across from you.
+
+A SINGLE GLASS CLOCHE.
+
+            NARRATOR (V.O.)
+    Shall we?
+
+He lifts the lid. REVEAL:
+
+– Sous-vide chicken breast
+– Glazed with a mirror of bone broth
+– Nested atop a saffron risotto
+– Dotted with blood orange reduction
+– Served on black ceramic
+
+He slices the first corner, deliberately.
+
+            NARRATOR (V.O.) (CONT’D)
+    You can tell a man by how he plates desire.
+
+Bon appétit.`;
+
     let i = 0;
-    function typeLine() {
-      if (i >= lines.length) return;
-      const div = document.createElement('div');
-      div.className = 'line';
-      div.textContent = lines[i];
-      container.appendChild(div);
-      i++;
-      setTimeout(typeLine, 500);
+    function typeWriter() {
+      if (i < scriptText.length) {
+        document.getElementById("script").innerText += scriptText.charAt(i);
+        i++;
+        setTimeout(typeWriter, 40);
+      }
     }
-    typeLine();
+    window.onload = typeWriter;
   </script>
 </body>
 </html>
