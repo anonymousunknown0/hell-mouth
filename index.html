@@ -1,81 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HUNTER HARDON: VIRTUAL SPIRAL NOTEBOOK</title>
+  <title>Virtual Spiral Notebook</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Courier New', monospace;
-      background: black url('spiral.gif') center center fixed;
+      background: #111 url('spiral.gif') center center fixed;
       background-size: cover;
+      font-family: monospace;
       color: white;
       overflow-x: hidden;
+      min-height: 100vh;
     }
-    .grid {
+    .puzzle-grid {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 10px;
-      padding: 20px;
+      gap: 16px;
+      padding: 30px 10px 60px 10px;
+      z-index: 2;
     }
     .tile {
-      background: rgba(20, 20, 20, 0.85);
-      border-radius: 10px;
-      padding: 10px 15px;
+      background: rgba(0,0,0,0.84);
+      border-radius: 18px;
+      border: 2px solid #fff;
+      box-shadow: 0 0 16px #000a;
+      min-width: 180px;
+      min-height: 90px;
+      padding: 36px 16px 20px 16px;
+      margin: 0;
+      font-size: 1.09rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-align: center;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      font-size: 0.9rem;
-      transition: background 0.3s;
-      border: 1px solid white;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.2s, transform 0.16s;
     }
     .tile:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255,255,255,0.13);
+      color: #ffd700;
+      transform: scale(1.05);
     }
-    audio {
+    .tile::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url('spiral.gif') center center/cover no-repeat;
+      opacity: 0.22;
+      z-index: 1;
+    }
+    .tile span {
+      z-index: 2;
+      position: relative;
+    }
+    #content {
+      display: none;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background: rgba(0,0,0,0.87);
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+    }
+    #content video, #content audio {
+      width: 90vw;
+      max-width: 700px;
+      margin: 38px auto 8px auto;
       display: block;
-      margin: 30px auto 0 auto;
-      width: 80%;
-      max-width: 400px;
+      background: #000;
+      border-radius: 16px;
+      box-shadow: 0 0 12px #0008;
+    }
+    #content .close-btn {
+      font-size: 1.4rem;
+      color: #fff;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid #fff;
+      border-radius: 16px;
+      padding: 7px 20px;
+      cursor: pointer;
+      margin-top: 24px;
+      transition: background 0.16s;
+      z-index: 999;
+    }
+    #content .close-btn:hover {
+      background: #e00;
+      color: #fff;
+    }
+    @media (max-width: 700px) {
+      .tile {
+        min-width: 90vw;
+        font-size: 1.01rem;
+        padding: 22px 7px;
+      }
+      #content video, #content audio {
+        width: 97vw;
+        max-width: 97vw;
+      }
     }
   </style>
 </head>
 <body>
 
-  <audio id="click-sound" src="click.mp3" preload="auto"></audio>
+<audio id="click-sound" src="click.mp3" preload="auto"></audio>
 
-  <div class="grid">
-    <div class="tile" onclick="playSound(); openLink('The%20Surveillance%20Tape.mp4')">the surveillance tapes</div>
-    <div class="tile" onclick="playSound(); openLink('lunch_w_narrator_smaller.mp4')">choose your player</div>
-    <div class="tile" onclick="playSound(); openLink('hellmouth%20part%20one.mp4')">night walk</div>
-    <div class="tile" onclick="playSound(); openLink('hellmouth%20part%20one_1.mp4')">gaga's private jet</div>
-    <div class="tile" onclick="playSound(); openLink('333_leaked_therapy_smaller.mp4')">333 leaked therapy session</div>
-    <div class="tile" onclick="playSound(); playNarratorAudio()">lunch with the narrator</div>
-  </div>
+<div class="puzzle-grid" id="puzzle-grid"></div>
 
-  <audio id="narrator-audio" src="lunch with the narrator.mp3" controls style="display:none"></audio>
+<div id="content">
+  <button class="close-btn" onclick="closeContent()">CLOSE</button>
+  <div id="content-area"></div>
+</div>
 
-  <script>
-    function playSound() {
-      const audio = document.getElementById('click-sound');
-      audio.currentTime = 0;
-      audio.play();
-    }
+<script>
+const files = [
+  "The Surveillance Tape.mp4",
+  "lunch_w_narrator_smaller.mp4",
+  "hellmouth part one.mp4",
+  "hellmouth part one_1.mp4",
+  "333_leaked_therapy_smaller.mp4",
+  "lunch with the narrator.mp3",
+  "3 cock anatomy.mp4",
+  "5 hypnotize.mp4",
+  "6 macbook air.mp4",
+  "7 male body.mp4",
+  "9 microchip.mp4",
+  "11 old school smoking.mp4",
+  "12 sperm microscope.mp4",
+  "17 heart.mp4",
+  "18 diagnosis final.mp4",
+  "23 window trees.mp4",
+  "24 diagnosis 1.mp4",
+  "25 muscle god.mp4",
+  "26 eyes.mp4",
+  "30 diagnosis 3.mp4",
+  "30 shadow man.mp4",
+  "31 the human brain.mp4",
+  "36 warner bros.mp4",
+  "38 facial expressions.mp4",
+  "41 my body.mp4",
+  "42 diagnosis 2.mp4",
+  "42 the emotional wheel.mp4",
+  "44 ups pimp my truck.mp4",
+  "45 weed.mp4",
+  "47 to write love....mp4",
+  "50 gay police 2.mp4",
+  "53 primetime boomboxx.mp4",
+  "54 77 johnson park.mp4",
+  "55 blu hair do care.mp4",
+  "61 the statue of david.mp4",
+  "67 fwmukigit.mp4",
+  "72 horny lesbians.mp4",
+  "74 kylie jenner.mp4",
+  "hot body.mov.mp4",
+  "kim kardashian.mp4",
+  "lizzo.mp4",
+  "part 1.mov.mp4",
+  "part 3.mov.mp4",
+  "part 4.mov.mp4",
+  "part 5.mov.mp4",
+  "part 6.mov.mp4",
+  "part 9.mp4",
+  "part 10.mov.mp4",
+  "stress.mov.mp4",
+  "the crying room.mov.mp4",
+  "the dopeiest of dopeness.mp4"
+];
 
-    function openLink(file) {
-      window.open(file, '_blank');
-    }
+function playClick() {
+  const audio = document.getElementById('click-sound');
+  audio.currentTime = 0;
+  audio.play();
+}
 
-    function playNarratorAudio() {
-      // Hide all other <audio> or video elements if you have them
-      // Show and play the narrator audio
-      const audio = document.getElementById('narrator-audio');
-      audio.style.display = 'block';
-      audio.currentTime = 0;
-      audio.play();
-      audio.scrollIntoView({behavior: "smooth"});
-    }
-  </script>
+function openFile(file) {
+  playClick();
+  document.getElementById('puzzle-grid').style.display = "none";
+  const content = document.getElementById('content');
+  const area = document.getElementById('content-area');
+  let ext = file.split('.').pop().toLowerCase();
+  area.innerHTML = "";
+  if (ext === 'mp3' || ext === 'wav' || ext === 'm4a') {
+    area.innerHTML = `<audio controls autoplay><source src="${file}"></audio>`;
+  } else {
+    area.innerHTML = `<video controls autoplay><source src="${file}"></video>`;
+  }
+  content.style.display = "flex";
+  content.scrollIntoView({behavior: "smooth"});
+}
+function closeContent() {
+  document.getElementById('content').style.display = "none";
+  document.getElementById('puzzle-grid').style.display = "flex";
+  // Stop all media playback:
+  document.querySelectorAll('#content-area video, #content-area audio').forEach(el=>{el.pause && el.pause();});
+}
+function displayTiles() {
+  let grid = document.getElementById('puzzle-grid');
+  grid.innerHTML = "";
+  for (let file of files) {
+    let shortName = file.replace(/\\.(mp4|mp3|mov|wav|m4a)$/gi,'');
+    grid.innerHTML += `<div class="tile" onclick="openFile('${file}')"><span>${shortName}</span></div>`;
+  }
+}
+displayTiles();
+</script>
 
 </body>
 </html>
