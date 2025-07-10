@@ -23,43 +23,34 @@
       z-index: 2;
     }
     .tile {
-      background: rgba(0,0,0,0.84);
-      border-radius: 18px;
+      background: rgba(0,0,0,0.15);
+      border-radius: 20px;
       border: 2px solid #fff;
       box-shadow: 0 0 16px #000a;
-      min-width: 180px;
-      min-height: 90px;
-      padding: 36px 16px 20px 16px;
+      width: 190px;
+      height: 106px;
+      overflow: hidden;
       margin: 0;
-      font-size: 1.09rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      text-align: center;
-      color: #fff;
+      padding: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       position: relative;
-      overflow: hidden;
-      transition: background 0.2s, transform 0.16s;
+      transition: transform 0.18s, box-shadow 0.18s;
     }
-    .tile:hover {
-      background: rgba(255,255,255,0.13);
-      color: #ffd700;
-      transform: scale(1.05);
+    .tile video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(0.2) brightness(0.9);
+      pointer-events: none;
     }
-    .tile::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: url('spiral.gif') center center/cover no-repeat;
-      opacity: 0.22;
-      z-index: 1;
-    }
-    .tile span {
-      z-index: 2;
-      position: relative;
+    .tile:hover, .tile:focus {
+      transform: scale(1.08);
+      box-shadow: 0 0 26px #fff8;
+      border-color: #ffd700;
+      z-index: 10;
     }
     #content {
       display: none;
@@ -75,33 +66,43 @@
     #content video, #content audio {
       width: 90vw;
       max-width: 700px;
-      margin: 38px auto 8px auto;
+      margin: 24px auto 8px auto;
       display: block;
       background: #000;
       border-radius: 16px;
       box-shadow: 0 0 12px #0008;
     }
+    #content .filename {
+      color: #ffd700;
+      font-size: 1.13rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-top: 12px;
+      margin-bottom: 5px;
+      text-align: center;
+    }
     #content .close-btn {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       color: #fff;
       background: rgba(0,0,0,0.6);
       border: 1px solid #fff;
-      border-radius: 16px;
+      border-radius: 14px;
       padding: 7px 20px;
       cursor: pointer;
-      margin-top: 24px;
+      margin: 32px auto 0 auto;
       transition: background 0.16s;
       z-index: 999;
+      display: block;
     }
     #content .close-btn:hover {
       background: #e00;
       color: #fff;
     }
-    @media (max-width: 700px) {
+    @media (max-width: 800px) {
       .tile {
-        min-width: 90vw;
-        font-size: 1.01rem;
-        padding: 22px 7px;
+        width: 92vw;
+        height: 20vw;
+        min-height: 80px;
       }
       #content video, #content audio {
         width: 97vw;
@@ -117,14 +118,15 @@
 <div class="puzzle-grid" id="puzzle-grid"></div>
 
 <div id="content">
-  <button class="close-btn" onclick="closeContent()">CLOSE</button>
+  <div class="filename" id="file-name"></div>
   <div id="content-area"></div>
+  <button class="close-btn" onclick="closeContent()">CLOSE</button>
 </div>
 
 <script>
 const files = [
   "The Surveillance Tape.mp4",
-  "lunch_w_narrator_smaller.mp4",
+  "choose your player.mp4",
   "hellmouth part one.mp4",
   "hellmouth part one_1.mp4",
   "333_leaked_therapy_smaller.mp4",
@@ -176,6 +178,9 @@ const files = [
   "the dopeiest of dopeness.mp4"
 ];
 
+// Video preview for every tile (hypnotize loop)
+const previewVideo = "5 hypnotize.mp4";
+
 function playClick() {
   const audio = document.getElementById('click-sound');
   audio.currentTime = 0;
@@ -187,8 +192,10 @@ function openFile(file) {
   document.getElementById('puzzle-grid').style.display = "none";
   const content = document.getElementById('content');
   const area = document.getElementById('content-area');
+  const namebox = document.getElementById('file-name');
   let ext = file.split('.').pop().toLowerCase();
   area.innerHTML = "";
+  namebox.innerHTML = file;
   if (ext === 'mp3' || ext === 'wav' || ext === 'm4a') {
     area.innerHTML = `<audio controls autoplay><source src="${file}"></audio>`;
   } else {
@@ -207,8 +214,10 @@ function displayTiles() {
   let grid = document.getElementById('puzzle-grid');
   grid.innerHTML = "";
   for (let file of files) {
-    let shortName = file.replace(/\\.(mp4|mp3|mov|wav|m4a)$/gi,'');
-    grid.innerHTML += `<div class="tile" onclick="openFile('${file}')"><span>${shortName}</span></div>`;
+    grid.innerHTML += `
+      <div class="tile" onclick="openFile('${file}')">
+        <video src="${previewVideo}" autoplay loop muted playsinline></video>
+      </div>`;
   }
 }
 displayTiles();
