@@ -2,125 +2,140 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HELL-MOUTH: Virtual Spiral Notebook</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Courier, monospace;
-      background: url('assets/hubble.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: white;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      padding: 20px;
-    }
-    .tile {
-      background-color: rgba(50, 50, 50, 0.9);
-      border: 1px solid white;
-      padding: 20px;
-      text-align: center;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-    .modal {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0, 0, 0, 0.95);
-      display: none;
-      flex-direction: row;
-      align-items: stretch;
-    }
-    .left, .right {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-    }
-    .left {
-      background-color: #111;
-      color: #0f0;
-      white-space: pre-wrap;
-    }
-    .right {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .spiral {
-      width: 80%;
-      height: 80%;
-      border-radius: 50%;
-      border: 10px solid white;
-      animation: spin 10s linear infinite;
-    }
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Virtual Spiral Notebook</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: monospace;
+            background: url('assets/hubble.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 20px;
+        }
+        .tile {
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        .modal video {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        .script-mode {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: black;
+            color: white;
+            font-family: monospace;
+            display: flex;
+            flex-direction: row;
+        }
+        .left {
+            width: 50%;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #111;
+        }
+        .right {
+            width: 50%;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .spiral {
+            width: 200px;
+            height: 200px;
+            border: 10px solid white;
+            border-radius: 50%;
+            animation: spin 5s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-  <div class="grid">
-    <div class="tile" onclick="openScript()">Lunch with the Narrator</div>
-    <div class="tile" onclick="playMedia('assets/hellmouth part one.mp4')">Night Walk</div>
-    <div class="tile" onclick="playMedia('assets/hellmouth part one_1.mp4')">Gaga's Private Jet</div>
-    <div class="tile" onclick="playMedia('assets/333_leaked_therapy_smaller.mp4')">333 Leaked Therapy Session</div>
-    <div class="tile" onclick="playMedia('assets/lunch_w_narrator_smaller.mp4')">Choose Your Player</div>
-    <div class="tile" onclick="playMedia('assets/The Surveillance Tape.mp4')">The Surveillance Tapes</div>
-    <div class="tile">Coming Soon</div>
-    <div class="tile">Coming Soon</div>
-    <div class="tile">Coming Soon</div>
-  </div>
+    <div class="grid">
+        <div class="tile" onclick="showVideo('The Surveillance Tape.mp4')">The Surveillance Tapes</div>
+<div class="tile" onclick="showVideo('lunch_w_narrator_smaller.mp4')">Choose Your Player</div>
+<div class="tile" onclick="showVideo('hellmouth part one.mp4')">Night Walk</div>
+<div class="tile" onclick="showVideo('hellmouth part one_1.mp4')">Gagas Private Jet</div>
+<div class="tile" onclick="showVideo('333_leaked_therapy_smaller.mp4')">Leaked Therapy Session</div>
+<div class="tile" onclick="showScript()">Lunch with the Narrator</div>
 
-  <div id="modal" class="modal">
-    <div class="left" id="script"></div>
-    <div class="right"><div class="spiral"></div></div>
-    <audio id="voice" autoplay></audio>
-  </div>
+    </div>
 
-  <script>
-    const scriptText = `INT. LIMINAL DINING ROOM – TIME UNRAVELS POLITELY
+    <div class="modal" id="videoModal">
+        <video id="modalVideo" controls></video>
+    </div>
 
-A table for two.
-Silver so polished it gaslights the eye.
-Ghostlight pours in from nowhere.
+    <div class="script-mode" id="scriptMode">
+        <div class="left" id="scriptText"></div>
+        <div class="right">
+            <div class="spiral"></div>
+        </div>
+    </div>
 
-THE NARRATOR sits across from YOU.
-Yes — you.
-Don’t look around.
-You’ve been summoned. You cannot leave until dessert.
+    <script>
+        const videos = {'The Surveillance Tape.mp4': 'The Surveillance Tapes', 'lunch_w_narrator_smaller.mp4': 'Choose Your Player', 'hellmouth part one.mp4': 'Night Walk', 'hellmouth part one_1.mp4': 'Gagas Private Jet', '333_leaked_therapy_smaller.mp4': 'Leaked Therapy Session'};
+        const script = `INT. LIMINAL DINING ROOM – TIME UNRAVELS POLITELY
 
-... (truncated for brevity, include full script here)
+A table for two...
+[Script continues here...]
 `;
 
-    function openScript() {
-      const modal = document.getElementById('modal');
-      const scriptBox = document.getElementById('script');
-      const audio = document.getElementById('voice');
-
-      modal.style.display = 'flex';
-      scriptBox.textContent = '';
-
-      let i = 0;
-      function typeWriter() {
-        if (i < scriptText.length) {
-          scriptBox.textContent += scriptText.charAt(i);
-          i++;
-          setTimeout(typeWriter, 25);
+        function showVideo(filename) {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('modalVideo');
+            video.src = 'assets/' + filename;
+            modal.style.display = 'flex';
         }
-      }
-      typeWriter();
 
-      audio.src = 'assets/lunch_with_the_narrator_voiceover.mp3';
-    }
+        function showScript() {
+            const scriptMode = document.getElementById('scriptMode');
+            const scriptText = document.getElementById('scriptText');
+            scriptMode.style.display = 'flex';
+            let i = 0;
+            function typeWriter() {
+                if (i < script.length) {
+                    scriptText.innerHTML += script.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 10);
+                }
+            }
+            typeWriter();
+        }
 
-    function playMedia(file) {
-      window.open(file, '_blank');
-    }
-  </script>
+        window.onclick = function(e) {
+            if (e.target.id === 'videoModal') {
+                document.getElementById('modalVideo').pause();
+                document.getElementById('videoModal').style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
