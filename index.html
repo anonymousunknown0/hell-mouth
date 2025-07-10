@@ -2,74 +2,52 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HUNTER HARDON: VIRTUAL SPIRAL NOTEBOOK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HELL-MOUTH</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Courier New', monospace;
-      background: black url('spiral.gif') center center fixed;
+      padding: 0;
+      font-family: Courier, monospace;
+      background: url('assets/spiral.gif') no-repeat center center fixed;
       background-size: cover;
       color: white;
-      overflow-x: hidden;
     }
-
-    h1 {
-      text-align: center;
-      font-size: 1rem;
-      padding: 1rem;
-      letter-spacing: 0.05em;
-    }
-
     .grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 40px;
+    }
+    .piece {
+      background: rgba(0, 0, 0, 0.7);
       padding: 20px;
-    }
-
-    .tile {
-      background: rgba(20, 20, 20, 0.85);
-      border-radius: 10px;
-      padding: 10px 15px;
+      border: 2px solid white;
+      text-align: center;
       cursor: pointer;
-      font-size: 0.9rem;
-      transition: background 0.3s;
-      border: 1px solid white;
+      transition: transform 0.2s;
     }
-
-    .tile:hover {
-      background: rgba(255, 255, 255, 0.2);
+    .piece:hover {
+      transform: scale(1.05);
     }
   </style>
 </head>
 <body>
-
-  <h1>HUNTER HARDON: VIRTUAL SPIRAL NOTEBOOK</h1>
-
-  <audio id="click-sound" src="click.mp3" preload="auto"></audio>
-
   <div class="grid">
-    <div class="tile" onclick="playSound(); openLink('The%20Surveillance%20Tape.mp4')">the surveillance tapes</div>
-    <div class="tile" onclick="playSound(); openLink('lunch_w_narrator_smaller.mp4')">choose your player</div>
-    <div class="tile" onclick="playSound(); openLink('hellmouth%20part%20one.mp4')">night walk</div>
-    <div class="tile" onclick="playSound(); openLink('hellmouth%20part%20one_1.mp4')">gaga's private jet</div>
-    <div class="tile" onclick="playSound(); openLink('333_leaked_therapy_smaller.mp4')">333 leaked therapy session</div>
-    <div class="tile" onclick="playSound(); openLink('lunch.html')">lunch with the narrator</div>
+    <div class="piece" onclick="playSound(); window.location.href='lunch.html'">Lunch with the Narrator</div>
+    <div class="piece" onclick="playSound(); window.location.href='#'">Night Walk</div>
+    <div class="piece" onclick="playSound(); window.location.href='#'">Gaga's Private Jet</div>
+    <div class="piece" onclick="playSound(); window.location.href='#'">333 Leaked Therapy Session</div>
+    <div class="piece" onclick="playSound(); window.location.href='#'">Choose Your Player</div>
+    <div class="piece" onclick="playSound(); window.location.href='#'">The Surveillance Tapes</div>
   </div>
 
+  <audio id="click-sound" src="assets/click.mp3" preload="auto"></audio>
   <script>
     function playSound() {
       const audio = document.getElementById('click-sound');
-      audio.currentTime = 0;
       audio.play();
     }
-
-    function openLink(file) {
-      window.open(file, '_blank');
-    }
   </script>
-
 </body>
 </html>
