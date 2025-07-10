@@ -1,44 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hunter Hardon: Virtual Spiral Notebook</title>
-  <style>
-    body {
-      margin: 0;
-      background: url('https://cdn.spacetelescope.org/archives/images/screen/heic1501a.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: #eaeaea;
-      font-family: 'Inter', Arial, sans-serif;
-      overflow: hidden;
-    }
+    <meta charset="UTF-8">
+    <title>HELL-MOUTH: VIRTUAL SPIRAL NOTEBOOK</title>
+    <style>
+        body {
+            margin: 0;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/4/4e/Hubble_ultra_deep_field_high_rez_edit1.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Courier, monospace;
+            color: white;
+        }
+        #spiral {
+            position: fixed;
+            top: 0; right: 0; bottom: 0; left: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #spiral::after {
+            content: "";
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 5px solid white;
+            animation: spin 20s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        #script {
+            width: 50%;
+            padding: 20px;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
 
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      padding: 1rem 2rem;
-      background: rgba(21, 26, 30, 0.8);
-      font-size: 1.2rem;
-      letter-spacing: 0.1em;
-      border-bottom: 1px solid #222;
-    }
+<div id="script">
+    <h2>Lunch with the Narrator</h2>
+    <p>INT. LIMINAL DINING ROOM – TIME UNRAVELS POLITELY</p>
+    <p>(FULL SCRIPT TYPES OUT HERE...)</p>
+</div>
+<div id="spiral"></div>
 
-    .grid {
-      position: absolute;
-      top: 70px; left: 0; right: 0; bottom: 0;
-      display: flex;
-      flex-wrap: wrap;
-      width: 300vw;
-      height: 300vh;
-      transform: translate(-60vw, -60vh);
-      transition: transform 0.2s;
-      cursor: grab;
-    }
+<audio autoplay>
+    <source src="lunch_with_the_narrator_voiceover.mp3" type="audio/mpeg">
+</audio>
 
-    .piece {
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid #2c2d
+</body>
+</html>
