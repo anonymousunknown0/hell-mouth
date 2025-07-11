@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Horny Videos</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: monospace;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      padding: 20px;
+    }
+    video {
+      width: 300px;
+      border: 2px solid #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 12px #000a;
+    }
+    #back-btn {
+      position: fixed;
+      left: 20px; top: 20px;
+      background: #fff;
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      padding: 8px 16px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="back-btn">← Back</button>
+
+  <script>
+    // List your “horny” videos here:
+    const hornyVideos = [
+      all american muscle.porn.mp4
+american horror.porn.mp4
+meet jack.porn.mp4
+alpha alternative.porn.mp4
+no smoking.porn.mp4
+bitch.porn.mp4
+thug.porn.mp4
+precum drip.porn.mp4
+honey baby.porn.mp4
+you might be a redneck.porn.mp4
+whore.porn.mp4
+island boys 5.porn.mp4
+island boys 4.porn.mp4
+forced balls.porn.mp4
+piss is hot.porn.mp4
+island boys 3.porn.mp4
+island boys 2.porn.mp4
+island boys 1.porn.mp4
+island boys.porn.mp4
+hung teen 3.porn.mp4
+hung teen 2.porn.mp4
+hung teen 1.porn.mp4
+brother blowjob.porn.mp4
+latino heat.porn.mp4
+    ];
+
+    const container = document.body;
+    hornyVideos.forEach(src => {
+      const v = document.createElement('video');
+      v.src = src;
+      v.controls = true;
+      v.autoplay = false;
+      v.loop = true;
+      container.appendChild(v);
+    });
+
+    document.getElementById('back-btn').onclick = () => {
+      window.location.href = 'index.html';
+    };
+  </script>
+
+</body>
+</html>
