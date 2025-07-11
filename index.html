@@ -160,6 +160,17 @@
 </div>
 
 <script>
+let clickPlayedOnce = false;
+
+function playClick() {
+  if (!clickPlayedOnce) {
+    const audio = document.getElementById('click-sound');
+    audio.currentTime = 0;
+    audio.play();
+    clickPlayedOnce = true;
+  }
+}
+
 const files = [
   "The Surveillance Tape.mp4",
   "choose your player.mp4",
@@ -212,12 +223,6 @@ const files = [
   "the crying room.mov.mp4",
   "the dopeiest of dopeness.mp4"
 ];
-
-function playClick() {
-  const audio = document.getElementById('click-sound');
-  audio.currentTime = 0;
-  audio.play();
-}
 
 function openFile(file) {
   playClick();
