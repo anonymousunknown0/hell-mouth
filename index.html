@@ -99,7 +99,7 @@
       display: none;
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.93);
-      overflow-y: auto;               /* allow page scroll */
+      overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       padding: 30px 10px;
       box-sizing: border-box;
@@ -117,7 +117,7 @@
       width: 100%;
       max-width: 700px;
       margin: 0 auto;
-      overflow-y: auto;               /* scrollable area */
+      overflow-y: auto;
       max-height: calc(100vh - 200px);
     }
     #content-area pre {
@@ -174,16 +174,12 @@
 </head>
 <body>
 
-  <!-- click once -->
   <audio id="click-sound" src="click.mp3" preload="auto"></audio>
 
-  <!-- puzzle tiles -->
   <div class="puzzle-grid" id="puzzle-grid"></div>
 
-  <!-- break the internet -->
   <button id="break-btn">BREAK THE INTERNET</button>
 
-  <!-- overlay area -->
   <div id="content">
     <div class="filename" id="file-name"></div>
     <div id="content-area"></div>
@@ -191,191 +187,190 @@
   </div>
 
   <script>
-  // ───────── Files Array ─────────
-  const files = [
-    "The Surveillance Tape.mp4",
-    "choose your player.mp4",
-    "hellmouth part one_1.mp4",
-    "333_leaked_therapy_smaller.mp4",
-    "lunch with the narrator.mp3",
-    "go_gay_outro.script.txt",       // screenplay
-    "3 cock anatomy.mp4",
-    "5 hypnotize.mp4",
-    "6 macbook air.mp4",
-    "7 male body.mp4",
-    "9 microchip.mp4",
-    "11 old school smoking.mp4",
-    "12 sperm microscope.mp4",
-    "17 heart.mp4",
-    "18 diagnosis final.mp4",
-    "23 window trees.mp4",
-    "24 diagnosis 1.mp4",
-    "25 muscle god.mp4",
-    "26 eyes.mp4",
-    "30 diagnosis 3.mp4",
-    "30 shadow man.mp4",
-    "31 the human brain.mp4",
-    "36 warner bros.mp4",
-    "38 facial expressions.mp4",
-    "41 my body.mp4",
-    "42 diagnosis 2.mp4",
-    "xxxximportant important important.mp4",
-    "part 2.mp4",
-    "door opened, door closed.mp4",
-    "42 the emotional wheel.mp4",
-    "44 ups pimp my truck.mp4",
-    "45 weed.mp4",
-    "47 to write love....mp4",
-    "50 gay police 2.mp4",
-    "53 primetime boomboxx.mp4",
-    "54 77 johnson park.mp4",
-    "55 blu hair do care.mp4",
-    "61 the statue of david.mp4",
-    "67 fwmukigit.mp4",
-    "72 horny lesbians.mp4",
-    "74 kylie jenner.mp4",
-    "hot body.mov.mp4",
-    "kim kardashian.mp4",
-    "lizzo.mp4",
-    "part 1.mov.mp4",
-    "part 3.mov.mp4",
-    "part 4.mov.mp4",
-    "part 5.mov.mp4",
-    "part 6.mov.mp4",
-    "part 9.mp4",
-    "part 10.mov.mp4",
-    "stress.mov.mp4",
-    "the crying room.mov.mp4",
-    "the dopeiest of dopeness.mp4",
-    "part 11.mp4",
-    "part 16.mp4",
-    "part 13.mp4",
-    "part 33.mp4",
-    "part 27.mp4",
-    "part 18.mp4",
-    "white noise.mp4",
-    "the weekend.mp4",
-    "the cum spiral.mp4",
-    "the brain spiral 2.mp4",
-    "speed me up angel.mp4",
-    "same old fucking mistakes.mp4",
-    "rated mature.mp4",
-    "paparazzi control.mp4",
-    "jesus christ was here.mp4",
-    "i am a god.mp4",
-    "hellmouth night walk.mp4",
-    "heaven sent.mp4",
-    "gentleman justin bieber.mp4",
-    "diagnosis equals schizophrenia.mp4",
-    "demons shut up.mp4",
-    "be chill life.mp4",
-    "back to my old ways.mp4",
-    "ai equals overwhelmed.mp4"
-  ];
+    // ───────── Files Array ─────────
+    const files = [
+      "The Surveillance Tape.mp4",
+      "choose your player.mp4",
+      "hellmouth part one_1.mp4",
+      "333_leaked_therapy_smaller.mp4",
+      // Removed: "lunch with the narrator.mp3"
+      "go_gay_outro.script.txt",
+      "lunch with the narrator.script.txt",
+      "disclaimers.script.txt",
+      "confession press conference.script.txt",
+      "3 cock anatomy.mp4",
+      "5 hypnotize.mp4",
+      "6 macbook air.mp4",
+      "7 male body.mp4",
+      "9 microchip.mp4",
+      "11 old school smoking.mp4",
+      "12 sperm microscope.mp4",
+      "17 heart.mp4",
+      "18 diagnosis final.mp4",
+      "23 window trees.mp4",
+      "24 diagnosis 1.mp4",
+      "25 muscle god.mp4",
+      "26 eyes.mp4",
+      "30 diagnosis 3.mp4",
+      "30 shadow man.mp4",
+      "31 the human brain.mp4",
+      "36 warner bros.mp4",
+      "38 facial expressions.mp4",
+      "41 my body.mp4",
+      "42 diagnosis 2.mp4",
+      "xxxximportant important important.mp4",
+      "part 2.mp4",
+      "door opened, door closed.mp4",
+      "42 the emotional wheel.mp4",
+      "44 ups pimp my truck.mp4",
+      "45 weed.mp4",
+      "47 to write love....mp4",
+      "50 gay police 2.mp4",
+      "53 primetime boomboxx.mp4",
+      "54 77 johnson park.mp4",
+      "55 blu hair do care.mp4",
+      "61 the statue of david.mp4",
+      "67 fwmukigit.mp4",
+      "72 horny lesbians.mp4",
+      "74 kylie jenner.mp4",
+      "hot body.mov.mp4",
+      "kim kardashian.mp4",
+      "lizzo.mp4",
+      "part 1.mov.mp4",
+      "part 3.mov.mp4",
+      "part 4.mov.mp4",
+      "part 5.mov.mp4",
+      "part 6.mov.mp4",
+      "part 9.mp4",
+      "part 10.mov.mp4",
+      "stress.mov.mp4",
+      "the crying room.mov.mp4",
+      "the dopeiest of dopeness.mp4",
+      "part 11.mp4",
+      "part 16.mp4",
+      "part 13.mp4",
+      "part 33.mp4",
+      "part 27.mp4",
+      "part 18.mp4",
+      "white noise.mp4",
+      "the weekend.mp4",
+      "the cum spiral.mp4",
+      "the brain spiral 2.mp4",
+      "speed me up angel.mp4",
+      "same old fucking mistakes.mp4",
+      "rated mature.mp4",
+      "paparazzi control.mp4",
+      "jesus christ was here.mp4",
+      "i am a god.mp4",
+      "hellmouth night walk.mp4",
+      "heaven sent.mp4",
+      "gentleman justin bieber.mp4",
+      "diagnosis equals schizophrenia.mp4",
+      "demons shut up.mp4",
+      "be chill life.mp4",
+      "back to my old ways.mp4",
+      "ai equals overwhelmed.mp4"
+    ];
 
-  // ───────── Globals ─────────
-  let hasClicked = false;
-  let isSmashing = false;
-  let smashAudioEls = [];
-  let currentScriptText = "";
+    // ───────── Globals ─────────
+    let hasClicked = false;
+    let isSmashing  = false;
+    let smashAudioEls = [];
+    let currentScriptText = "";
 
-  // ───────── Helpers ─────────
-  function escapeHTML(str) {
-    return str.replace(/[&<>"']/g, m =>
-      ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]
-    );
-  }
-  function playClickOnce() {
-    if (!hasClicked) {
-      hasClicked = true;
-      let a = document.getElementById('click-sound');
-      a.currentTime=0; a.play();
+    // ───────── Helpers ─────────
+    function escapeHTML(str) {
+      return str.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]);
     }
-  }
-
-  // ───────── BREAK THE INTERNET ─────────
-  function smashFuckAll() {
-    const body = document.body;
-    if (isSmashing) {
-      smashAudioEls.forEach(a=>{a.pause();a.remove()});
-      smashAudioEls=[]; isSmashing=false;
-      document.getElementById('break-btn').textContent="BREAK THE INTERNET";
-      body.style.animation = '';
-      return;
-    }
-    isSmashing=true;
-    document.getElementById('break-btn').textContent="STOP BREAK";
-    body.style.animation="smashFlash 0.3s alternate infinite";
-    for (let f of files) {
-      let ext = f.split('.').pop().toLowerCase();
-      if (!['mp4','mov','avi','mkv','wav','mp3','m4a'].includes(ext)) continue;
-      let audio = document.createElement('audio');
-      audio.src = f; audio.autoplay=true; audio.loop=true; audio.volume=0.7;
-      audio.style.display='none';
-      document.body.appendChild(audio);
-      smashAudioEls.push(audio);
-    }
-  }
-  document.getElementById('break-btn').onclick = smashFuckAll;
-
-  // ───────── OPEN A TILE ─────────
-  function openFile(file, idx) {
-    playClickOnce();
-    if (isSmashing) smashFuckAll();
-    let grid = document.getElementById('puzzle-grid');
-    let content = document.getElementById('content');
-    let area = document.getElementById('content-area');
-    let namebox = document.getElementById('file-name');
-    namebox.innerText = file;
-    area.innerHTML = '';
-    let ext = file.split('.').pop().toLowerCase();
-
-    if (['mp3','wav','m4a'].includes(ext)) {
-      area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
-    }
-    else if (file.endsWith('.script.txt') || ext==='txt') {
-      area.innerHTML = `<div style="color:#fff;">Loading script…</div>`;
-      fetch(file).then(r=>r.text()).then(txt=>{
-        currentScriptText = txt;
-        area.innerHTML = `
-          <pre>${escapeHTML(txt)}</pre>
-          <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>
-        `;
-      });
-    }
-    else {
-      area.innerHTML = `<video controls autoplay loop src="${file}"></video>`;
+    function playClickOnce() {
+      if (!hasClicked) {
+        hasClicked = true;
+        let a = document.getElementById('click-sound');
+        a.currentTime = 0; a.play();
+      }
     }
 
-    grid.style.display = "none";
-    content.style.display = "flex";
-  }
+    // ───────── BREAK THE INTERNET ─────────
+    function smashFuckAll() {
+      const body = document.body;
+      if (isSmashing) {
+        smashAudioEls.forEach(a=>{a.pause();a.remove()});
+        smashAudioEls = []; isSmashing = false;
+        document.getElementById('break-btn').textContent = "BREAK THE INTERNET";
+        body.style.animation = '';
+        return;
+      }
+      isSmashing = true;
+      document.getElementById('break-btn').textContent = "STOP BREAK";
+      body.style.animation = "smashFlash 0.3s alternate infinite";
+      for (let f of files) {
+        let ext = f.split('.').pop().toLowerCase();
+        if (!['mp3','wav','m4a','mp4','mov'].includes(ext)) continue;
+        let audio = document.createElement('audio');
+        audio.src = f; audio.autoplay=true; audio.loop=true; audio.volume=0.7;
+        audio.style.display='none';
+        document.body.appendChild(audio);
+        smashAudioEls.push(audio);
+      }
+    }
+    document.getElementById('break-btn').onclick = smashFuckAll;
 
-  function closeContent() {
-    document.getElementById('content').style.display="none";
-    document.getElementById('puzzle-grid').style.display="flex";
-    document.querySelectorAll('#content-area audio,#content-area video')
-      .forEach(m=>{m.pause && m.pause(); m.currentTime=0;});
-  }
+    // ───────── OPEN TILE ─────────
+    function openFile(file, idx) {
+      playClickOnce();
+      if (isSmashing) smashFuckAll();
+      let grid = document.getElementById('puzzle-grid');
+      let content = document.getElementById('content');
+      let area = document.getElementById('content-area');
+      let namebox = document.getElementById('file-name');
+      namebox.innerText = file;
+      area.innerHTML = '';
+      let ext = file.split('.').pop().toLowerCase();
 
-  function copyScript() {
-    if (!currentScriptText) return;
-    navigator.clipboard.writeText(currentScriptText);
-    alert('Script copied!');
-  }
+      if (['mp3','wav','m4a'].includes(ext)) {
+        area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
+      }
+      else if (file.endsWith('.script.txt')||ext==='txt') {
+        area.innerHTML = `<div style="color:#fff;">Loading script…</div>`;
+        fetch(file).then(r=>r.text()).then(txt=>{
+          currentScriptText = txt;
+          area.innerHTML = `<pre>${escapeHTML(txt)}</pre>
+                            <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>`;
+        });
+      }
+      else {
+        area.innerHTML = `<video controls autoplay loop src="${file}"></video>`;
+      }
 
-  // ───────── RENDER GRID ─────────
-  function displayTiles() {
-    const grid = document.getElementById('puzzle-grid');
-    grid.innerHTML = files.map((f,i)=>`
-      <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}',${i})">
-        <div class="tile-number">${i+1}</div>
-        <img src="spiral.gif" alt="spiral"/>
-        <div class="tile-filename">${f}</div>
-      </div>
-    `).join('');
-  }
-  displayTiles();
+      grid.style.display = "none";
+      content.style.display = "flex";
+    }
+
+    function closeContent() {
+      document.getElementById('content').style.display="none";
+      document.getElementById('puzzle-grid').style.display="flex";
+      document.querySelectorAll('#content-area audio,#content-area video')
+        .forEach(m=>{ m.pause && m.pause(); m.currentTime=0; });
+    }
+
+    function copyScript() {
+      if (!currentScriptText) return;
+      navigator.clipboard.writeText(currentScriptText);
+      alert('Script copied!');
+    }
+
+    // ───────── RENDER GRID ─────────
+    function displayTiles() {
+      let grid = document.getElementById('puzzle-grid');
+      grid.innerHTML = files.map((f,i)=>`
+        <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}',${i})">
+          <div class="tile-number">${i+1}</div>
+          <img src="spiral.gif" alt="spiral"/>
+          <div class="tile-filename">${f}</div>
+        </div>
+      `).join('');
+    }
+    displayTiles();
   </script>
 </body>
 </html>
