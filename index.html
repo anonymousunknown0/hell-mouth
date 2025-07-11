@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Virtual Spiral Notebook</title>
   <style>
-    /* ─── Base & Background ─────────────────────────────────────────────────*/
+    /* Base */
     body {
       margin: 0;
       background: #111 url('spiral.gif') center center fixed;
@@ -13,55 +13,32 @@
       font-family: monospace;
       color: #eee;
       overflow-x: hidden;
-      overflow-y: auto; /* allow vertical scrolling */
+      min-height: 100vh;
       transition: background 0.2s;
     }
-
-    /* ─── Emotion Overlay ───────────────────────────────────────────────────*/
-    #emotion-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.95);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 2000;
-    }
-    #emotion-wheel { position: relative; width: 400px; height: 400px; }
-    #emotion-wheel img {
-      width: 100%; height: 100%; object-fit: contain;
-      pointer-events: none;
-    }
-    .emotion-btn {
-      position: absolute; transform: translate(-50%, -50%);
-      background: rgba(255,255,255,0.8); color: #111;
-      padding: 6px 10px; border-radius: 4px; font-weight: bold;
-      cursor: pointer; transition: background 0.2s;
-    }
-    .emotion-btn:hover { background: #ffd700; }
-    .emotion-btn[data-emotion="Joy"]          { top: 12%; left: 50%; }
-    .emotion-btn[data-emotion="Trust"]        { top: 28%; left: 75%; }
-    .emotion-btn[data-emotion="Fear"]         { top: 60%; left: 75%; }
-    .emotion-btn[data-emotion="Surprise"]     { top: 85%; left: 50%; }
-    .emotion-btn[data-emotion="Sadness"]      { top: 60%; left: 25%; }
-    .emotion-btn[data-emotion="Disgust"]      { top: 28%; left: 25%; }
-    .emotion-btn[data-emotion="Anger"]        { top: 42%; left: 88%; }
-    .emotion-btn[data-emotion="Anticipation"] { top: 42%; left: 12%; }
-
-    /* ─── Puzzle Grid & Tiles ─────────────────────────────────────────────*/
+    /* Grid */
     .puzzle-grid {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 14px; padding: 30px 10px 140px; z-index: 2;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      padding: 30px 10px 140px 10px;
     }
     .tile {
       position: relative;
       width: 190px; height: 106px;
       background: rgba(0,0,0,0.15);
-      border: 2px solid #fff; border-radius: 20px;
+      border: 2px solid #fff;
+      border-radius: 20px;
       box-shadow: 0 0 16px #0008;
-      cursor: pointer; overflow: hidden;
+      cursor: pointer;
+      overflow: hidden;
       transition: transform 0.18s, box-shadow 0.18s;
     }
     .tile img {
-      width:100%; height:100%; object-fit:cover; opacity:0.9;
-      pointer-events:none;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      pointer-events: none;
     }
     .tile:hover {
       transform: scale(1.08);
@@ -69,125 +46,111 @@
       border-color: #ffd700;
       z-index: 5;
     }
-
-    /* ─── Script Tile Styling ─────────────────────────────────────────────*/
-    .tile.script {
-      background: url('galaxy.gif') center center / cover no-repeat;
-      border-color: #ffd700;
-    }
-    .tile.script img {
-      display: none;
-    }
-    .tile.script .tile-filename {
-      color: #ffd700 !important;
-    }
-
-    /* ─── Tile Labels ─────────────────────────────────────────────────────*/
     .tile-number {
-      position: absolute; top: 8px; left: 12px;
+      position: absolute;
+      top: 8px; left: 12px;
       font-size: 1.4rem; font-weight: bold;
-      color: #FFD600; text-shadow: 1px 1px 6px #000;
+      color: #FFD600;
+      text-shadow: 1px 1px 6px #000;
       pointer-events: none;
     }
     .tile-filename {
-      position: absolute; bottom: 6px; left: 0;
-      width: 100%; text-align: center;
+      position: absolute;
+      bottom: 6px; left: 0;
+      width: 100%;
+      text-align: center;
       font-size: 0.85em; font-weight: bold;
-      color: #FFD600; background: rgba(0,0,0,0.18);
-      padding: 2px 4px; white-space: nowrap;
-      overflow: hidden; text-overflow: ellipsis;
+      color: #FFD600;
+      background: rgba(0,0,0,0.18);
+      padding: 2px 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       pointer-events: none;
     }
-
-    /* ─── Break Button ────────────────────────────────────────────────────*/
+    .tile-filename.script-file {
+      color: purple !important;
+    }
+    /* Break-the-Spiral */
     #break-btn {
-      position: fixed; left: 50%; bottom: 32px;
+      position: fixed;
+      left: 50%; bottom: 32px;
       transform: translateX(-50%);
-      font-size: 2em; font-weight: 900;
-      color: #000; background: #fff;
+      background: #fff; color: #000;
       border: 4px solid #000; border-radius: 25px;
-      padding: 12px 38px; cursor: pointer;
-      box-shadow: 0 0 18px #0005; z-index: 1000;
-      transition: background 0.2s, box-shadow 0.2s;
+      padding: 12px 38px;
+      font-size: 2em; font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 0 18px #0005;
+      z-index: 1000;
+      transition: background 0.2s;
     }
     #break-btn:active {
       background: #000; color: #fff;
     }
-
-    /* ─── Content Overlay ─────────────────────────────────────────────────*/
+    /* Overlay */
     #content {
-      display: none;               /* hidden until openFile() */
-      position: fixed; top:0; left:0; right:0; bottom:0;
+      display: none;
+      position: fixed; inset: 0;
       background: rgba(0,0,0,0.93);
-      flex-direction: column; align-items: center;
-      overflow-y: auto; padding: 80px 10px 30px;
-      z-index: 2000;               /* above break button */
+      overflow-y: auto; -webkit-overflow-scrolling: touch;
+      padding: 30px 10px;
       box-sizing: border-box;
-      display: flex;
+      z-index: 20;
     }
     #content .filename {
-      color: #ffd700; font-size: 1.2rem; font-weight: bold;
-      margin-bottom: 12px; text-align: center; word-break: break-all;
+      color: #ffd700;
+      font-size: 1.2rem; font-weight: bold;
+      margin-bottom: 12px; text-align: center;
+      word-break: break-all;
     }
-    #content-area pre,
-    #content-area audio,
-    #content-area video {
+    #content-area {
       width: 100%; max-width: 700px;
-      margin-bottom: 16px; border-radius: 12px;
-      box-shadow: 0 0 12px #0008;
+      margin: 0 auto;
+      max-height: calc(100vh - 200px);
+      overflow-y: auto;
     }
     #content-area pre {
-      background: #111; color: #fff; padding: 24px;
-      border-radius: 14px; font-family: monospace;
+      background: #111; color: #fff;
+      padding: 24px; border-radius: 14px;
+      font-family: 'Courier New', Courier, monospace;
       font-size: 1.05em; line-height: 1.5;
       white-space: pre-wrap; word-break: break-word;
+      box-shadow: 0 0 12px #0008;
+      margin-bottom: 16px;
     }
-    .close-btn,
-    .copy-btn {
+    #content-area audio, #content-area video {
+      width: 100%; max-width: 700px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px #0008;
+      margin-bottom: 16px;
+    }
+    .close-btn, .copy-btn {
       display: block; margin: 8px auto;
-      padding: 8px 24px; font-size: 1em; font-weight: bold;
-      border: 2px solid #fff; border-radius: 12px; cursor: pointer;
-      background: rgba(0,0,0,0.5); color: #fff; transition: background 0.2s;
+      padding: 8px 24px;
+      font-size: 1em; font-weight: bold;
+      border: 2px solid #fff; border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
     }
+    .close-btn { background: rgba(0,0,0,0.5); color: #fff; }
     .close-btn:hover { background: #e00; }
     .copy-btn { background: #ffd700; color: #111; border-color: #ffd700; }
     .copy-btn:active { background: #ffc107; }
-
-    @media (max-width:800px) {
-      .tile { width:92vw; height:20vw; min-height:80px; }
-      #break-btn { font-size:1.4em; padding:8px 24px; bottom:12px; }
-      #emotion-wheel { width:70vw; height:70vw; }
-    }
     @keyframes smashFlash { from{background:#111;} to{background:#fff;} }
+    @media (max-width:800px){
+      .tile{width:92vw;height:20vw;min-height:80px}
+      #break-btn{font-size:1.4em;padding:8px 24px;bottom:12px}
+    }
   </style>
 </head>
 <body>
 
-  <!-- Emotion Selection Overlay -->
-  <div id="emotion-overlay">
-    <div id="emotion-wheel">
-      <img src="assets/emotional-wheel.png" alt="Select Your Emotion"/>
-      <div class="emotion-btn" data-emotion="Joy">Joy</div>
-      <div class="emotion-btn" data-emotion="Trust">Trust</div>
-      <div class="emotion-btn" data-emotion="Fear">Fear</div>
-      <div class="emotion-btn" data-emotion="Surprise">Surprise</div>
-      <div class="emotion-btn" data-emotion="Sadness">Sadness</div>
-      <div class="emotion-btn" data-emotion="Disgust">Disgust</div>
-      <div class="emotion-btn" data-emotion="Anger">Anger</div>
-      <div class="emotion-btn" data-emotion="Anticipation">Anticipation</div>
-    </div>
-  </div>
-
-  <!-- Click Sound -->
   <audio id="click-sound" src="click.mp3" preload="auto"></audio>
 
-  <!-- Puzzle Grid Container -->
   <div class="puzzle-grid" id="puzzle-grid"></div>
-
-  <!-- Break the Spiral Button -->
   <button id="break-btn">BREAK THE SPIRAL</button>
 
-  <!-- Content Viewer Overlay -->
   <div id="content">
     <div class="filename" id="file-name"></div>
     <div id="content-area"></div>
@@ -195,9 +158,8 @@
   </div>
 
   <script>
-    // ─── File List ─────────────────────────────────────────────────────────
     const files = [
-       "The Surveillance Tape.mp4",
+      "The Surveillance Tape.mp4",
       "choose your player.mp4",
       "hellmouth part one_1.mp4",
       "333_leaked_therapy_smaller.mp4",
@@ -208,6 +170,7 @@
       "why call tmz harvey levin.script.txt",
       "confession press conference.script.txt",
       "3 cock anatomy.mp4",
+"piss is hot.happy.mp4",
       "why calls from gaga are SO important.script.txt",
       "5 hypnotize.mp4",
       "6 macbook air.mp4",
@@ -243,6 +206,7 @@
       "54 77 johnson park.mp4",
       "55 blu hair do care.mp4",
       "61 the statue of david.mp4",
+"meet jack.happy.mp4",
       "the reinvention playbook.script.txt",
       "67 fwmukigit.mp4",
       "72 horny lesbians.mp4",
@@ -263,6 +227,7 @@
       "part 11.mp4",
       "part 16.mp4",
       "part 13.mp4",
+"demon teen.happy.mp4",
       "part 33.mp4",
       "part 27.mp4",
       "part 18.mp4",
@@ -273,6 +238,7 @@
       "speed me up angel.mp4",
       "same old fucking mistakes.mp4",
       "rated mature.mp4",
+"all american muscle.happy.mp4",
       "paparazzi control.mp4",
       "jesus christ was here.mp4",
       "i am a god.mp4",
@@ -288,14 +254,16 @@
       "fame kills act 1.mp4",
       "fame kills act 2.mp4",
       "hollywood baby.mp4",
+"alpha alternative.happy.mp4",
       "inside the actor studio.mp4",
       "NO SMOKING.mp4",
+"thug.happy.mp4",
       "prepare yourself.mp4",
+"bitch.happy.mp4",
       "press press press press press.mp4",
       "suffer suffer suffer.mp4",
       "welcome to your fantasy.mp4",
       "the tmz shame spiral.mp4",
-      /* newly added: */
       "you need to know.mp4",
       "you and i are bored.mp4",
       "the most hated man alive.mp4",
@@ -305,111 +273,105 @@
       "do you understand.mp4",
       "bieber with sound.mp4",
       "behind the scenes.mp4",
-      "are you listening_watching.mp4"
-  ];
+      "are you listening_watching.mp4"         
+          ];
 
-    // ─── Emotion Overlay Logic ─────────────────────────────────────────────
-    document.querySelectorAll('.emotion-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.getElementById('emotion-overlay').style.display = 'none';
-      });
-    });
+    let hasClicked = false,
+        isSmashing = false,
+        smashAudioEls = [],
+        currentScriptText = "";
 
-    // ─── Click Sound Helper ────────────────────────────────────────────────
-    let hasClicked = false;
+    function escapeHTML(str) {
+      return str.replace(/[&<>"']/g, m =>
+        ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]
+      );
+    }
     function playClickOnce() {
       if (!hasClicked) {
         hasClicked = true;
-        document.getElementById('click-sound').play();
+        const a = document.getElementById('click-sound');
+        a.currentTime = 0; a.play();
       }
     }
 
-    // ─── Infinite Audio Mashup ─────────────────────────────────────────────
-    let mashupPlayer = new Audio();
-    let smashIndex = 0, smashTimeout, smashing = false;
-
-    function smashNext() {
-      mashupPlayer.src = files[smashIndex];
-      mashupPlayer.playbackRate = 1.25;
-      mashupPlayer.currentTime = 0;
-      mashupPlayer.play();
-      smashTimeout = setTimeout(() => {
-        smashIndex = (smashIndex + 1) % files.length;
-        smashNext();
-      }, 7000);
-    }
-
     function smashFuckAll() {
-      if (smashing) {
-        smashing = false;
-        clearTimeout(smashTimeout);
-        mashupPlayer.pause();
+      const body = document.body;
+      if (isSmashing) {
+        smashAudioEls.forEach(a=>{ a.pause(); a.remove(); });
+        smashAudioEls=[]; isSmashing=false;
         document.getElementById('break-btn').textContent = "BREAK THE SPIRAL";
-        document.body.style.animation = "";
-      } else {
-        smashing = true;
-        smashIndex = 0;
-        document.getElementById('break-btn').textContent = "STOP SPIRAL";
-        document.body.style.animation = "smashFlash 0.3s alternate infinite";
-        smashNext();
+        body.style.animation = '';
+        return;
+      }
+      isSmashing = true;
+      document.getElementById('break-btn').textContent = "STOP SPIRAL";
+      body.style.animation = "smashFlash 0.3s alternate infinite";
+      for (const f of files) {
+        const ext = f.split('.').pop().toLowerCase();
+        if (!['mp3','wav','m4a','mp4','mov'].includes(ext)) continue;
+        const audio = document.createElement('audio');
+        audio.src = f; audio.autoplay = true; audio.loop = true;
+        audio.volume = 0.7; audio.playbackRate = 1.25;
+        audio.style.display = 'none';
+        document.body.appendChild(audio);
+        smashAudioEls.push(audio);
       }
     }
     document.getElementById('break-btn').onclick = smashFuckAll;
 
-    // ─── Content Viewer ────────────────────────────────────────────────────
-    let currentScriptText = "";
-    function escapeHTML(str) {
-      return str.replace(/[&<>"']/g, m => ({
-        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-      })[m]);
-    }
-    function openFile(file,i) {
+    function openFile(file, idx) {
       playClickOnce();
-      if (smashing) smashFuckAll();
-      document.getElementById('file-name').innerText = file;
-      const area = document.getElementById('content-area');
-      area.innerHTML = "";
+      if (isSmashing) smashFuckAll();
+      const grid = document.getElementById('puzzle-grid'),
+            content = document.getElementById('content'),
+            area = document.getElementById('content-area'),
+            namebox = document.getElementById('file-name');
+      namebox.innerText = file; area.innerHTML = '';
       const ext = file.split('.').pop().toLowerCase();
-      if (['mp4','mov'].includes(ext)) {
-        area.innerHTML = `<video controls autoplay loop src="${file}"></video>`;
-      } else if (['mp3','wav','m4a'].includes(ext)) {
+
+      if (['mp3','wav','m4a'].includes(ext)) {
         area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
-      } else {
-        area.innerHTML = `<div>Loading…</div>`;
+      } else if (file.endsWith('.script.txt') || ext==='txt') {
+        area.innerHTML = `<div style="color:#fff;">Loading script…</div>`;
         fetch(file).then(r=>r.text()).then(txt=>{
           currentScriptText = txt;
-          area.innerHTML = `
-            <pre>${escapeHTML(txt)}</pre>
-            <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>
-          `;
+          area.innerHTML = `<pre>${escapeHTML(txt)}</pre>
+                            <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>`;
         });
+      } else {
+        area.innerHTML = `<video controls autoplay loop src="${file}"></video>`;
       }
-      document.getElementById('puzzle-grid').style.display = "none";
-      document.getElementById('content').style.display = "flex";
+
+      grid.style.display = "none";
+      content.style.display = "flex";
     }
+
     function closeContent() {
       document.getElementById('content').style.display = "none";
       document.getElementById('puzzle-grid').style.display = "flex";
-      document.querySelectorAll('#content-area audio, #content-area video').forEach(m=>{
-        if (m.pause) { m.pause(); m.currentTime = 0; }
-      });
-    }
-    function copyScript() {
-      if (currentScriptText) {
-        navigator.clipboard.writeText(currentScriptText);
-        alert('Script copied!');
-      }
+      document.querySelectorAll('#content-area audio,#content-area video')
+        .forEach(m=>{ m.pause&&m.pause(); m.currentTime=0; });
     }
 
-    // ─── Render Tiles ───────────────────────────────────────────────────────
+    function copyScript() {
+      if (!currentScriptText) return;
+      navigator.clipboard.writeText(currentScriptText);
+      alert('Script copied!');
+    }
+
     function displayTiles() {
       const grid = document.getElementById('puzzle-grid');
       grid.innerHTML = files.map((f,i)=>`
-        <div class="tile${f.endsWith('.script.txt')?' script':''}"
-             onclick="openFile('${f.replace(/'/g,"\\'")}',${i})">
+        <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}', ${i})">
           <div class="tile-number">${i+1}</div>
-          <img src="spiral.gif" alt="spiral"/>
-          <div class="tile-filename">${f}</div>
+          <img
+            src="${
+              f.endsWith('.happy.mp4')    ? 'happy.gif'
+            : f.endsWith('.script.txt')   ? 'galaxy.gif'
+            :                               'spiral.gif'
+            }"
+            alt="tile"/>
+          <div class="tile-filename${f.endsWith('.script.txt')?' script-file':''}">${f}</div>
         </div>
       `).join('');
     }
