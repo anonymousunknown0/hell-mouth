@@ -116,12 +116,14 @@
 
     /* ─── Content Overlay ─────────────────────────────────────────────────*/
     #content {
-      display: none;               /* keep hidden until openFile() */
+      display: none;               /* hidden until openFile() */
       position: fixed; top:0; left:0; right:0; bottom:0;
       background: rgba(0,0,0,0.93);
       flex-direction: column; align-items: center;
       overflow-y: auto; padding: 80px 10px 30px;
-      z-index: 20; box-sizing: border-box;
+      z-index: 2000;               /* above break button */
+      box-sizing: border-box;
+      display: flex;
     }
     #content .filename {
       color: #ffd700; font-size: 1.2rem; font-weight: bold;
