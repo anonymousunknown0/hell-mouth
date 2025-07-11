@@ -5,69 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Virtual Spiral Notebook</title>
   <style>
+    /* ───── Base ───── */
     body {
       margin: 0;
       background: #111 url('spiral.gif') center center fixed;
       background-size: cover;
       font-family: monospace;
-      color: white;
+      color: #eee;
       overflow-x: hidden;
       min-height: 100vh;
       transition: background 0.2s;
     }
+
+    /* ───── Grid of Tiles ───── */
     .puzzle-grid {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 16px;
-      padding: 30px 10px 120px 10px; /* extra bottom for button */
+      gap: 14px;
+      padding: 30px 10px 140px 10px; /* room for button */
       z-index: 2;
     }
     .tile {
-      background: rgba(0,0,0,0.15);
-      border-radius: 20px;
-      border: 2px solid #fff;
-      box-shadow: 0 0 16px #000a;
-      width: 190px;
-      height: 106px;
-      overflow: hidden;
       position: relative;
+      width: 190px; height: 106px;
+      background: rgba(0,0,0,0.15);
+      border: 2px solid #fff;
+      border-radius: 20px;
+      box-shadow: 0 0 16px #0008;
       cursor: pointer;
+      overflow: hidden;
       transition: transform 0.18s, box-shadow 0.18s;
     }
     .tile img {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       object-fit: cover;
-      display: block;
       opacity: 0.9;
-    }
-    .tile-number {
-      position: absolute;
-      top: 8px;
-      left: 12px;
-      font-size: 1.4rem;
-      font-weight: bold;
-      color: #FFD600;
-      text-shadow: 1px 1px 6px #000;
-      z-index: 2;
-      pointer-events: none;
-    }
-    .tile-filename {
-      position: absolute;
-      bottom: 6px;
-      left: 0;
-      width: 100%;
-      text-align: center;
-      font-size: 0.85em;
-      color: #FFD600;
-      font-weight: bold;
-      background: rgba(0,0,0,0.18);
-      padding: 2px 4px;
-      z-index: 2;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       pointer-events: none;
     }
     .tile:hover {
@@ -76,39 +49,61 @@
       border-color: #ffd700;
       z-index: 5;
     }
+    .tile-number {
+      position: absolute;
+      top: 8px; left: 12px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #FFD600;
+      text-shadow: 1px 1px 6px #000;
+      pointer-events: none;
+    }
+    .tile-filename {
+      position: absolute;
+      bottom: 6px; left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 0.85em;
+      color: #FFD600;
+      font-weight: bold;
+      background: rgba(0,0,0,0.18);
+      padding: 2px 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      pointer-events: none;
+    }
+
+    /* ───── Break-the-Internet Button ───── */
     #break-btn {
       position: fixed;
-      left: 50%;
-      bottom: 32px;
+      left: 50%; bottom: 32px;
       transform: translateX(-50%);
-      z-index: 1000;
-      font-size: 2em;
-      font-weight: 900;
-      color: #fff;
-      background: #e00;
+      font-size: 2em; font-weight: 900;
+      color: #fff; background: #e00;
       border: 4px solid #ffd700;
       border-radius: 25px;
       padding: 12px 38px;
-      letter-spacing: 0.05em;
-      box-shadow: 0 0 18px #e00, 0 0 38px #ffd700aa;
-      cursor: pointer;
       text-shadow: 1px 2px 5px #000;
+      cursor: pointer;
+      box-shadow: 0 0 18px #e00, 0 0 38px #ffd700aa;
+      z-index: 1000;
       transition: background 0.2s, box-shadow 0.2s;
     }
     #break-btn:active {
-      background: #fff;
-      color: #e00;
+      background: #fff; color: #e00;
     }
+
+    /* ───── Content Overlay ───── */
     #content {
       display: none;
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: rgba(0,0,0,0.93);
+      overflow-y: auto;               /* allow page scroll */
+      -webkit-overflow-scrolling: touch;
+      padding: 30px 10px;
+      box-sizing: border-box;
       z-index: 20;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      padding: 20px;
     }
     #content .filename {
       color: #ffd700;
@@ -118,9 +113,14 @@
       text-align: center;
       word-break: break-all;
     }
-    #content-area pre {
-      width: 90vw;
+    #content-area {
+      width: 100%;
       max-width: 700px;
+      margin: 0 auto;
+      overflow-y: auto;               /* scrollable area */
+      max-height: calc(100vh - 200px);
+    }
+    #content-area pre {
       background: #111;
       color: #fff;
       padding: 24px;
@@ -135,52 +135,55 @@
     }
     #content-area audio,
     #content-area video {
-      width: 90vw;
+      width: 100%;
       max-width: 700px;
-      margin-bottom: 16px;
       border-radius: 12px;
       box-shadow: 0 0 12px #0008;
+      margin-bottom: 16px;
     }
-    button.close-btn,
-    button.copy-btn {
+    .close-btn,
+    .copy-btn {
+      display: block;
+      margin: 8px auto;
+      padding: 8px 24px;
       font-size: 1em;
       font-weight: bold;
-      padding: 8px 24px;
-      margin-top: 8px;
-      border-radius: 12px;
       border: 2px solid #fff;
+      border-radius: 12px;
       cursor: pointer;
       outline: none;
       transition: background 0.2s;
     }
-    button.close-btn {
-      background: rgba(0,0,0,0.5);
-      color: #fff;
+    .close-btn { background: rgba(0,0,0,0.5); color: #fff; }
+    .close-btn:hover { background: #e00; }
+    .copy-btn { background: #ffd700; color: #111; border-color: #ffd700; }
+    .copy-btn:active { background: #ffc107; }
+
+    /* ───── Smash-Flash ───── */
+    @keyframes smashFlash {
+      from { background: #111; }
+      to   { background: #fff; }
     }
-    button.close-btn:hover {
-      background: #e00;
-    }
-    button.copy-btn {
-      background: #ffd700;
-      color: #111;
-      border-color: #ffd700;
-    }
-    button.copy-btn:active {
-      background: #ffc107;
-    }
-    @media (max-width: 600px) {
-      #break-btn { font-size: 1.4em; padding: 8px 24px; bottom: 12px; }
+
+    /* ───── Responsive ───── */
+    @media (max-width:800px) {
+      .tile { width: 92vw; height: 20vw; min-height: 80px; }
+      #break-btn { font-size:1.4em; padding:8px 24px; bottom:12px; }
     }
   </style>
 </head>
 <body>
 
+  <!-- click once -->
   <audio id="click-sound" src="click.mp3" preload="auto"></audio>
 
+  <!-- puzzle tiles -->
   <div class="puzzle-grid" id="puzzle-grid"></div>
 
+  <!-- break the internet -->
   <button id="break-btn">BREAK THE INTERNET</button>
 
+  <!-- overlay area -->
   <div id="content">
     <div class="filename" id="file-name"></div>
     <div id="content-area"></div>
@@ -188,14 +191,14 @@
   </div>
 
   <script>
-  // ───────── Puzzle List ─────────
+  // ───────── Files Array ─────────
   const files = [
     "The Surveillance Tape.mp4",
     "choose your player.mp4",
     "hellmouth part one_1.mp4",
     "333_leaked_therapy_smaller.mp4",
     "lunch with the narrator.mp3",
-    "go_gay_outro.script.txt",      // your screenplay
+    "go_gay_outro.script.txt",       // screenplay
     "3 cock anatomy.mp4",
     "5 hypnotize.mp4",
     "6 macbook air.mp4",
@@ -216,6 +219,9 @@
     "38 facial expressions.mp4",
     "41 my body.mp4",
     "42 diagnosis 2.mp4",
+    "xxxximportant important important.mp4",
+    "part 2.mp4",
+    "door opened, door closed.mp4",
     "42 the emotional wheel.mp4",
     "44 ups pimp my truck.mp4",
     "45 weed.mp4",
@@ -275,16 +281,15 @@
 
   // ───────── Helpers ─────────
   function escapeHTML(str) {
-    return str.replace(/[&<>"']/g, m => 
+    return str.replace(/[&<>"']/g, m =>
       ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]
     );
   }
-
   function playClickOnce() {
     if (!hasClicked) {
       hasClicked = true;
-      const a = document.getElementById('click-sound');
-      a.currentTime = 0; a.play();
+      let a = document.getElementById('click-sound');
+      a.currentTime=0; a.play();
     }
   }
 
@@ -292,43 +297,35 @@
   function smashFuckAll() {
     const body = document.body;
     if (isSmashing) {
-      smashAudioEls.forEach(a=>{ a.pause(); a.remove(); });
-      smashAudioEls = [];
-      isSmashing = false;
-      document.getElementById('break-btn').textContent = "BREAK THE INTERNET";
-      body.style.background = '';
+      smashAudioEls.forEach(a=>{a.pause();a.remove()});
+      smashAudioEls=[]; isSmashing=false;
+      document.getElementById('break-btn').textContent="BREAK THE INTERNET";
+      body.style.animation = '';
       return;
     }
-    isSmashing = true;
-    document.getElementById('break-btn').textContent = "STOP BREAK";
-    smashAudioEls = [];
-    // strobe effect
-    body.style.animation = "smashFlash 0.3s alternate infinite";
+    isSmashing=true;
+    document.getElementById('break-btn').textContent="STOP BREAK";
+    body.style.animation="smashFlash 0.3s alternate infinite";
     for (let f of files) {
       let ext = f.split('.').pop().toLowerCase();
+      if (!['mp4','mov','avi','mkv','wav','mp3','m4a'].includes(ext)) continue;
       let audio = document.createElement('audio');
-      audio.src = f;
-      audio.autoplay = true;
-      audio.loop = true;
-      audio.volume = 0.7;
-      audio.style.display = 'none';
+      audio.src = f; audio.autoplay=true; audio.loop=true; audio.volume=0.7;
+      audio.style.display='none';
       document.body.appendChild(audio);
       smashAudioEls.push(audio);
     }
   }
   document.getElementById('break-btn').onclick = smashFuckAll;
 
-  // ───────── OPEN & DISPLAY CONTENT ─────────
+  // ───────── OPEN A TILE ─────────
   function openFile(file, idx) {
     playClickOnce();
-    // stop smash
-    if (isSmashing) {
-      smashFuckAll();
-      document.body.style.animation = '';
-    }
-    document.getElementById('puzzle-grid').style.display = "none";
-    const namebox = document.getElementById('file-name');
-    const area   = document.getElementById('content-area');
+    if (isSmashing) smashFuckAll();
+    let grid = document.getElementById('puzzle-grid');
+    let content = document.getElementById('content');
+    let area = document.getElementById('content-area');
+    let namebox = document.getElementById('file-name');
     namebox.innerText = file;
     area.innerHTML = '';
     let ext = file.split('.').pop().toLowerCase();
@@ -337,41 +334,39 @@
       area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
     }
     else if (file.endsWith('.script.txt') || ext==='txt') {
-      area.innerHTML = `<div style="color:#fff;">Loading script...</div>`;
-      fetch(file)
-        .then(r=>r.text())
-        .then(txt=>{
-          currentScriptText = txt;
-          area.innerHTML = `
-            <pre>${escapeHTML(txt)}</pre>
-            <button class="copy-btn" onclick="copyScript()">COPY TO CLIPBOARD</button>
-          `;
-        });
+      area.innerHTML = `<div style="color:#fff;">Loading script…</div>`;
+      fetch(file).then(r=>r.text()).then(txt=>{
+        currentScriptText = txt;
+        area.innerHTML = `
+          <pre>${escapeHTML(txt)}</pre>
+          <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>
+        `;
+      });
     }
     else {
       area.innerHTML = `<video controls autoplay loop src="${file}"></video>`;
     }
-    document.getElementById('content').style.display = "flex";
+
+    grid.style.display = "none";
+    content.style.display = "flex";
   }
 
   function closeContent() {
-    document.getElementById('content').style.display = "none";
-    document.getElementById('puzzle-grid').style.display = "flex";
-    // stop any playing
-    document.querySelectorAll('#content-area audio, #content-area video')
-      .forEach(el=>{ el.pause(); el.currentTime = 0; });
+    document.getElementById('content').style.display="none";
+    document.getElementById('puzzle-grid').style.display="flex";
+    document.querySelectorAll('#content-area audio,#content-area video')
+      .forEach(m=>{m.pause && m.pause(); m.currentTime=0;});
   }
 
   function copyScript() {
-    if (currentScriptText) {
-      navigator.clipboard.writeText(currentScriptText);
-      alert('Script copied!');
-    }
+    if (!currentScriptText) return;
+    navigator.clipboard.writeText(currentScriptText);
+    alert('Script copied!');
   }
 
   // ───────── RENDER GRID ─────────
   function displayTiles() {
-    let grid = document.getElementById('puzzle-grid');
+    const grid = document.getElementById('puzzle-grid');
     grid.innerHTML = files.map((f,i)=>`
       <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}',${i})">
         <div class="tile-number">${i+1}</div>
@@ -380,16 +375,7 @@
       </div>
     `).join('');
   }
-
   displayTiles();
-
   </script>
-
-  <style>
-    @keyframes smashFlash {
-      from { background: #111; }
-      to   { background: #fff; }
-    }
-  </style>
 </body>
 </html>
