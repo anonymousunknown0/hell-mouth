@@ -19,7 +19,7 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 16px;
-      padding: 30px 10px 120px 10px; /* bottom padding for button */
+      padding: 30px 10px 120px 10px;
       z-index: 2;
     }
     .tile {
@@ -132,39 +132,19 @@
       background: #e00;
       color: #fff;
     }
-    /* --- BREAK THE INTERNET FLASH ANIMATION --- */
-    .smash-flash {
-      animation: smashFlash 0.3s alternate infinite;
-    }
-    @keyframes smashFlash {
-      from { background: #fff; }
-      to   { background: #111; }
-    }
-    /* BREAK THE INTERNET BUTTON */
-    #break-btn {
-      position: fixed;
-      left: 50%;
-      bottom: 32px;
-      transform: translateX(-50%);
-      z-index: 1000;
-      font-size: 2em;
-      font-weight: 900;
+    .screenplay {
+      font-family: 'Courier New', Courier, monospace;
+      background: #111;
       color: #fff;
-      background: #e00;
-      border: 4px solid #ffd700;
-      border-radius: 25px;
-      padding: 12px 38px;
-      letter-spacing: 0.05em;
-      box-shadow: 0 0 18px #e00, 0 0 38px #ffd700aa;
-      cursor: pointer;
-      text-shadow: 1px 2px 5px #000, 0 0 18px #fff;
+      padding: 32px 12px;
+      font-size: 1.08em;
+      border-radius: 14px;
+      line-height: 1.48;
+      white-space: pre-wrap;
+      max-width: 650px;
       margin: 0 auto;
-      display: block;
-      transition: background 0.2s, box-shadow 0.2s;
-    }
-    #break-btn:active {
-      background: #fff;
-      color: #e00;
+      box-shadow: 0 0 28px #000a;
+      overflow-x: auto;
     }
     @media (max-width: 800px) {
       .tile {
@@ -179,11 +159,6 @@
       .tile-filename {
         font-size: 0.95em;
       }
-      #break-btn {
-        font-size: 1.15em;
-        padding: 10px 15vw;
-        bottom: 14px;
-      }
       .puzzle-grid {
         padding-bottom: 100px;
       }
@@ -191,40 +166,24 @@
   </style>
 </head>
 <body>
-
 <audio id="click-sound" src="click.mp3" preload="auto"></audio>
-
 <div class="puzzle-grid" id="puzzle-grid"></div>
-
-<button id="break-btn">BREAK THE INTERNET</button>
-
 <div id="content">
   <div class="filename" id="file-name"></div>
   <div id="content-area"></div>
   <button class="close-btn" onclick="closeContent()">CLOSE</button>
 </div>
-
 <script>
 let clickPlayedOnce = false;
-let isSmashing = false;
-let smashAudioEls = [];
 
-function playClick() {
-  if (!clickPlayedOnce) {
-    const audio = document.getElementById('click-sound');
-    audio.currentTime = 0;
-    audio.play();
-    clickPlayedOnce = true;
-  }
-}
-
-// MAIN FILE LIST
+// You can use a string (filename) or an object {label, path}
 let files = [
   "The Surveillance Tape.mp4",
   "choose your player.mp4",
   "hellmouth part one_1.mp4",
   "333 (1).m4a",
   "lunch with the narrator.mp3",
+  { label: "go gay (uncensored)", path: "go_gay_outro.script" },
   "3 cock anatomy.mp4",
   "5 hypnotize.mp4",
   "6 macbook air.mp4",
@@ -245,11 +204,9 @@ let files = [
   "38 facial expressions.mp4",
   "41 my body.mp4",
   "42 diagnosis 2.mp4",
-  // ⬇️ INSERT NEW PUZZLE PIECES HERE!
   "xxxximportant important important.mp4",
   "part 2.mp4",
   "door opened, door closed.mp4",
-  // (continue with rest)
   "42 the emotional wheel.mp4",
   "44 ups pimp my truck.mp4",
   "45 weed.mp4",
@@ -301,51 +258,49 @@ let files = [
   "ai equals overwhelmed.mp4"
 ];
 
-// --- BREAK THE INTERNET BUTTON FUNCTIONALITY ---
-function smashFuckAll() {
-  const body = document.body;
-  if (isSmashing) {
-    // STOP all playing audio
-    smashAudioEls.forEach(a => { a.pause(); a.remove(); });
-    smashAudioEls = [];
-    isSmashing = false;
-    document.getElementById('break-btn').textContent = "BREAK THE INTERNET";
-    body.classList.remove('smash-flash');
-    return;
+function playClick() {
+  if (!clickPlayedOnce) {
+    const audio = document.getElementById('click-sound');
+    audio.currentTime = 0;
+    audio.play();
+    clickPlayedOnce = true;
   }
-  // PLAY: All audio at once
-  isSmashing = true;
-  document.getElementById('break-btn').textContent = "STOP BREAK";
-  smashAudioEls = [];
-  body.classList.add('smash-flash');
-  files.forEach(file => {
-    let ext = file.split('.').pop().toLowerCase();
-    let audio = document.createElement('audio');
-    audio.src = file;
-    audio.autoplay = true;
-    audio.loop = true;
-    audio.volume = 0.8;
-    audio.style.display = "none";
-    document.body.appendChild(audio);
-    smashAudioEls.push(audio);
-  });
 }
 
-document.getElementById('break-btn').onclick = smashFuckAll;
-
-function openFile(file) {
+function openFile(fileOrObj) {
   playClick();
-  // Stop BREAK if active
-  if (isSmashing) { smashFuckAll(); }
-  document.body.classList.remove('smash-flash');
   document.getElementById('puzzle-grid').style.display = "none";
   const content = document.getElementById('content');
   const area = document.getElementById('content-area');
   const namebox = document.getElementById('file-name');
+
+  let label, file;
+  if (typeof fileOrObj === 'object') {
+    label = fileOrObj.label;
+    file = fileOrObj.path;
+  } else {
+    label = fileOrObj;
+    file = fileOrObj;
+  }
+
   let ext = file.split('.').pop().toLowerCase();
   area.innerHTML = "";
-  namebox.innerHTML = file;
-  if (ext === 'mp3' || ext === 'wav' || ext === 'm4a') {
+  namebox.innerHTML = label;
+
+  if (ext === 'script') {
+    area.innerHTML = "<div style='color:#fff;font-family:monospace'>Loading script...</div>";
+    fetch(file)
+      .then(resp => resp.text())
+      .then(text => {
+        area.innerHTML = `
+          <pre class="screenplay">${text.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</pre>
+          <button onclick="copyScreenplayFromText(\`${escapeBackticks(text)}\`)" class="close-btn" style="margin-top:16px;">COPY SCRIPT</button>
+        `;
+      })
+      .catch(() => {
+        area.innerHTML = "<div style='color:#e00;'>Failed to load script.</div>";
+      });
+  } else if (ext === 'mp3' || ext === 'wav' || ext === 'm4a') {
     area.innerHTML = `<audio controls autoplay loop><source src="${file}"></audio>`;
   } else {
     area.innerHTML = `<video controls autoplay loop><source src="${file}"></video>`;
@@ -353,28 +308,40 @@ function openFile(file) {
   content.style.display = "flex";
   content.scrollIntoView({behavior: "smooth"});
 }
+
+// Utility to escape backticks for JS template literals
+function escapeBackticks(str) {
+  return str.replace(/`/g, '\\`');
+}
+
+// Copy function for loaded script
+function copyScreenplayFromText(txt) {
+  navigator.clipboard.writeText(txt);
+  alert("Script copied!");
+}
+
 function closeContent() {
   document.getElementById('content').style.display = "none";
   document.getElementById('puzzle-grid').style.display = "flex";
-  // Stop all media playback:
   document.querySelectorAll('#content-area video, #content-area audio').forEach(el=>{el.pause && el.pause();});
 }
+
 function displayTiles() {
   let grid = document.getElementById('puzzle-grid');
   grid.innerHTML = "";
   for (let i = 0; i < files.length; i++) {
     let num = i + 1;
-    let filename = files[i];
+    let fileObj = files[i];
+    let label = typeof fileObj === 'object' ? fileObj.label : fileObj;
     grid.innerHTML += `
-      <button class="tile" onclick="openFile('${filename}')">
+      <button class="tile" onclick="openFile(files[${i}])">
         <img src="spiral.gif" alt="spiral" />
         <span class="tile-num">${num}</span>
-        <span class="tile-filename">${filename}</span>
+        <span class="tile-filename">${label}</span>
       </button>`;
   }
 }
 displayTiles();
 </script>
-
 </body>
 </html>
