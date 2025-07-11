@@ -19,7 +19,7 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 16px;
-      padding: 30px 10px 60px 10px;
+      padding: 30px 10px 120px 10px; /* bottom padding for button */
       z-index: 2;
     }
     .tile {
@@ -132,13 +132,39 @@
       background: #e00;
       color: #fff;
     }
-    /* --- SMASH FUCK FLASH ANIMATION --- */
+    /* --- BREAK THE INTERNET FLASH ANIMATION --- */
     .smash-flash {
       animation: smashFlash 0.3s alternate infinite;
     }
     @keyframes smashFlash {
       from { background: #fff; }
       to   { background: #111; }
+    }
+    /* BREAK THE INTERNET BUTTON */
+    #break-btn {
+      position: fixed;
+      left: 50%;
+      bottom: 32px;
+      transform: translateX(-50%);
+      z-index: 1000;
+      font-size: 2em;
+      font-weight: 900;
+      color: #fff;
+      background: #e00;
+      border: 4px solid #ffd700;
+      border-radius: 25px;
+      padding: 12px 38px;
+      letter-spacing: 0.05em;
+      box-shadow: 0 0 18px #e00, 0 0 38px #ffd700aa;
+      cursor: pointer;
+      text-shadow: 1px 2px 5px #000, 0 0 18px #fff;
+      margin: 0 auto;
+      display: block;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    #break-btn:active {
+      background: #fff;
+      color: #e00;
     }
     @media (max-width: 800px) {
       .tile {
@@ -153,6 +179,14 @@
       .tile-filename {
         font-size: 0.95em;
       }
+      #break-btn {
+        font-size: 1.15em;
+        padding: 10px 15vw;
+        bottom: 14px;
+      }
+      .puzzle-grid {
+        padding-bottom: 100px;
+      }
     }
   </style>
 </head>
@@ -160,19 +194,9 @@
 
 <audio id="click-sound" src="click.mp3" preload="auto"></audio>
 
-<!-- SMASH FUCK Button -->
-<button id="smash-fuck-btn" style="
-  position:fixed;top:16px;left:50%;transform:translateX(-50%);
-  z-index:1000;font-size:2em;font-weight:900;
-  color:#fff;background:#e00;border:4px solid #ffd700;
-  border-radius: 25px;padding:12px 38px;letter-spacing:0.05em;
-  box-shadow:0 0 18px #e00,0 0 38px #ffd700aa;cursor:pointer;
-  text-shadow:1px 2px 5px #000,0 0 18px #fff;
-">
-  SMASH FUCK
-</button>
-
 <div class="puzzle-grid" id="puzzle-grid"></div>
+
+<button id="break-btn">BREAK THE INTERNET</button>
 
 <div id="content">
   <div class="filename" id="file-name"></div>
@@ -194,7 +218,8 @@ function playClick() {
   }
 }
 
-const files = [
+// MAIN FILE LIST
+let files = [
   "The Surveillance Tape.mp4",
   "choose your player.mp4",
   "hellmouth part one_1.mp4",
@@ -220,6 +245,11 @@ const files = [
   "38 facial expressions.mp4",
   "41 my body.mp4",
   "42 diagnosis 2.mp4",
+  // ⬇️ INSERT NEW PUZZLE PIECES HERE!
+  "xxxximportant important important.mp4",
+  "part 2.mp4",
+  "door opened, door closed.mp4",
+  // (continue with rest)
   "42 the emotional wheel.mp4",
   "44 ups pimp my truck.mp4",
   "45 weed.mp4",
@@ -271,7 +301,7 @@ const files = [
   "ai equals overwhelmed.mp4"
 ];
 
-// --- SMASH FUCK BUTTON FUNCTIONALITY ---
+// --- BREAK THE INTERNET BUTTON FUNCTIONALITY ---
 function smashFuckAll() {
   const body = document.body;
   if (isSmashing) {
@@ -279,13 +309,13 @@ function smashFuckAll() {
     smashAudioEls.forEach(a => { a.pause(); a.remove(); });
     smashAudioEls = [];
     isSmashing = false;
-    document.getElementById('smash-fuck-btn').textContent = "SMASH FUCK";
+    document.getElementById('break-btn').textContent = "BREAK THE INTERNET";
     body.classList.remove('smash-flash');
     return;
   }
   // PLAY: All audio at once
   isSmashing = true;
-  document.getElementById('smash-fuck-btn').textContent = "STOP FUCK";
+  document.getElementById('break-btn').textContent = "STOP BREAK";
   smashAudioEls = [];
   body.classList.add('smash-flash');
   files.forEach(file => {
@@ -301,11 +331,11 @@ function smashFuckAll() {
   });
 }
 
-document.getElementById('smash-fuck-btn').onclick = smashFuckAll;
+document.getElementById('break-btn').onclick = smashFuckAll;
 
 function openFile(file) {
   playClick();
-  // Stop SMASH FUCK if active
+  // Stop BREAK if active
   if (isSmashing) { smashFuckAll(); }
   document.body.classList.remove('smash-flash');
   document.getElementById('puzzle-grid').style.display = "none";
