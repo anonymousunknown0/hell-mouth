@@ -187,13 +187,12 @@
   </div>
 
   <script>
-    // ───────── Files Array (now with 78 + 9 new = 87 total) ─────────
+    // ───────── Files Array ─────────
     const files = [
       "The Surveillance Tape.mp4",
       "choose your player.mp4",
       "hellmouth part one_1.mp4",
       "333_leaked_therapy_smaller.mp4",
-      // removed "lunch with the narrator.mp3"
       "go_gay_outro.script.txt",
       "lunch with the narrator.script.txt",
       "disclaimers.script.txt",
@@ -270,7 +269,7 @@
       "be chill life.mp4",
       "back to my old ways.mp4",
       "ai equals overwhelmed.mp4",
-      // ─── Newly Added Pieces ───
+      /* newly added at end: */
       "brain hair.mp4",
       "fame kills act 1.mp4",
       "fame kills act 2.mp4",
@@ -280,18 +279,21 @@
       "prepare yourself.mp4",
       "press press press press press.mp4",
       "suffer suffer suffer.mp4",
-      "welcome to your fantasy.mp4"
+      "welcome to your fantasy.mp4",
+      "the tmz shame spiral.mp4"
     ];
 
     // ───────── Globals ─────────
     let hasClicked = false;
-    let isSmashing  = false;
+    let isSmashing = false;
     let smashAudioEls = [];
     let currentScriptText = "";
 
     // ───────── Helpers ─────────
     function escapeHTML(str) {
-      return str.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]);
+      return str.replace(/[&<>"']/g, m =>
+        ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]
+      );
     }
     function playClickOnce() {
       if (!hasClicked) {
@@ -305,7 +307,7 @@
     function smashFuckAll() {
       const body = document.body;
       if (isSmashing) {
-        smashAudioEls.forEach(a=>{a.pause();a.remove()});
+        smashAudioEls.forEach(a => { a.pause(); a.remove(); });
         smashAudioEls = []; isSmashing = false;
         document.getElementById('break-btn').textContent = "BREAK THE INTERNET";
         body.style.animation = '';
@@ -318,8 +320,12 @@
         let ext = f.split('.').pop().toLowerCase();
         if (!['mp3','wav','m4a','mp4','mov'].includes(ext)) continue;
         let audio = document.createElement('audio');
-        audio.src = f; audio.autoplay=true; audio.loop=true; audio.volume=0.7;
-        audio.style.display='none';
+        audio.src = f;
+        audio.autoplay = true;
+        audio.loop = true;
+        audio.volume = 0.7;
+        audio.playbackRate = 1.25;  // <<< speed up for fluid chaos
+        audio.style.display = 'none';
         document.body.appendChild(audio);
         smashAudioEls.push(audio);
       }
