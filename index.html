@@ -163,7 +163,6 @@
 const files = [
   "The Surveillance Tape.mp4",
   "choose your player.mp4",
-  "hellmouth part one.mp4",
   "hellmouth part one_1.mp4",
   "333_leaked_therapy_smaller.mp4",
   "lunch with the narrator.mp3",
@@ -230,9 +229,9 @@ function openFile(file) {
   area.innerHTML = "";
   namebox.innerHTML = file;
   if (ext === 'mp3' || ext === 'wav' || ext === 'm4a') {
-    area.innerHTML = `<audio controls autoplay><source src="${file}"></audio>`;
+    area.innerHTML = `<audio controls autoplay loop><source src="${file}"></audio>`;
   } else {
-    area.innerHTML = `<video controls autoplay><source src="${file}"></video>`;
+    area.innerHTML = `<video controls autoplay loop><source src="${file}"></video>`;
   }
   content.style.display = "flex";
   content.scrollIntoView({behavior: "smooth"});
