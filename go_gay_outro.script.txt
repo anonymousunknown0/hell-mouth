@@ -1,4 +1,3 @@
-"go_gay_outro.script": `
 HELL-MOUTH  
 FINAL OUTRO: “GO GAY” (UNCENSORED CUT)
 
@@ -104,58 +103,4 @@ The “ON AIR” light blinks out.
 
 FADE TO BLACK.
 
-INSERT – THE VIEWER
-
-A FACE IN THE DARKNESS — genderless, gorgeous, terrified.
-
-Eyes wide. Lips parted. Breath held.
-
-Hunter’s voice licks through the screen like smoke, like heat, like truth too long denied.
-
-The viewer trembles.  
-A SHIVER starts at the base of their spine.
-
-            HUNTER (V.O.)  
-    Let someone kiss the part of you you hide...
-
-The viewer’s pupils dilate.
-
-Fingers twitch. Knees press together. Then open.
-
-Something breaks—  
-Not loud.  
-More like the snap of a zipper, or a secret whispered in church.
-
-A gasp.
-
-Their mouth forms the words before they know they’ve said them:
-
-            THE VIEWER  
-    Oh my God.  
-    I think I’m gonna go gay.
-
-            (beat)
-
-    I think I want to.
-
-            (beat)
-
-    I think I already am.
-
-A soft, stunned laugh escapes.  
-They touch their lips like they’ve just kissed someone holy.
-
-The screen pulses. Hunter’s voice returns.
-
-            HUNTER (V.O.)  
-    Go gay like it will save your life.
-
-FLASH — the viewer’s past lovers. Their shame. Their silence.  
-FLASH — the body they never touched. The kiss they never dared.  
-FLASH — the door, finally, swinging open.
-
-BACK TO SCENE.
-
 END OF OUTRO SEQUENCE.
-`
-};
