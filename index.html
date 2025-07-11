@@ -12,6 +12,7 @@
       color: white;
       min-height: 100vh;
       overflow-x: hidden;
+      transition: background 0.2s;
     }
     .puzzle-grid {
       display: flex;
@@ -131,6 +132,14 @@
       background: #e00;
       color: #fff;
     }
+    /* --- SMASH FUCK FLASH ANIMATION --- */
+    .smash-flash {
+      animation: smashFlash 0.3s alternate infinite;
+    }
+    @keyframes smashFlash {
+      from { background: #fff; }
+      to   { background: #111; }
+    }
     @media (max-width: 800px) {
       .tile {
         width: 92vw;
@@ -151,6 +160,18 @@
 
 <audio id="click-sound" src="click.mp3" preload="auto"></audio>
 
+<!-- SMASH FUCK Button -->
+<button id="smash-fuck-btn" style="
+  position:fixed;top:16px;left:50%;transform:translateX(-50%);
+  z-index:1000;font-size:2em;font-weight:900;
+  color:#fff;background:#e00;border:4px solid #ffd700;
+  border-radius: 25px;padding:12px 38px;letter-spacing:0.05em;
+  box-shadow:0 0 18px #e00,0 0 38px #ffd700aa;cursor:pointer;
+  text-shadow:1px 2px 5px #000,0 0 18px #fff;
+">
+  SMASH FUCK
+</button>
+
 <div class="puzzle-grid" id="puzzle-grid"></div>
 
 <div id="content">
@@ -161,6 +182,8 @@
 
 <script>
 let clickPlayedOnce = false;
+let isSmashing = false;
+let smashAudioEls = [];
 
 function playClick() {
   if (!clickPlayedOnce) {
@@ -230,8 +253,43 @@ const files = [
   "part 18.mp4"
 ];
 
+// --- SMASH FUCK BUTTON FUNCTIONALITY ---
+function smashFuckAll() {
+  const body = document.body;
+  if (isSmashing) {
+    // STOP all playing audio
+    smashAudioEls.forEach(a => { a.pause(); a.remove(); });
+    smashAudioEls = [];
+    isSmashing = false;
+    document.getElementById('smash-fuck-btn').textContent = "SMASH FUCK";
+    body.classList.remove('smash-flash');
+    return;
+  }
+  // PLAY: All audio at once
+  isSmashing = true;
+  document.getElementById('smash-fuck-btn').textContent = "STOP FUCK";
+  smashAudioEls = [];
+  body.classList.add('smash-flash');
+  files.forEach(file => {
+    let ext = file.split('.').pop().toLowerCase();
+    let audio = document.createElement('audio');
+    audio.src = file;
+    audio.autoplay = true;
+    audio.loop = true;
+    audio.volume = 0.8;
+    audio.style.display = "none";
+    document.body.appendChild(audio);
+    smashAudioEls.push(audio);
+  });
+}
+
+document.getElementById('smash-fuck-btn').onclick = smashFuckAll;
+
 function openFile(file) {
   playClick();
+  // Stop SMASH FUCK if active
+  if (isSmashing) { smashFuckAll(); }
+  document.body.classList.remove('smash-flash');
   document.getElementById('puzzle-grid').style.display = "none";
   const content = document.getElementById('content');
   const area = document.getElementById('content-area');
