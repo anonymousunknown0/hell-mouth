@@ -220,17 +220,26 @@ const hiddenHappy = [
 
     // ── WHISPER LOGIC ──
     async function playWhispers() {
-      stopWhispers();
-      for (let f of whisperFiles) {
-        const buf = await fetch(f).then(r=>r.arrayBuffer());
-        const dec = await audioCtx.decodeAudioData(buf);
-        const src = audioCtx.createBufferSource(), g = audioCtx.createGain();
-        src.buffer = dec; src.loop = true; g.gain.value = Math.random()*0.15+0.05;
-        src.connect(g).connect(audioCtx.destination);
-        setTimeout(()=>src.start(0), Math.random()*2000);
-        whisperSources.push(src);
-      }
-    }
+  // ensure context is running (must be from a user gesture)
+  await audioCtx.resume();
+
+  // stop any old whisper sources
+  stopWhispers();
+
+  for (let file of whisperFiles) {
+    const buf = await fetch(file).then(r => r.arrayBuffer());
+    const decoded = await audioCtx.decodeAudioData(buf);
+    const src = audioCtx.createBufferSource();
+    const gain = audioCtx.createGain();
+    src.buffer = decoded;
+    src.loop = true;
+    gain.gain.value = Math.random() * 0.15 + 0.05;
+    src.connect(gain).connect(audioCtx.destination);
+    // stagger their start times a bit
+    setTimeout(() => src.start(0), Math.random() * 2000);
+    whisperSources.push(src);
+  }
+}
     function stopWhispers() { whisperSources.forEach(s=>s.stop()); whisperSources=[]; }
 
     // ── CLICK SOUND ──
