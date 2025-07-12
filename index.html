@@ -1,95 +1,292 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Virtual Spiral Notebook</title>
+  <link rel="icon" href="spiral.gif" type="image/gif">
+  <title>🌀 Virtual Spiral Notebook</title>
   <style>
     body {
       margin: 0;
-      background: #000 url('spiral.gif') center center fixed;
+      background: #111 url('spiral.gif') center center fixed;
       background-size: cover;
       font-family: monospace;
-      color: #ffd700;
+      color: #eee;
       overflow-x: hidden;
+      min-height: 100vh;
+      transition: background 0.2s;
     }
-    #wheel-overlay {
+    #title-overlay, #wheel-overlay {
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,0.95);
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 9999;
-    }
-    #wheel-overlay h1 {
-      flex-basis: 100%;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .emotion-btn {
-      padding: 12px 24px;
-      margin: 6px;
-      background: #111;
-      border: 2px solid #ffd700;
       color: #ffd700;
+      text-align: center;
+      padding: 20px;
+    }
+    #title-overlay h1 {
+      font-size: 4rem;
+      color: red;
+      margin-bottom: 2rem;
+      letter-spacing: 0.5rem;
+    }
+    .enter-btn, .emotion-btn {
+      background: #222;
+      color: #ffd700;
+      border: 2px solid #ffd700;
+      border-radius: 12px;
+      padding: 12px 24px;
       font-size: 1rem;
       cursor: pointer;
-      border-radius: 8px;
+      margin: 8px;
+      transition: background 0.2s, color 0.2s;
     }
-    #puzzle-grid {
+    .enter-btn:hover, .emotion-btn:hover {
+      background: #ffd700;
+      color: #111;
+    }
+    .puzzle-grid { display: none; flex-wrap: wrap; justify-content: center; gap: 14px; padding: 30px 10px 140px 10px; }
+    .tile { position: relative; width: 190px; height: 106px; background: rgba(0,0,0,0.15); border: 2px solid #fff; border-radius: 20px; box-shadow: 0 0 16px #0008; cursor: pointer; overflow: hidden; transition: transform 0.18s, box-shadow 0.18s; }
+    .tile img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+    .tile-number { position: absolute; top: 8px; left: 12px; font-size: 1.4rem; font-weight: bold; color: #FFD600; text-shadow: 1px 1px 6px #000; pointer-events: none; }
+    .tile-filename { position: absolute; bottom: 6px; left: 0; width: 100%; text-align: center; font-size: 0.85em; font-weight: bold; color: #FFD600; background: rgba(0,0,0,0.18); padding: 2px 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
+    #break-btn, #random-btn {
       display: none;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 20px;
-      justify-content: center;
-    }
-    .tile {
-      width: 160px;
-      height: 90px;
-      background: rgba(255,255,255,0.05);
-      border: 2px solid #ffd700;
-      border-radius: 14px;
-      color: #ffd700;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
       cursor: pointer;
+      box-shadow: 0 0 18px #0005;
+      z-index: 1000;
+      transition: background 0.2s;
     }
+    #break-btn {
+      bottom: 32px;
+      background: #fff;
+      color: #000;
+      border: 4px solid #000;
+      border-radius: 25px;
+      padding: 12px 38px;
+      font-size: 2em;
+      font-weight: 900;
+    }
+    #random-btn {
+      bottom: 100px;
+      background: #333;
+      color: #ffd700;
+      border: 3px solid #ffd700;
+      border-radius: 20px;
+      padding: 8px 24px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    #content { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.93); overflow-y: auto; padding: 30px 10px; box-sizing: border-box; z-index: 20; }
+    #content-area pre { background: #111; color: #fff; padding: 24px; border-radius: 14px; font-size: 1.05em; white-space: pre-wrap; word-break: break-word; box-shadow: 0 0 12px #0008; margin-bottom: 16px; }
   </style>
 </head>
 <body>
+  <div id="title-overlay">
+    <h1>H E L L M O U T H</h1>
+    <button class="enter-btn" onclick="nextOverlay()">ENTER</button>
+  </div>  <div id="wheel-overlay" style="display:none">
+    <h1>Pick an Emotion to Enter</h1>
+    <button class="emotion-btn" onclick="startSite()">Enter</button>
+  </div>  <div class="puzzle-grid" id="puzzle-grid"></div>
+  <button id="break-btn">BREAK THE SPIRAL</button>
+  <button id="random-btn">random</button>
+  <div id="content"><div id="content-area"></div></div>  <script>
+    const files = [
+  "The Surveillance Tape.mp4",
+  "choose your player.mp4",
+  "hellmouth part one_1.mp4",
+  "333_leaked_therapy_smaller.mp4",
+  "go_gay_outro.script.txt",
+  "lunch with the narrator.script.txt",
+  "choose your player.script.txt",
+  "disclaimers.script.txt",
+  "why call tmz harvey levin.script.txt",
+  "confession press conference.script.txt",
+  "3 cock anatomy.mp4",
+  "why calls from gaga are SO important.script.txt",
+  "5 hypnotize.mp4",
+  "6 macbook air.mp4",
+  "why calls from YE are SO important.script.txt",
+  "7 male body.mp4",
+  "9 microchip.mp4",
+  "11 old school smoking.mp4",
+  "12 sperm microscope.mp4",
+  "17 heart.mp4",
+  "18 diagnosis final.mp4",
+  "23 window trees.mp4",
+  "24 diagnosis 1.mp4",
+  "25 muscle god.mp4",
+  "26 eyes.mp4",
+  "30 diagnosis 3.mp4",
+  "30 shadow man.mp4",
+  "meet the publicist.script.txt",
+  "31 the human brain.mp4",
+  "36 warner bros.mp4",
+  "38 facial expressions.mp4",
+  "41 my body.mp4",
+  "the hack, the leak explained.script.txt",
+  "42 diagnosis 2.mp4",
+  "xxxximportant important important.mp4",
+  "part 2.mp4",
+  "door opened, door closed.mp4",
+  "42 the emotional wheel.mp4",
+  "44 ups pimp my truck.mp4",
+  "45 weed.mp4",
+  "47 to write love....mp4",
+  "50 gay police 2.mp4",
+  "53 primetime boomboxx.mp4",
+  "54 77 johnson park.mp4",
+  "55 blu hair do care.mp4",
+  "61 the statue of david.mp4",
+  "the reinvention playbook.script.txt",
+  "67 fwmukigit.mp4",
+  "74 kylie jenner.mp4",
+  "hot body.mov.mp4",
+  "kim kardashian.mp4",
+  "lizzo.mp4",
+  "part 1.mov.mp4",
+  "part 3.mov.mp4",
+  "part 4.mov.mp4",
+  "part 5.mov.mp4",
+  "part 6.mov.mp4",
+  "part 9.mp4",
+  "part 10.mov.mp4",
+  "stress.mov.mp4",
+  "the crying room.mov.mp4",
+  "the dopeiest of dopeness.mp4",
+  "scandal roll call.script.txt",
+  "part 11.mp4",
+  "part 16.mp4",
+  "part 13.mp4",
+  "part 33.mp4",
+  "part 27.mp4",
+  "part 18.mp4",
+  "white noise.mp4",
+  "the weekend.mp4",
+  "the cum spiral.mp4",
+  "the brain spiral 2.mp4",
+  "speed me up angel.mp4",
+  "same old fucking mistakes.mp4",
+  "rated mature.mp4",
+  "paparazzi control.mp4",
+  "jesus christ was here.mp4",
+  "i am a god.mp4",
+  "hellmouth night walk.mp4",
+  "instant gratification.script.txt",
+  "heaven sent.mp4",
+  "gentleman justin bieber.mp4",
+  "diagnosis equals schizophrenia.mp4",
+  "demons shut up.mp4",
+  "be chill life.mp4",
+  "back to my old ways.mp4",
+  "ai equals overwhelmed.mp4",
+  "workout with daddy.script.txt",
+  "brain hair.mp4",
+  "fame kills act 1.mp4",
+  "fame kills act 2.mp4",
+  "hollywood baby.mp4",
+  "inside the actor studio.mp4",
+  "NO SMOKING.mp4",
+  "prepare yourself.mp4",
+  "press press press press press.mp4",
+  "suffer suffer suffer.mp4",
+  "welcome to your fantasy.mp4",
+  "meet ye kanye west.script.txt",
+  "the tmz shame spiral.mp4",
+  "you need to know.mp4",
+  "phantom communication system.script.txt",
+  "you and i are bored.mp4",
+  "the most hated man alive.mp4",
+  "television visions.mp4",
+  "hyper focused hyper relaxed.mp4",
+  "headphones baby.mp4",
+  "do you understand.mp4"  // trigger video
+];
 
-<div id="wheel-overlay">
-  <h1>PICK AN EMOTION TO ENTER</h1>
-  <button class="emotion-btn" onclick="startSite()">Joy</button>
-  <button class="emotion-btn" onclick="startSite()">Sadness</button>
-</div>
+const hiddenHappy = [
+  "latino heat.happy.mp4", "piss is hot.happy.mp4", "island boys.happy.mp4",
+  "the shower scene.happy.mp4", "no smoking.happy.mp4", "meet jack.happy.mp4",
+  "drip.happy.mp4", "talk the talk.happy.mp4", "demon teen.happy.mp4",
+  "my guy.happy.mp4", "alpha alternative.happy.mp4", "bitch.happy.mp4",
+  "honey baby.happy.mp4", "heartbreak hotel.happy.mp4", "all american muscle.happy.mp4",
+  "cool guy goon.happy.mp4", "balls.happy.mp4", "brother.happy.mp4", "thug.happy.mp4"
+];
 
-<div id="puzzle-grid"></div>
+    let whisperSources = [];
 
-<script>
-  const files = [
-    "choose your player.mp4",
-    "do you understand.mp4",
-    "lunch with the narrator.script.txt"
-  ];
+    function nextOverlay() {
+      document.getElementById('title-overlay').style.display = 'none';
+      document.getElementById('wheel-overlay').style.display = 'flex';
+    }
 
-  function startSite() {
-    document.getElementById('wheel-overlay').style.display = 'none';
-    document.getElementById('puzzle-grid').style.display = 'flex';
-    displayTiles();
+    function startSite() {
+      document.getElementById('wheel-overlay').style.display = 'none';
+      document.getElementById('puzzle-grid').style.display = 'flex';
+      document.getElementById('break-btn').style.display = 'block';
+      document.getElementById('random-btn').style.display = 'block';
+      displayTiles();
+    }
+
+    function playWhispers() {
+      const whisperFiles = ["333.mp3", "spiral whisper.mp3", "voices 1.mp3", "voices 2.mp3"];
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      whisperFiles.forEach(file => {
+        fetch(file).then(r => r.arrayBuffer()).then(buf => ctx.decodeAudioData(buf)).then(decoded => {
+          const src = ctx.createBufferSource();
+          const gain = ctx.createGain();
+          src.buffer = decoded;
+          gain.gain.value = Math.random() * 0.15 + 0.05;
+          src.connect(gain).connect(ctx.destination);
+          src.loop = true;
+          src.start(0);
+          whisperSources.push(src);
+        });
+      });
+    }
+
+    function stopWhispers() {
+      whisperSources.forEach(src => src.stop());
+      whisperSources = [];
+    }
+
+    function openFile(file) {
+      const ext = file.split('.').pop().toLowerCase();
+      const area = document.getElementById('content-area');
+      area.innerHTML = '';
+      if (ext === 'mp4') {
+        area.innerHTML = `<video controls autoplay loop src="${file}" width="100%"></video>`;
+      } else if (file.endsWith('.script.txt')) {
+        fetch(file).then(r => r.text()).then(txt => {
+          area.innerHTML = `<pre>${txt}</pre>`;playWhispers();
+    });
+  } else if (ext === 'mp3') {
+    area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
   }
+  document.getElementById('content').style.display = 'block';
+}
 
-  function displayTiles() {
-    const grid = document.getElementById('puzzle-grid');
-    grid.innerHTML = files.map(file => `
-      <div class="tile" onclick="alert('Clicked: ${file}')">${file}</div>
-    `).join('');
-  }
-</script>
+function displayTiles() {
+  const grid = document.getElementById('puzzle-grid');
+  grid.innerHTML = files.map((f, i) => {
+    let img = 'spiral.gif';
+    if (f.endsWith('.script.txt')) img = 'galaxy.gif';
+    if (f.endsWith('.happy.mp4')) img = 'happy.gif';
+    return `<div class="tile" onclick="openFile('${f}')">
+      <div class="tile-number">${i+1}</div>
+      <img src="${img}" alt="tile" />
+      <div class="tile-filename">${f}</div>
+    </div>`;
+  }).join('');
+}
 
+  </script>
 </body>
 </html>
