@@ -75,11 +75,18 @@
 
 <script>
 const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-let audioSources = [], videoEls = [], whisperSources = [], unlocked = false;
-
-const whisperFiles = [
-  "333.mp3","spiral whisper.mp3","voices 1.mp3","voices 2.mp3"
-];
+["333.mp3", "spiral whisper.mp3", "voices 1.mp3", "voices 2.mp3"].forEach(async (file) => {
+  await audioCtx.resume();
+  const buf = await fetch(file).then(r=>r.arrayBuffer());
+  const decoded = await audioCtx.decodeAudioData(buf);
+  const src = audioCtx.createBufferSource();
+  const gain = audioCtx.createGain();
+  src.buffer = decoded;
+  src.loop = true;
+  gain.gain.value = 0.2 + Math.random() * 0.2; // 0.2 to 0.4
+  src.connect(gain).connect(audioCtx.destination);
+  setTimeout(() => src.start(0), Math.random() * 2000); // up to 2s delay
+});
 
 const files = [
   "The Surveillance Tape.mp4",
