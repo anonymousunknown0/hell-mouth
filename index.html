@@ -16,9 +16,44 @@
       min-height: 100vh;
       transition: background 0.2s;
     }
+
+    /* Emotional-Wheel Overlay */
+    #wheel-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      color: #ffd700;
+      text-align: center;
+      padding: 20px;
+    }
+    #wheel-overlay h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    #wheel-overlay .emotion-btn {
+      background: #222;
+      color: #ffd700;
+      border: 2px solid #ffd700;
+      border-radius: 12px;
+      padding: 12px 24px;
+      margin: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    #wheel-overlay .emotion-btn:hover {
+      background: #ffd700;
+      color: #111;
+    }
+
     /* Grid */
     .puzzle-grid {
-      display: flex;
+      display: none; /* hidden until emotion picked */
       flex-wrap: wrap;
       justify-content: center;
       gap: 14px;
@@ -60,7 +95,7 @@
       width: 100%;
       text-align: center;
       font-size: 0.85em; font-weight: bold;
-      color: #FFD600;
+      color: #FFD600;              /* now all filenames are yellow */
       background: rgba(0,0,0,0.18);
       padding: 2px 4px;
       white-space: nowrap;
@@ -68,11 +103,10 @@
       text-overflow: ellipsis;
       pointer-events: none;
     }
-    .tile-filename.script-file {
-      color: purple !important;
-    }
+
     /* Break-the-Spiral */
     #break-btn {
+      display: none; /* hidden until emotion picked */
       position: fixed;
       left: 50%; bottom: 32px;
       transform: translateX(-50%);
@@ -88,6 +122,7 @@
     #break-btn:active {
       background: #000; color: #fff;
     }
+
     /* Overlay */
     #content {
       display: none;
@@ -137,14 +172,24 @@
     .close-btn:hover { background: #e00; }
     .copy-btn { background: #ffd700; color: #111; border-color: #ffd700; }
     .copy-btn:active { background: #ffc107; }
+
     @keyframes smashFlash { from{background:#111;} to{background:#fff;} }
     @media (max-width:800px){
-      .tile{width:92vw;height:20vw;min-height:80px}
-      #break-btn{font-size:1.4em;padding:8px 24px;bottom:12px}
+      .tile { width:92vw; height:20vw; min-height:80px }
+      #break-btn { font-size:1.4em; padding:8px 24px; bottom:12px }
     }
   </style>
 </head>
 <body>
+
+  <!-- Emotional-Wheel Entry Screen -->
+  <div id="wheel-overlay">
+    <h1>Pick an Emotion to Enter</h1>
+    <button class="emotion-btn" onclick="startSite('Joy')">Joy</button>
+    <button class="emotion-btn" onclick="startSite('Sadness')">Sadness</button>
+    <button class="emotion-btn" onclick="startSite('Anger')">Anger</button>
+    <button class="emotion-btn" onclick="startSite('Fear')">Fear</button>
+  </div>
 
   <audio id="click-sound" src="click.mp3" preload="auto"></audio>
 
@@ -158,6 +203,7 @@
   </div>
 
   <script>
+    // ───────── Master File List ─────────
     const files = [
       "The Surveillance Tape.mp4",
       "choose your player.mp4",
@@ -170,7 +216,7 @@
       "why call tmz harvey levin.script.txt",
       "confession press conference.script.txt",
       "3 cock anatomy.mp4",
-"piss is hot.happy.mp4",
+      "piss is hot.happy.mp4",
       "why calls from gaga are SO important.script.txt",
       "5 hypnotize.mp4",
       "6 macbook air.mp4",
@@ -206,7 +252,7 @@
       "54 77 johnson park.mp4",
       "55 blu hair do care.mp4",
       "61 the statue of david.mp4",
-"meet jack.happy.mp4",
+      "meet jack.happy.mp4",
       "the reinvention playbook.script.txt",
       "67 fwmukigit.mp4",
       "72 horny lesbians.mp4",
@@ -227,7 +273,7 @@
       "part 11.mp4",
       "part 16.mp4",
       "part 13.mp4",
-"demon teen.happy.mp4",
+      "demon teen.happy.mp4",
       "part 33.mp4",
       "part 27.mp4",
       "part 18.mp4",
@@ -238,7 +284,7 @@
       "speed me up angel.mp4",
       "same old fucking mistakes.mp4",
       "rated mature.mp4",
-"all american muscle.happy.mp4",
+      "all american muscle.happy.mp4",
       "paparazzi control.mp4",
       "jesus christ was here.mp4",
       "i am a god.mp4",
@@ -254,12 +300,12 @@
       "fame kills act 1.mp4",
       "fame kills act 2.mp4",
       "hollywood baby.mp4",
-"alpha alternative.happy.mp4",
+      "alpha alternative.happy.mp4",
       "inside the actor studio.mp4",
       "NO SMOKING.mp4",
-"thug.happy.mp4",
+      "thug.happy.mp4",
       "prepare yourself.mp4",
-"bitch.happy.mp4",
+      "bitch.happy.mp4",
       "press press press press press.mp4",
       "suffer suffer suffer.mp4",
       "welcome to your fantasy.mp4",
@@ -273,13 +319,20 @@
       "do you understand.mp4",
       "bieber with sound.mp4",
       "behind the scenes.mp4",
-      "are you listening_watching.mp4"         
-          ];
+      "are you listening_watching.mp4"
+    ];
 
     let hasClicked = false,
         isSmashing = false,
         smashAudioEls = [],
         currentScriptText = "";
+
+    function startSite(emotion){
+      // you could store 'emotion' or play a sound here
+      document.getElementById('wheel-overlay').style.display = 'none';
+      document.getElementById('puzzle-grid').style.display = 'flex';
+      document.getElementById('break-btn').style.display = 'block';
+    }
 
     function escapeHTML(str) {
       return str.replace(/[&<>"']/g, m =>
@@ -362,16 +415,14 @@
     function displayTiles() {
       const grid = document.getElementById('puzzle-grid');
       grid.innerHTML = files.map((f,i)=>`
-        <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}', ${i})">
+        <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}',${i})">
           <div class="tile-number">${i+1}</div>
-          <img
-            src="${
-              f.endsWith('.happy.mp4')    ? 'happy.gif'
-            : f.endsWith('.script.txt')   ? 'galaxy.gif'
-            :                               'spiral.gif'
-            }"
-            alt="tile"/>
-          <div class="tile-filename${f.endsWith('.script.txt')?' script-file':''}">${f}</div>
+          <img src="${
+            f.endsWith('.happy.mp4')    ? 'happy.gif'
+          : f.endsWith('.script.txt')   ? 'galaxy.gif'
+          :                               'spiral.gif'
+          }" alt="tile"/>
+          <div class="tile-filename">${f}</div>
         </div>
       `).join('');
     }
