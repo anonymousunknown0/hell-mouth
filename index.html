@@ -307,7 +307,9 @@ function startSite() {
             if (!unlocked) {
               unlocked = true;
               files.push(...hiddenHappy);
-              displayTiles();
+              window.addEventListener('DOMContentLoaded', () => {
+  displayTiles();
+});
               alert('🔓 Happy videos unlocked!');
             }
           };
@@ -351,7 +353,9 @@ function startSite() {
       ).join('');
     }
 
-    displayTiles();
+    window.addEventListener('DOMContentLoaded', () => {
+      displayTiles();
+    });
   </script>
 </body>
 </html>
