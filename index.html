@@ -10,7 +10,7 @@
     #wheel-overlay h1 { flex-basis: 100%; font-size: 2rem; margin-bottom: 1rem; }
     .emotion-btn { background: #222; color: #ffd700; border: 2px solid #ffd700; border-radius: 12px; padding: 12px 24px; margin: 6px; font-size: 1rem; cursor: pointer; flex: 1 0 120px; transition: background 0.2s, color 0.2s; }
     .emotion-btn:hover { background: #ffd700; color: #111; }
-    .puzzle-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; padding: 30px 10px 140px 10px; }
+    .puzzle-grid { display: none; flex-wrap: wrap; justify-content: center; gap: 14px; padding: 30px 10px 140px 10px; }
     .tile { position: relative; width: 190px; height: 106px; background: rgba(0,0,0,0.15); border: 2px solid #fff; border-radius: 20px; box-shadow: 0 0 16px #0008; cursor: pointer; overflow: hidden; transition: transform 0.18s, box-shadow 0.18s; }
     .tile img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
     .tile:hover { transform: scale(1.08); box-shadow: 0 0 26px #fff8; border-color: #ffd700; }
@@ -58,6 +58,7 @@
     <button class="emotion-btn" onclick="startSite()">Anxiety</button>
     <button class="emotion-btn" onclick="startSite()">Awe</button>
     <button class="emotion-btn" onclick="startSite()">Nostalgia</button>
+    <!-- Add more emotions if you wish -->
   </div>
 
   <!-- Puzzle Grid -->
@@ -75,19 +76,8 @@
 
 <script>
 const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-["333.mp3", "spiral whisper.mp3", "voices 1.mp3", "voices 2.mp3"].forEach(async (file) => {
-  await audioCtx.resume();
-  const buf = await fetch(file).then(r=>r.arrayBuffer());
-  const decoded = await audioCtx.decodeAudioData(buf);
-  const src = audioCtx.createBufferSource();
-  const gain = audioCtx.createGain();
-  src.buffer = decoded;
-  src.loop = true;
-  gain.gain.value = 0.2 + Math.random() * 0.2; // 0.2 to 0.4
-  src.connect(gain).connect(audioCtx.destination);
-  setTimeout(() => src.start(0), Math.random() * 2000); // up to 2s delay
-});
-
+let audioSources = [], videoEls = [], whisperSources = [], unlocked = false;
+const whisperFiles = ["333.mp3","spiral whisper.mp3","voices 1.mp3","voices 2.mp3"];
 const files = [
   "The Surveillance Tape.mp4",
   "choose your player.mp4",
@@ -199,40 +189,27 @@ const files = [
   "headphones baby.mp4",
   "do you understand.mp4"
 ];
-
 const hiddenHappy = [
-  "latino heat.happy.mp4",
-  "piss is hot.happy.mp4",
-  "island boys.happy.mp4",
-  "the shower scene.happy.mp4",
-  "no smoking.happy.mp4",
-  "meet jack.happy.mp4",
-  "drip.happy.mp4",
-  "talk the talk.happy.mp4",
-  "demon teen.happy.mp4",
-  "my guy.happy.mp4",
-  "alpha alternative.happy.mp4",
-  "bitch.happy.mp4",
-  "honey baby.happy.mp4",
-  "heartbreak hotel.happy.mp4",
-  "all american muscle.happy.mp4",
-  "cool guy goon.happy.mp4",
-  "balls.happy.mp4",
-  "brother.happy.mp4",
-  "thug.happy.mp4"
+  "latino heat.happy.mp4", "piss is hot.happy.mp4", "island boys.happy.mp4",
+  "the shower scene.happy.mp4", "no smoking.happy.mp4", "meet jack.happy.mp4",
+  "drip.happy.mp4", "talk the talk.happy.mp4", "demon teen.happy.mp4",
+  "my guy.happy.mp4", "alpha alternative.happy.mp4", "bitch.happy.mp4",
+  "honey baby.happy.mp4", "heartbreak hotel.happy.mp4", "all american muscle.happy.mp4",
+  "cool guy goon.happy.mp4", "balls.happy.mp4", "brother.happy.mp4", "thug.happy.mp4"
 ];
 
-// ───────── EMOTION WHEEL ENTRY ─────────
+// --- EMOTION SCREEN ---
 function startSite() {
   document.getElementById('wheel-overlay').style.display = 'none';
   document.getElementById('puzzle-grid').style.display = 'flex';
-  document.getElementById('break-btn').style.display = 'block';
-  document.getElementById('random-btn').style.display = 'block';
+  document.getElementById('break-btn').style.display = '';
+  document.getElementById('random-btn').style.display = '';
 }
 
-// ───────── WHISPER LOGIC ─────────
+// --- WHISPER LOGIC ---
 async function playWhispers() {
   stopWhispers();
+  await audioCtx.resume(); // Needed for mobile and desktop
   for (let file of whisperFiles) {
     const buf = await fetch(file).then(r => r.arrayBuffer());
     const decoded = await audioCtx.decodeAudioData(buf);
@@ -240,25 +217,24 @@ async function playWhispers() {
     const gain = audioCtx.createGain();
     src.buffer = decoded;
     src.loop = true;
-    gain.gain.value = Math.random() * 0.15 + 0.05;
+    gain.gain.value = 0.22 + Math.random() * 0.10; // Louder for effect
     src.connect(gain).connect(audioCtx.destination);
-    setTimeout(() => src.start(0), Math.random() * 2000);
+    setTimeout(() => src.start(0), Math.random() * 1300);
     whisperSources.push(src);
   }
 }
-
 function stopWhispers() {
   whisperSources.forEach(s => s.stop());
   whisperSources = [];
 }
 
-// ───────── CLICK SOUND ─────────
+// --- CLICK SOUND ---
 function playClickOnce() {
   const a = document.getElementById('click-sound');
   if (a) { a.currentTime = 0; a.play(); }
 }
 
-// ──────── BREAK THE SPIRAL ────────
+// --- BREAK THE SPIRAL ---
 function breakSpiral() {
   playClickOnce();
   if (audioSources.length) {
@@ -270,21 +246,18 @@ function breakSpiral() {
     return;
   }
   audioCtx.resume().then(() => {
-    // white flash
     const flash = document.createElement('div');
     Object.assign(flash.style, {
-      position: 'fixed', inset: 0,
-      background: '#fff', opacity: 1,
-      zIndex: 10000, transition: 'opacity 0.6s'
+      position:'fixed', inset:0,
+      background:'#fff', opacity:1,
+      zIndex:10000, transition:'opacity 0.6s'
     });
     document.body.appendChild(flash);
-    requestAnimationFrame(() => flash.style.opacity = '0');
-    flash.addEventListener('transitionend', () => flash.remove());
-
-    // play hidden happy audio
+    requestAnimationFrame(()=> flash.style.opacity = '0');
+    flash.addEventListener('transitionend', ()=> flash.remove());
     hiddenHappy.forEach(file => {
-      fetch(file).then(r => r.arrayBuffer())
-        .then(buf => audioCtx.decodeAudioData(buf))
+      fetch(file).then(r=>r.arrayBuffer())
+        .then(buf=>audioCtx.decodeAudioData(buf))
         .then(decoded => {
           const src = audioCtx.createBufferSource();
           const gain = audioCtx.createGain();
@@ -296,39 +269,36 @@ function breakSpiral() {
           audioSources.push(src);
         });
     });
-
-    // floating videos
-    files.filter(f => /\.(mp4|mov)$/i.test(f)).forEach(file => {
+    files.filter(f=>/\.(mp4|mov)$/i.test(f)).forEach(file => {
       const v = document.createElement('video');
       v.src = file;
       v.autoplay = v.loop = true;
       v.muted = true;
-      const size = 100 + Math.random() * 200;
+      const size = 100 + Math.random()*200;
       Object.assign(v.style, {
-        position: 'fixed',
-        width: size + 'px',
-        top: Math.random() * (window.innerHeight - size) + 'px',
-        left: Math.random() * (window.innerWidth - size) + 'px',
-        zIndex: 999
+        position:'fixed',
+        width: size+'px',
+        top: Math.random()*(window.innerHeight-size)+'px',
+        left: Math.random()*(window.innerWidth-size)+'px',
+        zIndex:999
       });
       document.body.appendChild(v);
       videoEls.push(v);
     });
-
     document.getElementById('break-btn').textContent = 'STOP SPIRAL';
   });
 }
 
-// ─────── RANDOM BUTTON ───────
+// --- RANDOM BUTTON ---
 function openRandom() {
   const idx = Math.floor(Math.random() * files.length);
   openFile(files[idx]);
 }
 
-// ───── DISPLAY TILES ─────
+// --- DISPLAY TILES ---
 function displayTiles() {
   const grid = document.getElementById('puzzle-grid');
-  grid.innerHTML = files.map((f, i) => `
+  grid.innerHTML = files.map((f,i)=>`
     <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
       <div class="tile-number">${i+1}</div>
       <img src="${
@@ -341,7 +311,7 @@ function displayTiles() {
   `).join('');
 }
 
-// ───── OPEN/CLOSE CONTENT ─────
+// --- OPEN/CLOSE CONTENT ---
 function openFile(file) {
   playClickOnce();
   const grid    = document.getElementById('puzzle-grid');
@@ -355,15 +325,17 @@ function openFile(file) {
     area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
   }
   else if (file.endsWith('.script.txt')) {
-  fetch(file).then(r => r.text()).then(txt => {
-    area.innerHTML = `
-      <pre>${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
-      <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>
-      <button class="copy-btn" onclick="playWhispers()">SCHIZOPHRENIA</button>
-    `;
-    // Note: do NOT call playWhispers() here automatically!
-  });
-}
+    area.innerHTML =
+      `<button id="schizo-btn" class="copy-btn" style="background:#500;color:#fff;margin-bottom:16px;">SCHIZOPHRENIA</button>
+       <div style="color:#fff;">Loading script…</div>`;
+    fetch(file).then(r => r.text()).then(txt => {
+      area.innerHTML =
+        `<button id="schizo-btn" class="copy-btn" style="background:#500;color:#fff;margin-bottom:16px;">SCHIZOPHRENIA</button>
+         <pre>${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
+         <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>`;
+      document.getElementById('schizo-btn').onclick = playWhispers;
+    });
+  }
   else {
     area.innerHTML = `<video controls autoplay src="${file}"></video>`;
     const vid = area.querySelector('video');
@@ -378,11 +350,8 @@ function openFile(file) {
         }
       };
     }
-    else {
-      vid.loop = true;
-    }
+    else vid.loop = true;
   }
-
   grid.style.display    = 'none';
   content.style.display = 'flex';
 }
@@ -403,7 +372,7 @@ function copyScript() {
   }
 }
 
-// ───────── INIT ─────────
+// --- INIT ---
 window.addEventListener('DOMContentLoaded', () => {
   displayTiles();
   document.getElementById('break-btn').onclick  = breakSpiral;
