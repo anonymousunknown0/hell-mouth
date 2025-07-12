@@ -98,6 +98,14 @@ function enterWheel() {
   document.getElementById('wheel-overlay').style.display = 'flex';
 }
 
+    // Wheel → grid
+    function startSite() {
+      document.getElementById('wheel-overlay').style.display = 'none';
+      document.getElementById('puzzle-grid').style.display = 'flex';
+      document.getElementById('break-btn').style.display = 'block';
+      document.getElementById('random-btn').style.display = 'block';
+    }
+
     // ───────── GLOBALS ─────────
     const audioCtx     = new (window.AudioContext||window.webkitAudioContext)();
     let audioSources   = [], videoEls = [], whisperSources = [], unlocked = false;
