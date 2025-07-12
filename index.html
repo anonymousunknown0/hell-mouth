@@ -1,16 +1,95 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>TEST MODE</title>
-    <meta charset="UTF-8">
-    <style>
-      body { background: black; color: white; font-family: monospace; padding: 2em; }
-    </style>
-  </head>
-  <body>
-    <h1>Hello from HELL-MOUTH</h1>
-    <script>
-      document.body.innerHTML += "<p>✅ JavaScript is working.</p>";
-    </script>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Virtual Spiral Notebook</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000 url('spiral.gif') center center fixed;
+      background-size: cover;
+      font-family: monospace;
+      color: #ffd700;
+      overflow-x: hidden;
+    }
+    #wheel-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.95);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    #wheel-overlay h1 {
+      flex-basis: 100%;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .emotion-btn {
+      padding: 12px 24px;
+      margin: 6px;
+      background: #111;
+      border: 2px solid #ffd700;
+      color: #ffd700;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    #puzzle-grid {
+      display: none;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 20px;
+      justify-content: center;
+    }
+    .tile {
+      width: 160px;
+      height: 90px;
+      background: rgba(255,255,255,0.05);
+      border: 2px solid #ffd700;
+      border-radius: 14px;
+      color: #ffd700;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div id="wheel-overlay">
+  <h1>PICK AN EMOTION TO ENTER</h1>
+  <button class="emotion-btn" onclick="startSite()">Joy</button>
+  <button class="emotion-btn" onclick="startSite()">Sadness</button>
+</div>
+
+<div id="puzzle-grid"></div>
+
+<script>
+  const files = [
+    "choose your player.mp4",
+    "do you understand.mp4",
+    "lunch with the narrator.script.txt"
+  ];
+
+  function startSite() {
+    document.getElementById('wheel-overlay').style.display = 'none';
+    document.getElementById('puzzle-grid').style.display = 'flex';
+    displayTiles();
+  }
+
+  function displayTiles() {
+    const grid = document.getElementById('puzzle-grid');
+    grid.innerHTML = files.map(file => `
+      <div class="tile" onclick="alert('Clicked: ${file}')">${file}</div>
+    `).join('');
+  }
+</script>
+
+</body>
 </html>
