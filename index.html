@@ -23,7 +23,7 @@
       inset: 0;
       background: rgba(0,0,0,0.95);
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: center;
       z-index: 9999;
@@ -32,10 +32,11 @@
       padding: 20px;
     }
     #wheel-overlay h1 {
+      flex-basis: 100%;
       font-size: 2rem;
       margin-bottom: 1rem;
     }
-    #wheel-overlay .emotion-btn {
+    .emotion-btn {
       background: #222;
       color: #ffd700;
       border: 2px solid #ffd700;
@@ -44,16 +45,17 @@
       margin: 6px;
       font-size: 1rem;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, color 0.2s;
+      flex: 1 0 120px;
     }
-    #wheel-overlay .emotion-btn:hover {
+    .emotion-btn:hover {
       background: #ffd700;
       color: #111;
     }
 
     /* Grid */
     .puzzle-grid {
-      display: none; /* hidden until emotion picked */
+      display: none; /* show after emotion */
       flex-wrap: wrap;
       justify-content: center;
       gap: 14px;
@@ -95,7 +97,7 @@
       width: 100%;
       text-align: center;
       font-size: 0.85em; font-weight: bold;
-      color: #FFD600;              /* now all filenames are yellow */
+      color: #FFD600;  /* all filenames now yellow */
       background: rgba(0,0,0,0.18);
       padding: 2px 4px;
       white-space: nowrap;
@@ -106,7 +108,7 @@
 
     /* Break-the-Spiral */
     #break-btn {
-      display: none; /* hidden until emotion picked */
+      display: none; /* show after emotion */
       position: fixed;
       left: 50%; bottom: 32px;
       transform: translateX(-50%);
@@ -123,7 +125,7 @@
       background: #000; color: #fff;
     }
 
-    /* Overlay */
+    /* Content Overlay */
     #content {
       display: none;
       position: fixed; inset: 0;
@@ -175,8 +177,8 @@
 
     @keyframes smashFlash { from{background:#111;} to{background:#fff;} }
     @media (max-width:800px){
-      .tile { width:92vw; height:20vw; min-height:80px }
-      #break-btn { font-size:1.4em; padding:8px 24px; bottom:12px }
+      .tile{width:92vw;height:20vw;min-height:80px}
+      #break-btn{font-size:1.4em;padding:8px 24px;bottom:12px}
     }
   </style>
 </head>
@@ -189,10 +191,25 @@
     <button class="emotion-btn" onclick="startSite('Sadness')">Sadness</button>
     <button class="emotion-btn" onclick="startSite('Anger')">Anger</button>
     <button class="emotion-btn" onclick="startSite('Fear')">Fear</button>
+    <button class="emotion-btn" onclick="startSite('Surprise')">Surprise</button>
+    <button class="emotion-btn" onclick="startSite('Disgust')">Disgust</button>
+    <button class="emotion-btn" onclick="startSite('Trust')">Trust</button>
+    <button class="emotion-btn" onclick="startSite('Anticipation')">Anticipation</button>
+    <button class="emotion-btn" onclick="startSite('Love')">Love</button>
+    <button class="emotion-btn" onclick="startSite('Shame')">Shame</button>
+    <button class="emotion-btn" onclick="startSite('Pride')">Pride</button>
+    <button class="emotion-btn" onclick="startSite('Envy')">Envy</button>
+    <button class="emotion-btn" onclick="startSite('Guilt')">Guilt</button>
+    <button class="emotion-btn" onclick="startSite('Hope')">Hope</button>
+    <button class="emotion-btn" onclick="startSite('Boredom')">Boredom</button>
+    <button class="emotion-btn" onclick="startSite('Confusion')">Confusion</button>
+    <button class="emotion-btn" onclick="startSite('Calm')">Calm</button>
+    <button class="emotion-btn" onclick="startSite('Anxiety')">Anxiety</button>
+    <button class="emotion-btn" onclick="startSite('Awe')">Awe</button>
+    <button class="emotion-btn" onclick="startSite('Nostalgia')">Nostalgia</button>
   </div>
 
   <audio id="click-sound" src="click.mp3" preload="auto"></audio>
-
   <div class="puzzle-grid" id="puzzle-grid"></div>
   <button id="break-btn">BREAK THE SPIRAL</button>
 
@@ -203,7 +220,6 @@
   </div>
 
   <script>
-    // ───────── Master File List ─────────
     const files = [
       "The Surveillance Tape.mp4",
       "choose your player.mp4",
@@ -328,7 +344,6 @@
         currentScriptText = "";
 
     function startSite(emotion){
-      // you could store 'emotion' or play a sound here
       document.getElementById('wheel-overlay').style.display = 'none';
       document.getElementById('puzzle-grid').style.display = 'flex';
       document.getElementById('break-btn').style.display = 'block';
@@ -351,7 +366,7 @@
       const body = document.body;
       if (isSmashing) {
         smashAudioEls.forEach(a=>{ a.pause(); a.remove(); });
-        smashAudioEls=[]; isSmashing=false;
+        smashAudioEls = []; isSmashing = false;
         document.getElementById('break-btn').textContent = "BREAK THE SPIRAL";
         body.style.animation = '';
         return;
