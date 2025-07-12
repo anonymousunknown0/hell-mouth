@@ -91,6 +91,13 @@
 
   <!-- ALL JS in one block -->
   <script>
+
+// Hide the title screen and show the emotion wheel
+function enterWheel() {
+  document.getElementById('entry-screen').style.display = 'none';
+  document.getElementById('wheel-overlay').style.display = 'flex';
+}
+
     // ───────── GLOBALS ─────────
     const audioCtx     = new (window.AudioContext||window.webkitAudioContext)();
     let audioSources   = [], videoEls = [], whisperSources = [], unlocked = false;
