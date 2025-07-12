@@ -71,10 +71,11 @@
   </div><audio id="click-sound" src="click.mp3" preload="auto"></audio>
 
   <script>
-    // Auto-launch wheel on load
-    window.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('wheel-overlay').style.display = 'flex';
-    });
+    // Auto-launch grid on load (skip splash & wheel)
+window.addEventListener('DOMContentLoaded', () => {
+  startSite();      // show puzzle-grid + buttons
+  displayTiles();   // populate tiles
+});
 
     function startSite() {
       document.getElementById('wheel-overlay').style.display = 'none';
