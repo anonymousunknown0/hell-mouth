@@ -7,12 +7,8 @@
   <style>
     /* Base */
     body { margin: 0; background: #111 url('spiral.gif') center center fixed; background-size: cover; font-family: monospace; color: #eee; overflow-x: hidden; min-height: 100vh; }
-    /* Hellmouth Title Page */
-    #entry-screen { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: #000; z-index: 9999; flex-direction: column; }
-    #entry-screen h1 { color: #ff0000; font-size: 6rem; font-weight: 900; letter-spacing: 2rem; text-align: center; text-transform: uppercase; margin-bottom: 40px; }
-    #entry-screen button { padding: 14px 40px; font-size: 1.4rem; background: #000; color: #fff; border: 3px solid #fff; border-radius: 12px; cursor: pointer; }
     /* Emotional Wheel */
-    #wheel-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; flex-wrap: wrap; align-items: center; justify-content: center; z-index: 9998; color: #ffd700; text-align: center; padding: 20px; }
+    #wheel-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; z-index: 9998; color: #ffd700; text-align: center; padding: 20px; }
     #wheel-overlay h1 { margin-bottom: 1rem; font-size: 2rem; }
     .emotion-btn { background: #222; color: #ffd700; border: 2px solid #ffd700; border-radius: 12px; padding: 12px 24px; margin: 6px; font-size: 1rem; cursor: pointer; transition: background .2s, color .2s; }
     .emotion-btn:hover { background: #ffd700; color: #111; }
@@ -43,11 +39,8 @@
   </style>
 </head>
 <body>
-  <!-- Hellmouth Entry Page -->
-  <div id="entry-screen">
-    <h1>H E L L M O U T H</h1>
-    <button onclick="enterWheel()">Enter</button>
-  </div>  <!-- Emotional Wheel Entry Page -->  <div id="wheel-overlay">
+  <!-- Emotional Wheel Entry Page -->
+  <div id="wheel-overlay">
     <h1>Pick an Emotion to Enter</h1>
     <button class="emotion-btn" onclick="startSite()">Joy</button>
     <button class="emotion-btn" onclick="startSite()">Sadness</button>
@@ -77,14 +70,12 @@
     <button class="close-btn" onclick="closeContent()">CLOSE</button>
   </div><audio id="click-sound" src="click.mp3" preload="auto"></audio>
 
-  <!-- ALL JS in one block -->  <script>
-    // Enter from title → wheel
-    function enterWheel() {
-      document.getElementById('entry-screen').style.display = 'none';
+  <script>
+    // Auto-launch wheel on load
+    window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('wheel-overlay').style.display = 'flex';
-    }
+    });
 
-    // Wheel → grid
     function startSite() {
       document.getElementById('wheel-overlay').style.display = 'none';
       document.getElementById('puzzle-grid').style.display = 'flex';
@@ -311,7 +302,9 @@ function closeContent(){
 function copyScript(){ const p = document.querySelector('#content-area pre'); if(p){ navigator.clipboard.writeText(p.innerText); alert('Script copied!'); }}
 
 // ── INIT ──
-window.addEventListener('DOMContentLoaded', ()=>{ displayTiles(); });
+window.addEventListener('DOMContentLoaded', ()=>{
+  displayTiles();
+});
 
   </script>
 </body>
