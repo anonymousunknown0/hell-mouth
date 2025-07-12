@@ -355,12 +355,15 @@ function openFile(file) {
     area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
   }
   else if (file.endsWith('.script.txt')) {
-    fetch(file).then(r => r.text()).then(txt => {
-      area.innerHTML = `<pre>${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
-                        <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>`;
-      playWhispers();
-    });
-  }
+  fetch(file).then(r => r.text()).then(txt => {
+    area.innerHTML = `
+      <pre>${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
+      <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>
+      <button class="copy-btn" onclick="playWhispers()">SCHIZOPHRENIA</button>
+    `;
+    // Note: do NOT call playWhispers() here automatically!
+  });
+}
   else {
     area.innerHTML = `<video controls autoplay src="${file}"></video>`;
     const vid = area.querySelector('video');
