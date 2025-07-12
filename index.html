@@ -220,6 +220,38 @@ const hiddenHappy = [
 
     // ── WHISPER LOGIC ──
     async function playWhispers() {
+    // unlock audio context from user gesture
+    await audioCtx.resume();
+
+    // stop any old whisper sources
+    stopWhispers();
+
+    for (let file of whisperFiles) {
+      const buf = await fetch(file).then(r => r.arrayBuffer());
+      const decoded = await audioCtx.decodeAudioData(buf);
+      const src = audioCtx.createBufferSource();
+      const gain = audioCtx.createGain();
+      src.buffer = decoded;
+      src.loop = true;
+      gain.gain.value = Math.random() * 0.15 + 0.05;
+      src.connect(gain).connect(audioCtx.destination);
+      setTimeout(() => src.start(0), Math.random() * 2000);
+      whisperSources.push(src);
+    }
+}
+    }
+    function stopWhispers() { whisperSources.forEach(s=>s.stop()); whisperSources=[]; }
+
+    // ── CLICK SOUND ──
+    function playClickOnce() {
+      const a = document.getElementById('click-sound'); if(a){a.currentTime=0; a.play();}
+    }
+
+    // ── BREAK THE SPIRAL ──
+    function breakSpiral() {
+      playClickOnce();
+      if (audioSources.length) {
+        audioSources.forEach(s=>s.stop()); audioSources=[async function playWhispers() {
   // ensure context is running (must be from a user gesture)
   await audioCtx.resume();
 
@@ -239,19 +271,12 @@ const hiddenHappy = [
     setTimeout(() => src.start(0), Math.random() * 2000);
     whisperSources.push(src);
   }
-}
-    function stopWhispers() { whisperSources.forEach(s=>s.stop()); whisperSources=[]; }
-
-    // ── CLICK SOUND ──
-    function playClickOnce() {
-      const a = document.getElementById('click-sound'); if(a){a.currentTime=0; a.play();}
-    }
-
-    // ── BREAK THE SPIRAL ──
-    function breakSpiral() {
-      playClickOnce();
-      if (audioSources.length) {
-        audioSources.forEach(s=>s.stop()); audioSources=[];
+}const files = ["latino heat.happy.mp4", "piss is hot.happy.mp4", "island boys.happy.mp4",
+  "the shower scene.happy.mp4", "no smoking.happy.mp4", "meet jack.happy.mp4",
+  "drip.happy.mp4", "talk the talk.happy.mp4", "demon teen.happy.mp4",
+  "my guy.happy.mp4", "alpha alternative.happy.mp4", "bitch.happy.mp4",
+  "honey baby.happy.mp4", "heartbreak hotel.happy.mp4", "all american muscle.happy.mp4",
+  "cool guy goon.happy.mp4", "balls.happy.mp4", "brother.happy.mp4", "thug.happy.mp4"];
         videoEls.forEach(v=>v.remove()); videoEls=[];
         document.getElementById('break-btn').textContent='BREAK THE SPIRAL';
         return;
@@ -312,3 +337,4 @@ window.addEventListener('DOMContentLoaded',()=>{ displayTiles(); });
   </script>
 </body>
 </html>
+
