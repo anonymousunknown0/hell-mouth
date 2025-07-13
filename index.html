@@ -155,7 +155,8 @@
   // --- BREAK THE SPIRAL ---
 function breakSpiral() {
   playClickOnce();
-  // Stop all previous
+
+  // Stop all previous spiral audio & floating videos
   if (spiralAudio || audioSources.length || videoEls.length) {
     if (spiralAudio) { spiralAudio.pause(); spiralAudio = null; }
     audioSources.forEach(s => s.stop && s.stop());
@@ -165,7 +166,8 @@ function breakSpiral() {
     document.getElementById('break-btn').textContent = 'BREAK THE SPIRAL';
     return;
   }
-  // White flash
+
+  // White flash effect
   const flash = document.createElement('div');
   Object.assign(flash.style, {
     position: 'fixed', inset: 0,
@@ -175,125 +177,40 @@ function breakSpiral() {
   document.body.appendChild(flash);
   requestAnimationFrame(() => flash.style.opacity = '0');
   flash.addEventListener('transitionend', () => flash.remove());
-  // Play break the spiral.mp3 in a user gesture
+
+  // Play break the spiral.mp3 from a random point, loop
   spiralAudio = new Audio('break the spiral.mp3');
   spiralAudio.loop = true;
   spiralAudio.volume = 1.0;
-  // Start playback immediately, set random time after loaded
-  spiralAudio.addEventListener('canplay', () => {
+  spiralAudio.addEventListener('loadedmetadata', () => {
     if (spiralAudio.duration > 3) {
       spiralAudio.currentTime = Math.random() * (spiralAudio.duration - 2);
     }
-    // spiralAudio.play(); // don't need, already playing if not blocked
+    spiralAudio.play();
   });
-  spiralAudio.play().catch(e => {
-    // If autoplay fails, user interaction can try again
-    console.warn('Audio play blocked, try tapping again:', e);
+  spiralAudio.play();
+
+  // Floating videos (all .mp4/.mov from files array)
+  files.filter(f => /\.(mp4|mov)$/i.test(f)).forEach(file => {
+    const v = document.createElement('video');
+    v.src = file;
+    v.autoplay = v.loop = true;
+    v.muted = true;
+    const size = 100 + Math.random() * 200;
+    Object.assign(v.style, {
+      position: 'fixed',
+      width: size + 'px',
+      top: Math.random() * (window.innerHeight - size) + 'px',
+      left: Math.random() * (window.innerWidth - size) + 'px',
+      zIndex: 999
+    });
+    document.body.appendChild(v);
+    videoEls.push(v);
   });
+
   document.getElementById('break-btn').textContent = 'STOP SPIRAL';
 }
 
-  // --- RANDOM BUTTON ---
-  function openRandom() {
-    const idx = Math.floor(Math.random() * files.length);
-    openFile(files[idx]);
-  }
-  // --- DISPLAY TILES ---
-  function displayTiles() {
-    const grid = document.getElementById('puzzle-grid');
-    grid.innerHTML = files.map((f, i) => `
-      <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
-        <div class="tile-number">${i+1}</div>
-        <img src="${
-          f.endsWith('.happy.mp4')   ? 'happy.gif' :
-          f.endsWith('.script.txt')  ? 'galaxy.gif' :
-                                       'spiral.gif'
-        }" alt="tile" />
-        <div class="tile-filename">${f}</div>
-      </div>
-    `).join('');
-  }
-  // --- OPEN / CLOSE CONTENT ---
-  function openFile(file) {
-    playClickOnce();
-    const grid    = document.getElementById('puzzle-grid');
-    const content = document.getElementById('content');
-    const area    = document.getElementById('content-area');
-    document.getElementById('file-name').innerText = file;
-    area.innerHTML = '';
-    if (schizAudio) { schizAudio.pause(); schizAudio = null; }
-    const ext = file.split('.').pop().toLowerCase();
-    if (['mp3','wav','m4a'].includes(ext)) {
-      area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
-    }
-    else if (file.endsWith('.script.txt')) {
-      area.innerHTML = `
-        <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
-        <div style="color:#fff;">Loading script…</div>`;
-      fetch(file).then(r => r.text()).then(txt => {
-        area.innerHTML = `
-          <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
-          <pre>${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
-          <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>`;
-      });
-    }
-    else {
-      area.innerHTML = `<video controls autoplay src="${file}"></video>`;
-      const vid = area.querySelector('video');
-      if (file === 'do you understand.mp4') {
-        vid.loop = false;
-        vid.onended = () => {
-          if (!unlocked) {
-            unlocked = true;
-            files.push(...hiddenHappy);
-            displayTiles();
-            alert('🔓 Happy videos unlocked!');
-          }
-        };
-      }
-      else {
-        vid.loop = true;
-      }
-    }
-    grid.style.display    = 'none';
-    content.style.display = 'flex';
-  }
-  function closeContent() {
-    document.getElementById('content').style.display = 'none';
-    document.getElementById('puzzle-grid').style.display = 'flex';
-    document.querySelectorAll('#content-area audio, #content-area video')
-      .forEach(m => { m.pause && m.pause(); m.currentTime = 0; });
-    if (schizAudio) { schizAudio.pause(); schizAudio = null; }
-    if (spiralAudio) { spiralAudio.pause(); spiralAudio = null; }
-  }
-  // --- SCHIZOPHRENIA BUTTON LOGIC ---
-  function playSchizophrenia() {
-    if (schizAudio) { schizAudio.pause(); schizAudio = null; }
-    schizAudio = new Audio('schizophrenia.mp3');
-    schizAudio.loop = true;
-    schizAudio.volume = 1.0;
-    schizAudio.addEventListener('loadedmetadata', () => {
-      if (schizAudio.duration > 3) {
-        schizAudio.currentTime = Math.random() * (schizAudio.duration - 2);
-      }
-      schizAudio.play();
-    });
-    schizAudio.play();
-  }
-  // --- COPY SCRIPT BUTTON ---
-  function copyScript() {
-    const pre = document.querySelector('#content-area pre');
-    if (pre) {
-      navigator.clipboard.writeText(pre.innerText);
-      alert('Script copied!');
-    }
-  }
-  // --- INIT ---
-  window.addEventListener('DOMContentLoaded', () => {
-    displayTiles();
-    document.getElementById('break-btn').onclick  = breakSpiral;
-    document.getElementById('random-btn').onclick = openRandom;
-  });
 </script>
 </body>
 </html>
