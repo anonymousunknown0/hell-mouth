@@ -105,6 +105,13 @@
   <script>
   // --- ARRAYS ---
   const files = [
+    "scene 5 meet the voices.script.txt",
+    "scene 4 what hunter believes explained.script.txt",
+    "scene 3 meet hunter hardon.script.txt",
+    "scene 21 THE SPECTRAL ARCHIVE.script.txt",
+    "scene 2 the therapy session.script.txt",
+    "scene 1 schizophrenia disclaimer.script.txt",
+    "scene 25 new beginnings.script.txt",
     "The Surveillance Tape.mp4", "choose your player.mp4", "hellmouth part one_1.mp4", "333_leaked_therapy_smaller.mp4",
     "go_gay_outro.script.txt", "lunch with the narrator.script.txt", "choose your player.script.txt", "disclaimers.script.txt",
     "why call tmz harvey levin.script.txt", "confession press conference.script.txt", "3 cock anatomy.mp4", "why calls from gaga are SO important.script.txt",
@@ -134,7 +141,8 @@
   ];
   // --- AUDIO CTX ---
   const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-  let audioSources=[], videoEls=[], unlocked=false, schizAudio=null;
+  let audioSources=[], videoEls=[], unlocked=false, schizAudio=null, spiralAudio=null;
+
   // --- EMOTIONAL WHEEL LOGIC ---
   function startSite() {
     document.getElementById('wheel-overlay').style.display = 'none';
@@ -142,95 +150,106 @@
     document.getElementById('break-btn').style.display = 'block';
     document.getElementById('random-btn').style.display = 'block';
   }
+
   // --- ENTRY SCREEN LOGIC ---
-document.getElementById('enter-btn').onclick = function() {
-  document.getElementById('entry-screen').style.display = 'none';
-  document.getElementById('wheel-overlay').style.display = 'flex';
-};
+  document.getElementById('enter-btn').onclick = function() {
+    document.getElementById('entry-screen').style.display = 'none';
+    document.getElementById('wheel-overlay').style.display = 'flex';
+  };
 
-// --- CLICK SOUND ---
-function playClickOnce() {
-  const a = document.getElementById('click-sound');
-  if (a) { a.currentTime = 0; a.play(); }
-}
-
-// --- BREAK THE SPIRAL ---
-function breakSpiral() {
-  playClickOnce();
-  // Stop all previous
-  if (audioSources.length || videoEls.length || window.spiralAudio) {
-    if (window.spiralAudio) { window.spiralAudio.pause(); window.spiralAudio = null; }
-    audioSources.forEach(s => s.stop && s.stop());
-    audioSources = [];
-    videoEls.forEach(v => v.remove());
-    videoEls = [];
-    document.getElementById('break-btn').textContent = 'BREAK THE SPIRAL';
-    return;
+  // --- CLICK SOUND ---
+  function playClickOnce() {
+    const a = document.getElementById('click-sound');
+    if (a) { a.currentTime = 0; a.play(); }
   }
-  // White flash
-  const flash = document.createElement('div');
-  Object.assign(flash.style, {
-    position: 'fixed', inset: 0,
-    background: '#fff', opacity: 1,
-    zIndex: 10000, transition: 'opacity 0.6s'
-  });
-  document.body.appendChild(flash);
-  requestAnimationFrame(() => flash.style.opacity = '0');
-  flash.addEventListener('transitionend', () => flash.remove());
-  // Play break the spiral.mp3
-  window.spiralAudio = new Audio('break the spiral.mp3');
-  window.spiralAudio.loop = true;
-  window.spiralAudio.volume = 1.0;
-  window.spiralAudio.addEventListener('loadedmetadata', () => {
-    if (window.spiralAudio.duration > 3) {
-      window.spiralAudio.currentTime = Math.random() * (window.spiralAudio.duration - 2);
+
+  // --- BREAK THE SPIRAL ---
+  function breakSpiral() {
+    playClickOnce();
+    // Stop all previous spiral audio & floating videos
+    if (spiralAudio || audioSources.length || videoEls.length) {
+      if (spiralAudio) { spiralAudio.pause(); spiralAudio = null; }
+      audioSources.forEach(s => s.stop && s.stop());
+      audioSources = [];
+      videoEls.forEach(v => v.remove());
+      videoEls = [];
+      document.getElementById('break-btn').textContent = 'BREAK THE SPIRAL';
+      return;
     }
-    window.spiralAudio.play();
-  });
-  window.spiralAudio.play();
-  // Floating videos (visuals only, still muted)
-  files.filter(f => /\.(mp4|mov)$/i.test(f)).forEach(file => {
-    const v = document.createElement('video');
-    v.src = file;
-    v.autoplay = v.loop = true;
-    v.muted = true;
-    const size = 100 + Math.random() * 200;
-    Object.assign(v.style, {
-      position: 'fixed',
-      width: size + 'px',
-      top: Math.random() * (window.innerHeight - size) + 'px',
-      left: Math.random() * (window.innerWidth - size) + 'px',
-      zIndex: 999
+    // White flash effect
+    const flash = document.createElement('div');
+    Object.assign(flash.style, {
+      position: 'fixed', inset: 0,
+      background: '#fff', opacity: 1,
+      zIndex: 10000, transition: 'opacity 0.6s'
     });
-    document.body.appendChild(v);
-    videoEls.push(v);
-  });
-  document.getElementById('break-btn').textContent = 'STOP SPIRAL';
-}
+    document.body.appendChild(flash);
+    requestAnimationFrame(() => flash.style.opacity = '0');
+    flash.addEventListener('transitionend', () => flash.remove());
+    // Play break the spiral.mp3 from a random point, loop
+    spiralAudio = new Audio('break the spiral.mp3');
+    spiralAudio.loop = true;
+    spiralAudio.volume = 1.0;
+    spiralAudio.addEventListener('loadedmetadata', () => {
+      if (spiralAudio.duration > 3) {
+        spiralAudio.currentTime = Math.random() * (spiralAudio.duration - 2);
+      }
+      spiralAudio.play();
+    });
+    spiralAudio.play();
+    // Floating videos (all .mp4/.mov from files array)
+    files.filter(f => /\.(mp4|mov)$/i.test(f)).forEach(file => {
+      const v = document.createElement('video');
+      v.src = file;
+      v.autoplay = v.loop = true;
+      v.muted = true;
+      const size = 100 + Math.random() * 200;
+      Object.assign(v.style, {
+        position: 'fixed',
+        width: size + 'px',
+        top: Math.random() * (window.innerHeight - size) + 'px',
+        left: Math.random() * (window.innerWidth - size) + 'px',
+        zIndex: 999
+      });
+      document.body.appendChild(v);
+      videoEls.push(v);
+    });
+    document.getElementById('break-btn').textContent = 'STOP SPIRAL';
+  }
 
-// --- RANDOM BUTTON ---
-function openRandom() {
-  const idx = Math.floor(Math.random() * files.length);
-  openFile(files[idx]);
-}
+  // --- RANDOM BUTTON ---
+  function openRandom() {
+    const idx = Math.floor(Math.random() * files.length);
+    openFile(files[idx]);
+  }
 
-// --- DISPLAY TILES ---
-function displayTiles() {
-  const grid = document.getElementById('puzzle-grid');
-  grid.innerHTML = files.map((f, i) => `
-    <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
-      <div class="tile-number">${i+1}</div>
-      <img src="${
-        f.endsWith('.happy.mp4')   ? 'happy.gif' :
-        f.endsWith('.script.txt')  ? 'galaxy.gif' :
-                                     'spiral.gif'
-      }" alt="tile" />
-      <div class="tile-filename">${f}</div>
-    </div>
-  `).join('');
-}
+  // --- DISPLAY TILES ---
+  function displayTiles() {
+    const featureScripts = [
+      "scene 5 meet the voices.script.txt",
+      "scene 4 what hunter believes explained.script.txt",
+      "scene 3 meet hunter hardon.script.txt",
+      "scene 21 THE SPECTRAL ARCHIVE.script.txt",
+      "scene 2 the therapy session.script.txt",
+      "scene 1 schizophrenia disclaimer.script.txt",
+      "scene 25 new beginnings.script.txt"
+    ];
+    const grid = document.getElementById('puzzle-grid');
+    grid.innerHTML = files.map((f, i) => `
+      <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
+        <div class="tile-number">${i+1}</div>
+        <img src="${
+          featureScripts.includes(f)           ? 'lost-pilot-jack-eye-open.gif' :
+          f.endsWith('.happy.mp4')            ? 'happy.gif' :
+          f.endsWith('.script.txt')           ? 'galaxy.gif' :
+                                                'spiral.gif'
+        }" alt="tile" />
+        <div class="tile-filename">${f}</div>
+      </div>
+    `).join('');
+  }
 
-// --- OPEN / CLOSE CONTENT ---
+  // --- OPEN / CLOSE CONTENT ---
 function openFile(file) {
   playClickOnce();
   const grid    = document.getElementById('puzzle-grid');
@@ -239,9 +258,7 @@ function openFile(file) {
   document.getElementById('file-name').innerText = file;
   area.innerHTML = '';
   if (schizAudio) { schizAudio.pause(); schizAudio = null; }
-
   const ext = file.split('.').pop().toLowerCase();
-
   if (['mp3','wav','m4a'].includes(ext)) {
     area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
   }
@@ -317,6 +334,6 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('break-btn').onclick  = breakSpiral;
   document.getElementById('random-btn').onclick = openRandom;
 });
-  </script>
+</script>
 </body>
 </html>
