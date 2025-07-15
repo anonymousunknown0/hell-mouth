@@ -303,47 +303,11 @@ function openFile(file) {
   if (schizAudio) { schizAudio.pause(); schizAudio = null; }
 
   if (file === 'HAPPY-GRID') {
-    let currentHappy = 0;
-    area.innerHTML = `
-      <div style="display:flex;flex-direction:column;align-items:center">
-        <div class="happy-gallery-title" style="font-weight:900;font-size:1.2em;margin:8px 0 8px 0;">The Happy Gallery</div>
-        <video id="happy-gallery-video" src="${happyFiles[0]}" controls autoplay style="max-width:98vw;max-height:58vw;border-radius:14px;box-shadow:0 0 16px #0008"></video>
-        <div style="margin-top:18px;display:flex;gap:12px;">
-          <button class="copy-btn" onclick="happyPrev()">Prev</button>
-          <div id="happy-gallery-counter" style="font-weight:700;font-size:1.1em;">1 / ${happyFiles.length}</div>
-          <button class="copy-btn" onclick="happyNext()">Next</button>
-        </div>
-      </div>
-    `;
-    // Button actions:
-    window.happyPrev = function() {
-      happySwitch(currentHappy - 1);
-    };
-    window.happyNext = function() {
-      happySwitch(currentHappy + 1);
-    };
-    window.happySwitch = function(idx) {
-      const total = happyFiles.length;
-      if (idx < 0) idx = total - 1;
-      if (idx >= total) idx = 0;
-      currentHappy = idx;
-      let v = document.getElementById('happy-gallery-video');
-      v.pause();
-      v.src = happyFiles[idx];
-      v.play();
-      document.getElementById('happy-gallery-counter').textContent = (idx + 1) + ' / ' + total;
-    };
-    // Optional: Swipe navigation for mobile
-    let startX = null;
-    document.getElementById('happy-gallery-video').addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
-    document.getElementById('happy-gallery-video').addEventListener('touchend', e => {
-      if (startX !== null) {
-        let dx = e.changedTouches[0].clientX - startX;
-        if (Math.abs(dx) > 30) { dx > 0 ? happyPrev() : happyNext(); }
-        startX = null;
-      }
-    });
-
+    // Minimalist grid of all happy videos
+    let vids = happyFiles.map(f =>
+      `<video src="${f}" tabindex="0" controls preload="metadata" onclick="playSingleHappy(this)"></video>`
+    ).join('');
+    area.innerHTML = `<div class="happy-grid-label">The Happy Grid</div><div class="happy-grid">${vids}</div>`;
     grid.style.display = 'none';
     content.style.display = 'flex';
     return;
@@ -372,7 +336,7 @@ function openFile(file) {
       vid.onended = () => {
         if (!unlocked) {
           unlocked = true;
-          displayTiles();
+          displayTiles(); // now grid will show the happy puzzle piece!
           alert('🔓 Happy videos unlocked!');
         }
       };
@@ -384,17 +348,20 @@ function openFile(file) {
   content.style.display = 'flex';
 }
 
-// --- CLOSE CONTENT (improved: stop happy video) ---
+// --- Only play 1 happy video at a time ---
+function playSingleHappy(el) {
+  document.querySelectorAll('.happy-grid video').forEach(v => {
+    if (v !== el) { v.pause(); v.currentTime = 0; }
+  });
+  el.play();
+}
+
 function closeContent() {
   document.getElementById('content').style.display = 'none';
   document.getElementById('puzzle-grid').style.display = 'flex';
   document.querySelectorAll('#content-area audio, #content-area video')
     .forEach(m => { m.pause && m.pause(); m.currentTime = 0; });
   if (schizAudio) { schizAudio.pause(); schizAudio = null; }
-  if (window.happySwitch) {
-    let v = document.getElementById('happy-gallery-video');
-    if (v) { v.pause(); v.currentTime = 0; }
-  }
 }
 
 // --- SCHIZOPHRENIA BUTTON LOGIC ---
