@@ -46,6 +46,8 @@
       line-height: .9;
     }
     #entry-screen button { padding: 14px 40px; font-size: 1.4rem; background: #000; color: #fff; border: 3px solid #fff; border-radius: 12px; cursor: pointer; }
+    #schiz-btn-top { display:block; margin: 22px auto 0 auto; padding: 11px 32px; font-size: 1.12em; font-weight: bold; border: 2.5px solid #ff5252; border-radius: 13px; background:#111; color: #ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s; }
+    #schiz-btn-top:hover { background: #ff5252; color: #fff; }
     #wheel-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; flex-wrap: wrap; align-items: center; justify-content: center; z-index: 9998; color: #ffd700; text-align: center; padding: 20px; text-transform: capitalize; }
     #wheel-overlay h1 { flex-basis: 100%; font-size: 2rem; margin-bottom: 1rem; }
     .emotion-btn { background: #222; color: #ffd700; border: 2px solid #ffd700; border-radius: 12px; padding: 12px 24px; margin: 6px; font-size: 1rem; cursor: pointer; flex: 1 0 120px; transition: background 0.2s, color 0.2s; }
@@ -73,12 +75,13 @@
     .copy-btn:active { background: #ffc107; }
     .schiz-btn { background: #111; color: #ff5252; border-color: #ff5252; font-weight: 900; margin-bottom: 18px; text-transform: uppercase; letter-spacing: .2em; }
     .schiz-btn:hover { background: #ff5252; color: #fff; }
-    @media(max-width:800px){ .tile { width:92vw; height:20vw; min-height:80px; } #break-btn,#random-btn { font-size:1.4em; padding:8px 24px; bottom:12px; } }
-    .happy-gallery { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; padding: 20px 0; }
-    .happy-thumb { width: 340px; height: 192px; object-fit: cover; border-radius: 18px; box-shadow:0 0 10px #000; cursor:pointer; transition: box-shadow .2s; border: 2px solid #FFD600;}
+    .happy-gallery { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; padding: 18px 0 34px 0; }
+    .happy-thumb { width: 340px; height: 200px; object-fit: cover; border-radius: 16px; box-shadow:0 0 10px #000; cursor:pointer; transition: box-shadow .2s; background: #111; }
     .happy-thumb:hover { box-shadow:0 0 36px #FFD700; }
     @media(max-width:900px){ .happy-thumb{width:98vw;height:24vw;min-height:110px;} }
     #happy-fullscreen { display:none; position:fixed; inset:0; z-index:2000; background:#000D; align-items:center; justify-content:center; }
+    #happy-fullscreen video { border-radius:18px; box-shadow:0 0 36px #000; max-width:90vw; max-height:90vh;}
+    #happy-fullscreen button { position:absolute; top:30px; right:40px; font-size:2em; padding:8px 24px;}
   </style>
 </head>
 <body>
@@ -91,6 +94,7 @@
   </div>
   <div id="wheel-overlay">
     <h1>Pick an Emotion to Enter</h1>
+    <!-- ... emotion buttons ... -->
     <button class="emotion-btn" onclick="startSite()">Joy</button>
     <button class="emotion-btn" onclick="startSite()">Sadness</button>
     <button class="emotion-btn" onclick="startSite()">Anger</button>
@@ -112,7 +116,7 @@
     <button class="emotion-btn" onclick="startSite()">Awe</button>
     <button class="emotion-btn" onclick="startSite()">Nostalgia</button>
   </div>
-<button class="schiz-btn" style="margin:32px auto 16px;display:block;" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
+  <button id="schiz-btn-top" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
   <div class="puzzle-grid" id="puzzle-grid"></div>
   <button id="break-btn">BREAK THE SPIRAL</button>
   <button id="random-btn">random</button>
@@ -120,10 +124,9 @@
     <div class="filename" id="file-name"></div>
     <div id="content-area"></div>
     <button class="close-btn" onclick="closeContent()">CLOSE</button>
-    <!-- Happy fullscreen modal -->
     <div id="happy-fullscreen">
-      <video id="happy-fullscreen-video" controls autoplay loop style="max-width:90vw;max-height:90vh;border-radius:18px;box-shadow:0 0 36px #000"></video>
-      <button onclick="closeHappyFullscreen()" style="position:absolute;top:30px;right:40px;font-size:2em;padding:8px 24px;">CLOSE</button>
+      <video id="happy-fullscreen-video" controls autoplay loop></video>
+      <button onclick="closeHappyFullscreen()">CLOSE</button>
     </div>
   </div>
   <audio id="click-sound" src="click.mp3" preload="auto"></audio>
@@ -155,11 +158,14 @@
     "diagnosis equals schizophrenia.mp4", "demons shut up.mp4", "be chill life.mp4", "back to my old ways.mp4", "ai equals overwhelmed.mp4",
     "workout with daddy.script.txt", "brain hair.mp4", "fame kills act 1.mp4", "fame kills act 2.mp4", "hollywood baby.mp4", "inside the actor studio.mp4",
     "NO SMOKING.mp4", "prepare yourself.mp4", "press press press press press.mp4", "suffer suffer suffer.mp4", "welcome to your fantasy.mp4",
-    "meet ye kanye west.script.txt", "the tmz shame spiral.mp4", "you need to know.mp4", "phantom communication system.script.txt",
-    "you and i are bored.mp4", "the most hated man alive.mp4", "television visions.mp4", "hyper focused hyper relaxed.mp4",
-    "headphones baby.mp4", "do you understand.mp4"
-  ];
-  const happyFiles = [
+    "meet ye kanye west.script.txt",
+"the tmz shame spiral.mp4", "you need to know.mp4", "phantom communication system.script.txt",
+"you and i are bored.mp4", "the most hated man alive.mp4", "television visions.mp4", "hyper focused hyper relaxed.mp4",
+"headphones baby.mp4", "do you understand.mp4"
+];
+
+// --- FIRST HAPPY GALLERY FILES ---
+const happyFiles = [
   "latino heat.happy.mp4","piss is hot.happy.mp4","island boys.happy.mp4","the shower scene.happy.mp4",
   "no smoking.happy.mp4","meet jack.happy.mp4","drip.happy.mp4","talk the talk.happy.mp4","demon teen.happy.mp4",
   "my guy.happy.mp4","alpha alternative.happy.mp4","bitch.happy.mp4","honey baby.happy.mp4","happiest.happy.mp4",
@@ -169,7 +175,29 @@
   "feet master.happy.mp4","stroke it.happy.mp4","suit and tie.happy.mp4","swinging.happy.mp4","the climax.happy.mp4","virtual insanity.happy.mp4","real friends.happy.mp4"
 ];
 
-let unlocked = false;
+// --- SECOND HAPPY GALLERY FILES ---
+const happyFiles2 = [
+  "virtual insanity 2.happy.mp4",
+  "pov the man.happy.mp4",
+  "big guy bigger shot.happy.mp4",
+  "yes master.happy.mp4",
+  "daddy pleased.happy.mp4",
+  "three is not a crowd.happy.mp4",
+  "zzzzzzz.happy.mp4",
+  "three having fun.happy.mp4",
+  "teen works hard.happy.mp4",
+  "spit flex cum.happy.mp4",
+  "tall figure.happy.mp4",
+  "from the bed.happy.mp4",
+  "lights camera action.happy.mp4",
+  "modern mullet flex.happy.mp4",
+  "digital phone zone.happy.mp4",
+  "ill do it myself swagger.happy.mp4",
+  "finger in mouth seduction.happy.mp4"
+];
+
+// --- UNLOCK STATE ---
+let unlocked = false, unlocked2 = false;
 
 // --- AUDIO CTX ---
 const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
@@ -266,16 +294,15 @@ function displayTiles() {
     "scene 25 new beginnings.script.txt"
   ];
   const grid = document.getElementById('puzzle-grid');
-  // Add happy gallery as a single tile IF unlocked
-  let filesToShow = [...files];
-  if (unlocked && !filesToShow.includes("happy gallery")) filesToShow.push("happy gallery");
-  grid.innerHTML = filesToShow.map((f, i) => {
+  let mainTiles = files.map((f, i) => {
+    // Special tile for do you understand.mp4
     let imgSrc =
-      featureScripts.includes(f)      ? 'lost-pilot-jack-eye-open.gif' :
-      f === "happy gallery"           ? 'happy.gif' :
-      f === "do you understand.mp4"   ? 'do you understand.gif' :
-      f.endsWith('.script.txt')       ? 'galaxy.gif' :
-                                       'spiral.gif';
+      f === "do you understand.mp4"     ? "do you understand.gif"
+    : featureScripts.includes(f)         ? 'lost-pilot-jack-eye-open.gif'
+    : f.endsWith('.happy.mp4')           ? 'happy.gif'
+    : f.endsWith('.script.txt')          ? 'galaxy.gif'
+    :                                     'spiral.gif';
+
     return `
       <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
         <div class="tile-number">${i+1}</div>
@@ -284,29 +311,90 @@ function displayTiles() {
       </div>
     `;
   }).join('');
+
+  // Happy gallery tile(s) -- only after unlocking
+  let happyTile = unlocked ? `
+    <div class="tile" onclick="openFile('happy gallery')">
+      <div class="tile-number">🎉</div>
+      <img src="happy.gif" alt="happy" />
+      <div class="tile-filename">happy gallery</div>
+    </div>
+  ` : '';
+  let happyTile2 = unlocked2 ? `
+    <div class="tile" onclick="openFile('happy gallery 2')">
+      <div class="tile-number">🎈</div>
+      <img src="happy.gif" alt="happy" />
+      <div class="tile-filename">happy gallery 2</div>
+    </div>
+  ` : '';
+  // Schiz button stays at top
+  grid.innerHTML = happyTile + happyTile2 + mainTiles;
 }
 
-// --- HAPPY GALLERY ---
+// --- HAPPY GALLERY #1 ---
 function openHappyGallery() {
   playClickOnce();
   const grid    = document.getElementById('puzzle-grid');
   const content = document.getElementById('content');
   const area    = document.getElementById('content-area');
   document.getElementById('file-name').innerText = "happy gallery";
-
   area.innerHTML = `
     <div class="happy-gallery">
-      ${happyFiles.map(f => `
-        <div class="happy-thumb-wrap" style="display:inline-block; margin:8px;">
-          <video class="happy-thumb" src="${f}" preload="metadata" onclick="showHappyFullscreen('${f}')" poster=""></video>
-          <div style="color:#FFD600;font-size:0.9em;text-align:center;margin-top:2px;">${f.replace('.happy.mp4','')}</div>
-        </div>
+      ${happyFiles.map(f=>`
+        <video class="happy-thumb" src="${f}" preload="metadata" onclick="showHappyFullscreen('${f}')" poster=""></video>
       `).join('')}
     </div>
   `;
   grid.style.display    = 'none';
   content.style.display = 'flex';
 }
+
+// --- HAPPY GALLERY #2 ---
+function openHappyGallery2() {
+  playClickOnce();
+  const grid    = document.getElementById('puzzle-grid');
+  const content = document.getElementById('content');
+  const area    = document.getElementById('content-area');
+  document.getElementById('file-name').innerText = "happy gallery 2";
+  area.innerHTML = `
+    <div class="happy-gallery">
+      ${happyFiles2.map(f=>`
+        <video class="happy-thumb" src="${f}" preload="metadata" onclick="showHappyFullscreen('${f}')" poster=""></video>
+      `).join('')}
+    </div>
+  `;
+  grid.style.display    = 'none';
+  content.style.display = 'flex';
+}
+
+function generateVideoThumbnails(selector) {
+  // Find all thumbnails in the current gallery
+  document.querySelectorAll(selector).forEach(vid => {
+    // Only do it once per video
+    if (vid.dataset.posterGenerated) return;
+    vid.dataset.posterGenerated = true;
+
+    vid.addEventListener('loadeddata', function handler() {
+      try {
+        // Create a canvas to draw the first frame
+        const canvas = document.createElement('canvas');
+        canvas.width = vid.videoWidth;
+        canvas.height = vid.videoHeight;
+        canvas.getContext('2d').drawImage(vid, 0, 0, canvas.width, canvas.height);
+        // Set poster attribute to data URL
+        vid.setAttribute('poster', canvas.toDataURL('image/jpeg', 0.8));
+        vid.pause(); // Pause so it doesn't play in the gallery
+        vid.currentTime = 0;
+      } catch (e) {
+        // ignore errors
+      }
+      vid.removeEventListener('loadeddata', handler);
+    });
+    // Trigger load
+    vid.load();
+  });
+}
+
 function showHappyFullscreen(file) {
   const fs = document.getElementById('happy-fullscreen');
   const vid = document.getElementById('happy-fullscreen-video');
@@ -331,7 +419,10 @@ function openFile(file) {
   const area    = document.getElementById('content-area');
   document.getElementById('file-name').innerText = file;
   area.innerHTML = '';
+  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
+  // Happy galleries logic
   if (file === "happy gallery") { openHappyGallery(); return; }
+  if (file === "happy gallery 2") { openHappyGallery2(); return; }
   const ext = file.split('.').pop().toLowerCase();
   if (['mp3','wav','m4a'].includes(ext)) {
     area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
@@ -357,6 +448,10 @@ function openFile(file) {
           unlocked = true;
           displayTiles();
           alert('🔓 Happy gallery unlocked!');
+        } else if (!unlocked2) {
+          unlocked2 = true;
+          displayTiles();
+          alert('🔓 Happy gallery 2 unlocked!');
         }
       };
     } else {
@@ -406,6 +501,6 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('break-btn').onclick  = breakSpiral;
   document.getElementById('random-btn').onclick = openRandom;
 });
-</script>
+  </script>
 </body>
 </html>
