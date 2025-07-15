@@ -105,7 +105,7 @@
   <div id="entry-screen">
     <!-- Background video for entry page -->
     <video id="entry-bg-video" autoplay loop muted playsinline>
-      <source src="5 hypnotize.mp4" type="video/mp4">
+      <source src="brain 2.mp4" type="video/mp4">
     </video>
     <h1>H E L L M O U T H</h1>
     <button id="enter-btn">ENTER</button>
@@ -270,29 +270,64 @@
 
   // --- DISPLAY TILES ---
   function displayTiles() {
-    const featureScripts = [
-      "scene 5 meet the voices.script.txt",
-      "scene 4 what hunter believes explained.script.txt",
-      "scene 3 meet hunter hardon.script.txt",
-      "scene 21 THE SPECTRAL ARCHIVE.script.txt",
-      "scene 2 the therapy session.script.txt",
-      "scene 1 schizophrenia disclaimer.script.txt",
-      "scene 25 new beginnings.script.txt"
-    ];
-    const grid = document.getElementById('puzzle-grid');
-    grid.innerHTML = files.map((f, i) => `
-      <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
-        <div class="tile-number">${i+1}</div>
-        <img src="${
-          featureScripts.includes(f)           ? 'lost-pilot-jack-eye-open.gif' :
-          f.endsWith('.happy.mp4')            ? 'happy.gif' :
-          f.endsWith('.script.txt')           ? 'galaxy.gif' :
-                                                'spiral.gif'
-        }" alt="tile" />
-        <div class="tile-filename">${f}</div>
-      </div>
-    `).join('');
-  }
+  const featureScripts = [
+    "scene 5 meet the voices.script.txt",
+    "scene 4 what hunter believes explained.script.txt",
+    "scene 3 meet hunter hardon.script.txt",
+    "scene 21 THE SPECTRAL ARCHIVE.script.txt",
+    "scene 2 the therapy session.script.txt",
+    "scene 1 schizophrenia disclaimer.script.txt",
+    "scene 25 new beginnings.script.txt"
+  ];
+
+  // Files that get "parts series.gif" as their cover image
+  const partsSeries = [
+    "choose your player.mp4",
+    "11 old school smoking.mp4",
+    "part 1.mov.mp4",
+    "part 3.mov.mp4",
+    "part 4.mov.mp4",
+    "part 5.mov.mp4",
+    "part 6.mov.mp4",
+    "part 9.mp4",
+    "part 10.mov.mp4",
+    "part 11.mp4",
+    "part 16.mp4",
+    "part 13.mp4",
+    "part 33.mp4",
+    "part 27.mp4",
+    "part 18.mp4",
+    "the weekend.mp4",
+    "the brain spiral 2.mp4",
+    "rated mature.mp4",
+    "paparazzi control.mp4",
+    "jesus christ was here.mp4",
+    "i am a god.mp4",
+    "hellmouth night walk.mp4",
+    "demons shut up.mp4",
+    "be chill life.mp4",
+    "fame kills act 2.mp4",
+    "prepare yourself.mp4",
+    "press press press press press.mp4",
+    "headphones baby.mp4"
+  ];
+
+  const grid = document.getElementById('puzzle-grid');
+  grid.innerHTML = files.map((f, i) => `
+    <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
+      <div class="tile-number">${i+1}</div>
+      <img src="${
+        featureScripts.includes(f)             ? 'lost-pilot-jack-eye-open.gif' :
+        partsSeries.includes(f)                ? 'parts series.gif' :
+        f === 'do you understand.mp4'          ? 'do you understand.GIF' :
+        f.endsWith('.happy.mp4')               ? 'happy.gif' :
+        f.endsWith('.script.txt')              ? 'galaxy.gif' :
+                                                 'spiral.gif'
+      }" alt="tile" />
+      <div class="tile-filename">${f}</div>
+    </div>
+  `).join('');
+}
 
   // --- OPEN / CLOSE CONTENT ---
 function openFile(file) {
