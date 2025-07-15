@@ -63,28 +63,22 @@
     #break-btn:active { background: #000; color: #fff; }
     #random-btn { bottom: 100px; background: #333; color: #ffd700; border: 3px solid #ffd700; border-radius: 20px; padding: 8px 24px; font-size: 1.2em; font-weight: bold; }
     #random-btn:hover { background: #ffd700; color: #111; }
-    #content { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.93); overflow-y: auto; padding: 30px 10px; box-sizing: border-box; z-index: 20; }
+    #content { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.93); overflow-y: auto; padding: 30px 10px; box-sizing: border-box; z-index: 12000; }
     #content .filename { color: #ffd700; font-size: 1.2rem; font-weight: bold; margin-bottom: 12px; text-align: center; word-break: break-all; }
     #content-area { width: 100%; max-width: 700px; margin: 0 auto; max-height: calc(100vh - 200px); overflow-y: auto; }
     #content-area pre { background: #111; color: #fff; padding: 24px; border-radius: 14px; font-family: 'Courier New', monospace; font-size: 1.05em; line-height: 1.5; white-space: pre-wrap; word-break: break-word; box-shadow: 0 0 12px #0008; margin-bottom: 16px; }
     #content-area audio, #content-area video { width: 100%; max-width: 700px; border-radius: 12px; box-shadow: 0 0 12px #0008; margin-bottom: 16px; }
     .close-btn, .copy-btn, .schiz-btn { display: block; margin: 8px auto; padding: 8px 24px; font-size: 1em; font-weight: bold; border: 2px solid #fff; border-radius: 12px; cursor: pointer; transition: background 0.2s; }
-    .close-btn { background: rgba(0,0,0,0.5); color: #fff; }
+    .close-btn { background: rgba(0,0,0,0.5); color: #fff; z-index: 99999; }
     .close-btn:hover { background: #e00; }
     .copy-btn { background: #ffd700; color: #111; border-color: #ffd700; }
     .copy-btn:active { background: #ffc107; }
     .schiz-btn { background: #111; color: #ff5252; border-color: #ff5252; font-weight: 900; margin-bottom: 18px; text-transform: uppercase; letter-spacing: .2em; }
     .schiz-btn:hover { background: #ff5252; color: #fff; }
-    .happy-gallery { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; padding: 18px 0 34px 0; }
-    .happy-thumb { width: 340px; height: 200px; object-fit: cover; border-radius: 16px; box-shadow:0 0 10px #000; cursor:pointer; transition: box-shadow .2s; background: #111; }
-    .happy-thumb:hover { box-shadow:0 0 36px #FFD700; }
-    @media(max-width:900px){ .happy-thumb{width:98vw;height:24vw;min-height:110px;} }
-    #happy-fullscreen { display:none; position:fixed; inset:0; z-index:2000; background:#000D; align-items:center; justify-content:center; }
-    #happy-fullscreen video { border-radius:18px; box-shadow:0 0 36px #000; max-width:90vw; max-height:90vh;}
-    #happy-fullscreen button { position:absolute; top:30px; right:40px; font-size:2em; padding:8px 24px;}
   </style>
 </head>
 <body>
+  <!-- ENTRY SCREEN -->
   <div id="entry-screen">
     <video id="entry-bg-video" autoplay loop muted playsinline>
       <source src="5 hypnotize.mp4" type="video/mp4">
@@ -92,9 +86,9 @@
     <h1>H E L L M O U T H</h1>
     <button id="enter-btn">ENTER</button>
   </div>
+  <!-- EMOTIONAL WHEEL -->
   <div id="wheel-overlay">
     <h1>Pick an Emotion to Enter</h1>
-    <!-- ... emotion buttons ... -->
     <button class="emotion-btn" onclick="startSite()">Joy</button>
     <button class="emotion-btn" onclick="startSite()">Sadness</button>
     <button class="emotion-btn" onclick="startSite()">Anger</button>
@@ -123,13 +117,11 @@
   <div id="content">
     <div class="filename" id="file-name"></div>
     <div id="content-area"></div>
-    <button class="close-btn" onclick="closeContent()">CLOSE</button>
-    <div id="happy-fullscreen">
-      <video id="happy-fullscreen-video" controls autoplay loop></video>
-      <button onclick="closeHappyFullscreen()">CLOSE</button>
-    </div>
+    <button class="close-btn" id="close-btn-main" onclick="closeContent()">CLOSE</button>
+    <!-- Happy modal(s) can go here if needed -->
   </div>
   <audio id="click-sound" src="click.mp3" preload="auto"></audio>
+
   <script>
   // --- ARRAYS ---
   const files = [
@@ -158,380 +150,195 @@
     "diagnosis equals schizophrenia.mp4", "demons shut up.mp4", "be chill life.mp4", "back to my old ways.mp4", "ai equals overwhelmed.mp4",
     "workout with daddy.script.txt", "brain hair.mp4", "fame kills act 1.mp4", "fame kills act 2.mp4", "hollywood baby.mp4", "inside the actor studio.mp4",
     "NO SMOKING.mp4", "prepare yourself.mp4", "press press press press press.mp4", "suffer suffer suffer.mp4", "welcome to your fantasy.mp4",
-    "meet ye kanye west.script.txt",
-"the tmz shame spiral.mp4", "you need to know.mp4", "phantom communication system.script.txt",
-"you and i are bored.mp4", "the most hated man alive.mp4", "television visions.mp4", "hyper focused hyper relaxed.mp4",
-"headphones baby.mp4", "do you understand.mp4"
-];
+    "meet ye kanye west.script.txt", "the tmz shame spiral.mp4", "you need to know.mp4", "phantom communication system.script.txt",
+    "you and i are bored.mp4", "the most hated man alive.mp4", "television visions.mp4", "hyper focused hyper relaxed.mp4",
+    "headphones baby.mp4", "do you understand.mp4"
+  ];
+  // --- HAPPY FILE ARRAYS ---
+  const happyFiles = [
+    "latino heat.happy.mp4","piss is hot.happy.mp4","island boys.happy.mp4","the shower scene.happy.mp4",
+    "no smoking.happy.mp4","meet jack.happy.mp4","drip.happy.mp4","talk the talk.happy.mp4","demon teen.happy.mp4",
+    "my guy.happy.mp4","alpha alternative.happy.mp4","bitch.happy.mp4","honey baby.happy.mp4","happiest.happy.mp4",
+    "all american muscle.happy.mp4","cool guy goon.happy.mp4","balls.happy.mp4","thug.happy.mp4",
+    "all for you.happy.mp4","charming.happy.mp4","another one.happy.mp4","generic wrestler.happy.mp4","public strip down.happy.mp4",
+    "easy twink.happy.mp4","got goon.happy.mp4","mirror.happy.mp4","public bbc.happy.mp4","self 321.happy.mp4","big shot.happy.mp4",
+    "feet master.happy.mp4","stroke it.happy.mp4","suit and tie.happy.mp4", "swinging.happy.mp4",
+    "the climax.happy.mp4",
+    "virtual insanity.happy.mp4",
+    "real friends.happy.mp4"
+  ];
 
-// --- FIRST HAPPY GALLERY FILES ---
-const happyFiles = [
-  "latino heat.happy.mp4","piss is hot.happy.mp4","island boys.happy.mp4","the shower scene.happy.mp4",
-  "no smoking.happy.mp4","meet jack.happy.mp4","drip.happy.mp4","talk the talk.happy.mp4","demon teen.happy.mp4",
-  "my guy.happy.mp4","alpha alternative.happy.mp4","bitch.happy.mp4","honey baby.happy.mp4","happiest.happy.mp4",
-  "all american muscle.happy.mp4","cool guy goon.happy.mp4","balls.happy.mp4","thug.happy.mp4",
-  "all for you.happy.mp4","charming.happy.mp4","another one.happy.mp4","generic wrestler.happy.mp4","public strip down.happy.mp4",
-  "easy twink.happy.mp4","got goon.happy.mp4","mirror.happy.mp4","public bbc.happy.mp4","self 321.happy.mp4","big shot.happy.mp4",
-  "feet master.happy.mp4","stroke it.happy.mp4","suit and tie.happy.mp4","swinging.happy.mp4","the climax.happy.mp4","virtual insanity.happy.mp4","real friends.happy.mp4"
-];
+  const happyFiles2 = [
+    "virtual insanity 2.happy.mp4",
+    "pov the man.happy.mp4",
+    "big guy bigger shot.happy.mp4",
+    "yes master.happy.mp4",
+    "daddy pleased.happy.mp4",
+    "three is not a crowd.happy.mp4",
+    "zzzzzzz.happy.mp4",
+    "three having fun.happy.mp4",
+    "teen works hard.happy.mp4",
+    "spit flex cum.happy.mp4",
+    "tall figure.happy.mp4",
+    "from the bed.happy.mp4",
+    "lights camera action.happy.mp4",
+    "modern mullet flex.happy.mp4",
+    "digital phone zone.happy.mp4",
+    "ill do it myself swagger.happy.mp4",
+    "finger in mouth seduction.happy.mp4"
+  ];
 
-// --- SECOND HAPPY GALLERY FILES ---
-const happyFiles2 = [
-  "virtual insanity 2.happy.mp4",
-  "pov the man.happy.mp4",
-  "big guy bigger shot.happy.mp4",
-  "yes master.happy.mp4",
-  "daddy pleased.happy.mp4",
-  "zzzzzzz.happy.mp4",
-  "three having fun.happy.mp4",
-  "teen works hard.happy.mp4",
-  "spit flex cum.happy.mp4",
-  "tall figure.happy.mp4",
-  "from the bed.happy.mp4",
-  "lights camera action.happy.mp4",
-  "modern mullet flex.happy.mp4",
-  "digital phone zone.happy.mp4",
-  "ill do it myself swagger.happy.mp4",
-  "finger in mouth seduction.happy.mp4"
-];
+  // --- UNLOCK STATES ---
+  let unlocked = false, unlocked2 = false;
 
-function openHappyFileList(happyFilesArr, galleryTitle = "happy gallery") {
-  playClickOnce();
-  const grid    = document.getElementById('puzzle-grid');
-  const content = document.getElementById('content');
-  const area    = document.getElementById('content-area');
-  document.getElementById('file-name').innerText = galleryTitle;
+  // --- AUDIO CTX ---
+  const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  let audioSources=[], videoEls=[], schizAudio=null, spiralAudio=null;
 
-  area.innerHTML = `
-    <div style="max-width:500px;margin:0 auto;">
-      <div style="font-size:1.2em;color:#FFD600;text-align:left;padding-bottom:10px;">
-        <b>${galleryTitle.toUpperCase()}</b> – double-click any file below:
+  // --- EMOTIONAL WHEEL LOGIC ---
+  function startSite() {
+    document.getElementById('wheel-overlay').style.display = 'none';
+    document.getElementById('puzzle-grid').style.display = 'flex';
+    document.getElementById('break-btn').style.display = 'block';
+    document.getElementById('random-btn').style.display = 'block';
+  }
+
+  // --- ENTRY SCREEN LOGIC ---
+  document.getElementById('enter-btn').onclick = function() {
+    document.getElementById('entry-screen').style.display = 'none';
+    document.getElementById('wheel-overlay').style.display = 'flex';
+  };
+
+  // --- CLICK SOUND ---
+  function playClickOnce() {
+    const a = document.getElementById('click-sound');
+    if (a) { a.currentTime = 0; a.play(); }
+  }
+
+  // --- BREAK THE SPIRAL ---
+  function breakSpiral() {
+    playClickOnce();
+    if (spiralAudio || audioSources.length || videoEls.length) {
+      if (spiralAudio) { spiralAudio.pause(); spiralAudio = null; }
+      audioSources.forEach(s => s.stop && s.stop());
+      audioSources = [];
+      videoEls.forEach(v => v.remove());
+      videoEls = [];
+      document.getElementById('break-btn').textContent = 'BREAK THE SPIRAL';
+      return;
+    }
+    const flash = document.createElement('div');
+    Object.assign(flash.style, {
+      position: 'fixed', inset: 0,
+      background: '#fff', opacity: 1,
+      zIndex: 10000, transition: 'opacity 0.6s'
+    });
+    document.body.appendChild(flash);
+    requestAnimationFrame(() => flash.style.opacity = '0');
+    flash.addEventListener('transitionend', () => flash.remove());
+    spiralAudio = new Audio('break the spiral.mp3');
+    spiralAudio.loop = true;
+    spiralAudio.volume = 1.0;
+    spiralAudio.addEventListener('loadedmetadata', () => {
+      if (spiralAudio.duration > 3) {
+        spiralAudio.currentTime = Math.random() * (spiralAudio.duration - 2);
+      }
+      spiralAudio.play();
+    });
+    spiralAudio.play();
+    files.filter(f => /\.(mp4|mov)$/i.test(f)).forEach(file => {
+      const v = document.createElement('video');
+      v.src = file;
+      v.autoplay = v.loop = true;
+      v.muted = true;
+      const size = 100 + Math.random() * 200;
+      Object.assign(v.style, {
+        position: 'fixed',
+        width: size + 'px',
+        top: Math.random() * (window.innerHeight - size) + 'px',
+        left: Math.random() * (window.innerWidth - size) + 'px',
+        zIndex: 999
+      });
+      document.body.appendChild(v);
+      videoEls.push(v);
+    });
+    document.getElementById('break-btn').textContent = 'STOP SPIRAL';
+  }
+
+  // --- RANDOM BUTTON ---
+  function openRandom() {
+    const idx = Math.floor(Math.random() * files.length);
+    openFile(files[idx]);
+  }
+
+  // --- DISPLAY TILES (PUZZLE GRID) ---
+  function displayTiles() {
+    const featureScripts = [
+      "scene 5 meet the voices.script.txt",
+      "scene 4 what hunter believes explained.script.txt",
+      "scene 3 meet hunter hardon.script.txt",
+      "scene 21 THE SPECTRAL ARCHIVE.script.txt",
+      "scene 2 the therapy session.script.txt",
+      "scene 1 schizophrenia disclaimer.script.txt",
+      "scene 25 new beginnings.script.txt"
+    ];
+    const grid = document.getElementById('puzzle-grid');
+    let mainTiles = files.map((f, i) => {
+      let imgSrc =
+        f === "do you understand.mp4"     ? "do you understand.gif"
+      : featureScripts.includes(f)         ? 'lost-pilot-jack-eye-open.gif'
+      : f.endsWith('.happy.mp4')           ? 'happy.gif'
+      : f.endsWith('.script.txt')          ? 'galaxy.gif'
+      :                                     'spiral.gif';
+      return `
+        <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
+          <div class="tile-number">${i+1}</div>
+          <img src="${imgSrc}" alt="tile" />
+          <div class="tile-filename">${f}</div>
+        </div>
+      `;
+    }).join('');
+    let happyTile = unlocked ? `
+      <div class="tile" onclick="openFile('happy gallery')">
+        <div class="tile-number">🎉</div>
+        <img src="happy.gif" alt="happy" />
+        <div class="tile-filename">happy gallery</div>
       </div>
-      <ul style="list-style:none;padding:0;">
-        ${happyFilesArr.map(f => `
-          <li style="border-bottom:1px solid #222;padding:10px 0;cursor:pointer;transition:background 0.15s;"
-              ondblclick="showHappyVideo('${f.replace(/'/g,"\\'")}')"
-              onmouseover="this.style.background='#232'"
-              onmouseout="this.style.background='none'">
-            <span style="color:#FFD600;">📄</span>
-            <span style="font-family:monospace;color:#fff">${f}</span>
-          </li>
-        `).join('')}
-      </ul>
-    </div>
-    <div id="happy-modal" style="display:none;position:fixed;inset:0;z-index:2000;background:#000c;align-items:center;justify-content:center;">
-      <div style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-        <video id="happy-modal-video" controls autoplay style="max-width:90vw;max-height:90vh;border-radius:18px;box-shadow:0 0 36px #000"></video>
-        <div style="margin-top:8px;">
-          <button onclick="setPlaybackRate(0.5)">0.5x</button>
-          <button onclick="setPlaybackRate(1)">1x</button>
-          <button onclick="setPlaybackRate(1.5)">1.5x</button>
-          <button onclick="setPlaybackRate(2)">2x</button>
-          <button onclick="closeHappyModal()" style="margin-left:30px;">CLOSE</button>
+    ` : '';
+    let happyTile2 = unlocked2 ? `
+      <div class="tile" onclick="openFile('happy gallery 2')">
+        <div class="tile-number">🎈</div>
+        <img src="happy.gif" alt="happy" />
+        <div class="tile-filename">happy gallery 2</div>
+      </div>
+    ` : '';
+    grid.innerHTML = happyTile + happyTile2 + mainTiles;
+  }
+
+  // --- HAPPY FILE LIST VIEWER (FILE EXPLORER-STYLE) ---
+  function openHappyFileList(fileArray, galleryTitle) {
+    const grid    = document.getElementById('puzzle-grid');
+    const content = document.getElementById('content');
+    const area    = document.getElementById('content-area');
+    document.getElementById('file-name').innerText = galleryTitle;
+
+    area.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px;margin:30px 0;">
+        <h2 style="color:#FFD700;">${galleryTitle.replace(/gallery/i,'Happy Gallery')}</h2>
+        <div class="happy-file-list" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+          ${fileArray.map((f, i) => `
+            <button onclick="openSingleHappyVideo('${f.replace(/'/g,"\\'")}', '${galleryTitle}')" 
+                    style="background:#111;color:#FFD700;font-size:1.1em;border:2px solid #FFD700;border-radius:10px;padding:8px 24px;cursor:pointer;min-width:240px;">
+              ${i+1}. ${f}
+            </button>
+          `).join('')}
         </div>
       </div>
-    </div>
-  `;
-  grid.style.display    = 'none';
-  content.style.display = 'flex';
-  // Add keydown escape to close modal
-  document.onkeydown = function(e){ if (e.key==="Escape") closeHappyModal(); };
-}
-
-function showHappyVideo(file) {
-  const modal = document.getElementById('happy-modal');
-  const vid = document.getElementById('happy-modal-video');
-  modal.style.display = 'flex';
-  vid.src = file;
-  vid.play();
-}
-function closeHappyModal() {
-  const modal = document.getElementById('happy-modal');
-  const vid = document.getElementById('happy-modal-video');
-  vid.pause(); vid.src='';
-  modal.style.display = 'none';
-}
-function setPlaybackRate(rate) {
-  const vid = document.getElementById('happy-modal-video');
-  vid.playbackRate = rate;
-}
-
-// --- UNLOCK STATE ---
-let unlocked = false, unlocked2 = false;
-
-// --- AUDIO CTX ---
-const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-let audioSources=[], videoEls=[], schizAudio=null, spiralAudio=null;
-
-// --- EMOTIONAL WHEEL LOGIC ---
-function startSite() {
-  document.getElementById('wheel-overlay').style.display = 'none';
-  document.getElementById('puzzle-grid').style.display = 'flex';
-  document.getElementById('break-btn').style.display = 'block';
-  document.getElementById('random-btn').style.display = 'block';
-}
-
-// --- ENTRY SCREEN LOGIC ---
-document.getElementById('enter-btn').onclick = function() {
-  document.getElementById('entry-screen').style.display = 'none';
-  document.getElementById('wheel-overlay').style.display = 'flex';
-};
-
-// --- CLICK SOUND ---
-function playClickOnce() {
-  const a = document.getElementById('click-sound');
-  if (a) { a.currentTime = 0; a.play(); }
-}
-
-// --- BREAK THE SPIRAL ---
-function breakSpiral() {
-  playClickOnce();
-  if (spiralAudio || audioSources.length || videoEls.length) {
-    if (spiralAudio) { spiralAudio.pause(); spiralAudio = null; }
-    audioSources.forEach(s => s.stop && s.stop());
-    audioSources = [];
-    videoEls.forEach(v => v.remove());
-    videoEls = [];
-    document.getElementById('break-btn').textContent = 'BREAK THE SPIRAL';
-    return;
-  }
-  // White flash effect
-  const flash = document.createElement('div');
-  Object.assign(flash.style, {
-    position: 'fixed', inset: 0,
-    background: '#fff', opacity: 1,
-    zIndex: 10000, transition: 'opacity 0.6s'
-  });
-  document.body.appendChild(flash);
-  requestAnimationFrame(() => flash.style.opacity = '0');
-  flash.addEventListener('transitionend', () => flash.remove());
-  // Play break the spiral.mp3 from a random point, loop
-  spiralAudio = new Audio('break the spiral.mp3');
-  spiralAudio.loop = true;
-  spiralAudio.volume = 1.0;
-  spiralAudio.addEventListener('loadedmetadata', () => {
-    if (spiralAudio.duration > 3) {
-      spiralAudio.currentTime = Math.random() * (spiralAudio.duration - 2);
-    }
-    spiralAudio.play();
-  });
-  spiralAudio.play();
-  // Floating videos (all .mp4/.mov from files array)
-  files.filter(f => /\.(mp4|mov)$/i.test(f)).forEach(file => {
-    const v = document.createElement('video');
-    v.src = file;
-    v.autoplay = v.loop = true;
-    v.muted = true;
-    const size = 100 + Math.random() * 200;
-    Object.assign(v.style, {
-      position: 'fixed',
-      width: size + 'px',
-      top: Math.random() * (window.innerHeight - size) + 'px',
-      left: Math.random() * (window.innerWidth - size) + 'px',
-      zIndex: 999
-    });
-    document.body.appendChild(v);
-    videoEls.push(v);
-  });
-  document.getElementById('break-btn').textContent = 'STOP SPIRAL';
-}
-
-// --- RANDOM BUTTON ---
-function openRandom() {
-  const idx = Math.floor(Math.random() * files.length);
-  openFile(files[idx]);
-}
-
-// --- DISPLAY TILES ---
-function displayTiles() {
-  const featureScripts = [
-    "scene 5 meet the voices.script.txt",
-    "scene 4 what hunter believes explained.script.txt",
-    "scene 3 meet hunter hardon.script.txt",
-    "scene 21 THE SPECTRAL ARCHIVE.script.txt",
-    "scene 2 the therapy session.script.txt",
-    "scene 1 schizophrenia disclaimer.script.txt",
-    "scene 25 new beginnings.script.txt"
-  ];
-  const grid = document.getElementById('puzzle-grid');
-  let mainTiles = files.map((f, i) => {
-    // Special tile for do you understand.mp4
-    let imgSrc =
-      f === "do you understand.mp4"     ? "do you understand.gif"
-    : featureScripts.includes(f)         ? 'lost-pilot-jack-eye-open.gif'
-    : f.endsWith('.happy.mp4')           ? 'happy.gif'
-    : f.endsWith('.script.txt')          ? 'galaxy.gif'
-    :                                     'spiral.gif';
-
-    return `
-      <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
-        <div class="tile-number">${i+1}</div>
-        <img src="${imgSrc}" alt="tile" />
-        <div class="tile-filename">${f}</div>
-      </div>
-    `;
-  }).join('');
-
-  // Happy gallery tile(s) -- only after unlocking
-  let happyTile = unlocked ? `
-    <div class="tile" onclick="openFile('happy gallery')">
-      <div class="tile-number">🎉</div>
-      <img src="happy.gif" alt="happy" />
-      <div class="tile-filename">happy gallery</div>
-    </div>
-  ` : '';
-  let happyTile2 = unlocked2 ? `
-    <div class="tile" onclick="openFile('happy gallery 2')">
-      <div class="tile-number">🎈</div>
-      <img src="happy.gif" alt="happy" />
-      <div class="tile-filename">happy gallery 2</div>
-    </div>
-  ` : '';
-  // Schiz button stays at top
-  grid.innerHTML = happyTile + happyTile2 + mainTiles;
-}
-
-// --- HAPPY GALLERY #1 ---
-function openHappyGallery() {
-  playClickOnce();
-  const grid    = document.getElementById('puzzle-grid');
-  const content = document.getElementById('content');
-  const area    = document.getElementById('content-area');
-  document.getElementById('file-name').innerText = "happy gallery";
-  area.innerHTML = `
-    <div class="happy-gallery">
-      ${happyFiles.map(f=>`
-        <video class="happy-thumb" src="${f}" preload="metadata" onclick="showHappyFullscreen('${f}')" poster=""></video>
-      `).join('')}
-    </div>
-  `;
-  grid.style.display    = 'none';
-  content.style.display = 'flex';
-}
-
-// --- HAPPY GALLERY #2 ---
-function openHappyGallery2() {
-  playClickOnce();
-  const grid    = document.getElementById('puzzle-grid');
-  const content = document.getElementById('content');
-  const area    = document.getElementById('content-area');
-  document.getElementById('file-name').innerText = "happy gallery 2";
-  area.innerHTML = `
-    <div class="happy-gallery">
-      ${happyFiles2.map(f=>`
-        <video class="happy-thumb" src="${f}" preload="metadata" onclick="showHappyFullscreen('${f}')" poster=""></video>
-      `).join('')}
-    </div>
-  `;
-  grid.style.display    = 'none';
-  content.style.display = 'flex';
-}
-
-function generateVideoThumbnails(selector) {
-  // Find all thumbnails in the current gallery
-  document.querySelectorAll(selector).forEach(vid => {
-    // Only do it once per video
-    if (vid.dataset.posterGenerated) return;
-    vid.dataset.posterGenerated = true;
-
-    vid.addEventListener('loadeddata', function handler() {
-      try {
-        // Create a canvas to draw the first frame
-        const canvas = document.createElement('canvas');
-        canvas.width = vid.videoWidth;
-        canvas.height = vid.videoHeight;
-        canvas.getContext('2d').drawImage(vid, 0, 0, canvas.width, canvas.height);
-        // Set poster attribute to data URL
-        vid.setAttribute('poster', canvas.toDataURL('image/jpeg', 0.8));
-        vid.pause(); // Pause so it doesn't play in the gallery
-        vid.currentTime = 0;
-      } catch (e) {
-        // ignore errors
-      }
-      vid.removeEventListener('loadeddata', handler);
-    });
-    // Trigger load
-    vid.load();
-  });
-}
-
-function showHappyFullscreen(file) {
-  const fs = document.getElementById('happy-fullscreen');
-  const vid = document.getElementById('happy-fullscreen-video');
-  vid.src = file;
-  vid.currentTime = 0;
-  vid.play();
-  fs.style.display = 'flex';
-}
-function closeHappyFullscreen() {
-  const fs = document.getElementById('happy-fullscreen');
-  const vid = document.getElementById('happy-fullscreen-video');
-  vid.pause();
-  vid.src = '';
-  fs.style.display = 'none';
-}
-
-// --- OPEN / CLOSE CONTENT ---
-function openFile(file) {
-  playClickOnce(); // Play click sound
-
-function closeContent() {
-  document.getElementById('content').style.display = 'none';
-  document.getElementById('puzzle-grid').style.display = 'flex';
-  // Pause all audio/video in content
-  document.querySelectorAll('#content-area audio, #content-area video')
-    .forEach(m => { m.pause && m.pause(); m.currentTime = 0; });
-  // Happy modals
-  if (document.getElementById('happy-video-modal')) closeHappyModal();
-  if (document.getElementById('happy-fullscreen')) closeHappyFullscreen();
-  if (typeof schizAudio !== "undefined" && schizAudio) { schizAudio.pause(); schizAudio = null; }
-}
-
-  // --- HAPPY GALLERY HANDLING ---
-  // If you click the "happy gallery" tile
-  if (file === "happy gallery") {
-    openHappyFileList(happyFiles, "happy gallery");
-    return;
-  }
-  // If you click the "happy gallery 2" tile
-  if (file === "happy gallery 2") {
-    openHappyFileList(happyFiles2, "happy gallery 2");
-    return;
-  }
-
-  // --- STANDARD CONTENT LOGIC ---
-  const grid    = document.getElementById('puzzle-grid');
-  const content = document.getElementById('content');
-  const area    = document.getElementById('content-area');
-  document.getElementById('file-name').innerText = file;
-  area.innerHTML = '';
-  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
-  const ext = file.split('.').pop().toLowerCase();
-
-  // Audio file
-  if (['mp3','wav','m4a'].includes(ext)) {
-    area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
-  }
-  // Script file
-  else if (file.endsWith('.script.txt')) {
-    area.innerHTML = `
-      <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
-      <div style="color:#fff;">Loading script…</div>`;
-    fetch(file).then(r => r.text()).then(txt => {
-      area.innerHTML = `
-        <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
-        <pre>${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
-        <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>`;
-    });
-  }
-  // Video file
-  else {
-    area.innerHTML = `
-      <div style="display:flex;align-items:center;gap:18px;">
-        <video id="main-video" controls autoplay src="${file}" style="max-width:92vw;max-height:74vh;border-radius:12px;"></video>
-        <div>
+      <div id="happy-video-modal" style="display:none;position:fixed;inset:0;z-index:5000;background:#000E;align-items:center;justify-content:center;">
+        <video id="happy-modal-video" controls autoplay loop style="max-width:92vw;max-height:78vh;border-radius:16px;"></video>
+        <div style="margin-top:12px;text-align:center;">
           <label>Speed: 
-            <select id="video-speed" onchange="setVideoSpeed()">
+            <select id="happy-video-speed" onchange="setHappyVideoSpeed()">
               <option value="0.5">0.5x</option>
               <option value="1" selected>1x</option>
               <option value="1.5">1.5x</option>
@@ -539,127 +346,155 @@ function closeContent() {
             </select>
           </label>
         </div>
+        <button onclick="closeHappyModal()" style="position:absolute;top:30px;right:40px;font-size:2em;padding:8px 24px;background:#FFD700;color:#111;border:none;border-radius:10px;cursor:pointer;">CLOSE</button>
       </div>
     `;
-    const vid = area.querySelector('#main-video');
-    if (file === 'do you understand.mp4') {
-      vid.loop = false;
-      vid.onended = () => {
-        if (!unlocked) {
-          unlocked = true;
-          // Push the two happy galleries if not already present
-          if (!files.includes("happy gallery"))  files.push("happy gallery");
-          if (!files.includes("happy gallery 2")) files.push("happy gallery 2");
-          displayTiles();
-          alert('🔓 Happy galleries unlocked!');
-        }
-      };
-    } else {
-      vid.loop = true;
-    }
+    grid.style.display    = 'none';
+    content.style.display = 'flex';
+    document.onkeydown = function(e){ if (e.key==="Escape") closeHappyModal(); };
   }
 
-  grid.style.display    = 'none';
-  content.style.display = 'flex';
-}
+  function openSingleHappyVideo(file, galleryTitle) {
+    const modal = document.getElementById('happy-video-modal');
+    const vid = document.getElementById('happy-modal-video');
+    vid.src = file;
+    vid.currentTime = 0;
+    vid.play();
+    modal.style.display = 'flex';
+  }
 
-// --- HAPPY FILE LIST VIEWER ---
-function openHappyFileList(fileArray, galleryTitle) {
-  const grid    = document.getElementById('puzzle-grid');
-  const content = document.getElementById('content');
-  const area    = document.getElementById('content-area');
-  document.getElementById('file-name').innerText = galleryTitle;
+  function closeHappyModal() {
+    const modal = document.getElementById('happy-video-modal');
+    const vid = document.getElementById('happy-modal-video');
+    if (vid) { vid.pause(); vid.src = ''; }
+    if (modal) { modal.style.display = 'none'; }
+  }
 
-  area.innerHTML = `
-    <div style="display:flex;flex-direction:column;align-items:center;gap:14px;margin:30px 0;">
-      <h2 style="color:#FFD700;">${galleryTitle.replace(/gallery/i,'Happy Gallery')}</h2>
-      <div class="happy-file-list" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
-        ${fileArray.map((f, i) => `
-          <button onclick="openSingleHappyVideo('${f.replace(/'/g,"\\'")}', '${galleryTitle}')" 
-                  style="background:#111;color:#FFD700;font-size:1.1em;border:2px solid #FFD700;border-radius:10px;padding:8px 24px;cursor:pointer;min-width:240px;">
-            ${i+1}. ${f}
-          </button>
-        `).join('')}
-      </div>
-    </div>
-    <div id="happy-video-modal" style="display:none;position:fixed;inset:0;z-index:5000;background:#000E;align-items:center;justify-content:center;">
-      <video id="happy-modal-video" controls autoplay loop style="max-width:92vw;max-height:78vh;border-radius:16px;"></video>
-      <div style="margin-top:12px;text-align:center;">
-        <label>Speed: 
-          <select id="happy-video-speed" onchange="setHappyVideoSpeed()">
-            <option value="0.5">0.5x</option>
-            <option value="1" selected>1x</option>
-            <option value="1.5">1.5x</option>
-            <option value="2">2x</option>
-          </select>
-        </label>
-      </div>
-      <button onclick="closeHappyModal()" style="position:absolute;top:30px;right:40px;font-size:2em;padding:8px 24px;background:#FFD700;color:#111;border:none;border-radius:10px;cursor:pointer;">CLOSE</button>
-    </div>
-  `;
-  grid.style.display    = 'none';
-  content.style.display = 'flex';
-}
+  // --- SPEED BUTTON LOGIC ---
+  function setVideoSpeed() {
+    const v = document.getElementById('main-video');
+    const s = document.getElementById('video-speed');
+    if (v && s) v.playbackRate = parseFloat(s.value);
+  }
+  function setHappyVideoSpeed() {
+    const v = document.getElementById('happy-modal-video');
+    const s = document.getElementById('happy-video-speed');
+    if (v && s) v.playbackRate = parseFloat(s.value);
+  }
 
-function openSingleHappyVideo(file, galleryTitle) {
-  const modal = document.getElementById('happy-video-modal');
-  const vid = document.getElementById('happy-modal-video');
-  vid.src = file;
-  vid.currentTime = 0;
-  vid.play();
-  modal.style.display = 'flex';
-}
-
-function closeHappyModal() {
-  const modal = document.getElementById('happy-video-modal');
-  const vid = document.getElementById('happy-modal-video');
-  vid.pause();
-  vid.src = '';
-  modal.style.display = 'none';
-}
-
-// --- SPEED BUTTON LOGIC ---
-function setVideoSpeed() {
-  const v = document.getElementById('main-video');
-  const s = document.getElementById('video-speed');
-  if (v && s) v.playbackRate = parseFloat(s.value);
-}
-function setHappyVideoSpeed() {
-  const v = document.getElementById('happy-modal-video');
-  const s = document.getElementById('happy-video-speed');
-  if (v && s) v.playbackRate = parseFloat(s.value);
-}
-
-// --- SCHIZOPHRENIA BUTTON LOGIC ---
-function playSchizophrenia() {
-  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
-  schizAudio = new Audio('schizophrenia.mp3');
-  schizAudio.loop = true;
-  schizAudio.volume = 1.0;
-  schizAudio.addEventListener('loadedmetadata', () => {
-    if (schizAudio.duration > 3) {
-      schizAudio.currentTime = Math.random() * (schizAudio.duration - 2);
-    }
+  // --- SCHIZOPHRENIA BUTTON LOGIC ---
+  function playSchizophrenia() {
+    if (schizAudio) { schizAudio.pause(); schizAudio = null; }
+    schizAudio = new Audio('schizophrenia.mp3');
+    schizAudio.loop = true;
+    schizAudio.volume = 1.0;
+    schizAudio.addEventListener('loadedmetadata', () => {
+      if (schizAudio.duration > 3) {
+        schizAudio.currentTime = Math.random() * (schizAudio.duration - 2);
+      }
+      schizAudio.play();
+    });
     schizAudio.play();
-  });
-  schizAudio.play();
-}
-
-// --- COPY SCRIPT BUTTON ---
-function copyScript() {
-  const pre = document.querySelector('#content-area pre');
-  if (pre) {
-    navigator.clipboard.writeText(pre.innerText);
-    alert('Script copied!');
   }
-}
 
-// --- INIT ---
-window.addEventListener('DOMContentLoaded', () => {
-  displayTiles();
-  document.getElementById('break-btn').onclick  = breakSpiral;
-  document.getElementById('random-btn').onclick = openRandom;
-});
+  // --- COPY SCRIPT BUTTON ---
+  function copyScript() {
+    const pre = document.querySelector('#content-area pre');
+    if (pre) {
+      navigator.clipboard.writeText(pre.innerText);
+      alert('Script copied!');
+    }
+  }
+
+  // --- OPEN / CLOSE CONTENT ---
+  function openFile(file) {
+    playClickOnce();
+    // Happy gallery tiles
+    if (file === "happy gallery") { openHappyFileList(happyFiles, "happy gallery"); return; }
+    if (file === "happy gallery 2") { openHappyFileList(happyFiles2, "happy gallery 2"); return; }
+    // Standard
+    const grid    = document.getElementById('puzzle-grid');
+    const content = document.getElementById('content');
+    const area    = document.getElementById('content-area');
+    document.getElementById('file-name').innerText = file;
+    area.innerHTML = '';
+    if (schizAudio) { schizAudio.pause(); schizAudio = null; }
+    const ext = file.split('.').pop().toLowerCase();
+    if (['mp3','wav','m4a'].includes(ext)) {
+      area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
+    }
+    else if (file.endsWith('.script.txt')) {
+      area.innerHTML = `
+        <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
+        <div style="color:#fff;">Loading script…</div>`;
+      fetch(file).then(r => r.text()).then(txt => {
+        area.innerHTML = `
+          <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
+          <pre>${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
+          <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>`;
+      });
+    }
+    else {
+      area.innerHTML = `
+        <div style="display:flex;align-items:center;gap:18px;">
+          <video id="main-video" controls autoplay src="${file}" style="max-width:92vw;max-height:74vh;border-radius:12px;"></video>
+          <div>
+            <label>Speed: 
+              <select id="video-speed" onchange="setVideoSpeed()">
+                <option value="0.5">0.5x</option>
+                <option value="1" selected>1x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2x</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      `;
+      const vid = area.querySelector('#main-video');
+      if (file === 'do you understand.mp4') {
+        vid.loop = false;
+        vid.onended = () => {
+          if (!unlocked) {
+            unlocked = true;
+            if (!files.includes("happy gallery"))  files.push("happy gallery");
+            if (!files.includes("happy gallery 2")) files.push("happy gallery 2");
+            displayTiles();
+            alert('🔓 Happy galleries unlocked!');
+          }
+        };
+      } else {
+        vid.loop = true;
+      }
+    }
+    grid.style.display    = 'none';
+    content.style.display = 'flex';
+  }
+
+  function closeContent() {
+    const content = document.getElementById('content');
+    const area = document.getElementById('content-area');
+    content.style.display = 'none';
+    document.getElementById('puzzle-grid').style.display = 'flex';
+    // Stop any media in area
+    area.querySelectorAll('audio,video').forEach(m => { try {m.pause(); m.currentTime = 0;} catch{} });
+    // Also ensure happy modal is closed if open
+    closeHappyModal();
+    if (schizAudio) { schizAudio.pause(); schizAudio = null; }
+  }
+
+  // --- INIT ---
+  window.addEventListener('DOMContentLoaded', () => {
+    displayTiles();
+    document.getElementById('break-btn').onclick  = breakSpiral;
+    document.getElementById('random-btn').onclick = openRandom;
+    // Close on ESC in all views
+    document.addEventListener('keydown', e => {
+      if (e.key === "Escape") {
+        closeContent();
+        closeHappyModal();
+      }
+    });
+  });
   </script>
 </body>
 </html>
