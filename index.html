@@ -112,6 +112,7 @@
     <button class="emotion-btn" onclick="startSite()">Awe</button>
     <button class="emotion-btn" onclick="startSite()">Nostalgia</button>
   </div>
+<button class="schiz-btn" style="margin:32px auto 16px;display:block;" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
   <div class="puzzle-grid" id="puzzle-grid"></div>
   <button id="break-btn">BREAK THE SPIRAL</button>
   <button id="random-btn">random</button>
@@ -269,15 +270,16 @@ function displayTiles() {
   let filesToShow = [...files];
   if (unlocked && !filesToShow.includes("happy gallery")) filesToShow.push("happy gallery");
   grid.innerHTML = filesToShow.map((f, i) => {
+    let imgSrc =
+      featureScripts.includes(f)      ? 'lost-pilot-jack-eye-open.gif' :
+      f === "happy gallery"           ? 'happy.gif' :
+      f === "do you understand.mp4"   ? 'do you understand.gif' :
+      f.endsWith('.script.txt')       ? 'galaxy.gif' :
+                                       'spiral.gif';
     return `
       <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
         <div class="tile-number">${i+1}</div>
-        <img src="${
-          featureScripts.includes(f)           ? 'lost-pilot-jack-eye-open.gif' :
-          f === "happy gallery"                ? 'happy.gif' :
-          f.endsWith('.script.txt')            ? 'galaxy.gif' :
-                                                'spiral.gif'
-        }" alt="tile" />
+        <img src="${imgSrc}" alt="tile" />
         <div class="tile-filename">${f}</div>
       </div>
     `;
