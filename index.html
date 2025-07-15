@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🌀 Virtual Spiral Notebook</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>🌀 Virtual Spiral Notebook</title>
+<style>
     @keyframes melt {
       0%   { text-shadow: 0 0 0 #000, 0 0 0 #f00; }
       20%  { text-shadow: 0 2px 0 #c00, 0 6px 8px #e11; }
@@ -78,47 +79,47 @@
   </style>
 </head>
 <body>
-  <div id="entry-screen">
-    <video id="entry-bg-video" autoplay loop muted playsinline>
-      <source src="5 hypnotize.mp4" type="video/mp4">
-    </video>
-    <h1>H E L L M O U T H</h1>
-    <button id="enter-btn">ENTER</button>
-  </div>
-  <div id="wheel-overlay">
-    <h1>Pick an Emotion to Enter</h1>
-    <button class="emotion-btn" onclick="startSite()">Joy</button>
-    <button class="emotion-btn" onclick="startSite()">Sadness</button>
-    <button class="emotion-btn" onclick="startSite()">Anger</button>
-    <button class="emotion-btn" onclick="startSite()">Fear</button>
-    <button class="emotion-btn" onclick="startSite()">Surprise</button>
-    <button class="emotion-btn" onclick="startSite()">Disgust</button>
-    <button class="emotion-btn" onclick="startSite()">Trust</button>
-    <button class="emotion-btn" onclick="startSite()">Anticipation</button>
-    <button class="emotion-btn" onclick="startSite()">Love</button>
-    <button class="emotion-btn" onclick="startSite()">Shame</button>
-    <button class="emotion-btn" onclick="startSite()">Pride</button>
-    <button class="emotion-btn" onclick="startSite()">Envy</button>
-    <button class="emotion-btn" onclick="startSite()">Guilt</button>
-    <button class="emotion-btn" onclick="startSite()">Hope</button>
-    <button class="emotion-btn" onclick="startSite()">Boredom</button>
-    <button class="emotion-btn" onclick="startSite()">Confusion</button>
-    <button class="emotion-btn" onclick="startSite()">Calm</button>
-    <button class="emotion-btn" onclick="startSite()">Anxiety</button>
-    <button class="emotion-btn" onclick="startSite()">Awe</button>
-    <button class="emotion-btn" onclick="startSite()">Nostalgia</button>
-  </div>
-  <button id="schiz-btn-top" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
-  <div class="puzzle-grid" id="puzzle-grid"></div>
-  <button id="break-btn">BREAK THE SPIRAL</button>
-  <button id="random-btn">random</button>
-  <div id="content">
-    <div class="filename" id="file-name"></div>
-    <div id="content-area"></div>
-    <button class="close-btn" onclick="closeContent()">CLOSE</button>
-  </div>
-  <audio id="click-sound" src="click.mp3" preload="auto"></audio>
-  <script>
+<div id="entry-screen">
+<video autoplay="" id="entry-bg-video" loop="" muted="" playsinline="">
+<source src="5 hypnotize.mp4" type="video/mp4"/>
+</video>
+<h1>H E L L M O U T H</h1>
+<button id="enter-btn">ENTER</button>
+</div>
+<div id="wheel-overlay">
+<h1>Pick an Emotion to Enter</h1>
+<button class="emotion-btn" onclick="startSite()">Joy</button>
+<button class="emotion-btn" onclick="startSite()">Sadness</button>
+<button class="emotion-btn" onclick="startSite()">Anger</button>
+<button class="emotion-btn" onclick="startSite()">Fear</button>
+<button class="emotion-btn" onclick="startSite()">Surprise</button>
+<button class="emotion-btn" onclick="startSite()">Disgust</button>
+<button class="emotion-btn" onclick="startSite()">Trust</button>
+<button class="emotion-btn" onclick="startSite()">Anticipation</button>
+<button class="emotion-btn" onclick="startSite()">Love</button>
+<button class="emotion-btn" onclick="startSite()">Shame</button>
+<button class="emotion-btn" onclick="startSite()">Pride</button>
+<button class="emotion-btn" onclick="startSite()">Envy</button>
+<button class="emotion-btn" onclick="startSite()">Guilt</button>
+<button class="emotion-btn" onclick="startSite()">Hope</button>
+<button class="emotion-btn" onclick="startSite()">Boredom</button>
+<button class="emotion-btn" onclick="startSite()">Confusion</button>
+<button class="emotion-btn" onclick="startSite()">Calm</button>
+<button class="emotion-btn" onclick="startSite()">Anxiety</button>
+<button class="emotion-btn" onclick="startSite()">Awe</button>
+<button class="emotion-btn" onclick="startSite()">Nostalgia</button>
+</div>
+<button id="schiz-btn-top" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
+<div class="puzzle-grid" id="puzzle-grid"></div>
+<button id="break-btn">BREAK THE SPIRAL</button>
+<button id="random-btn">random</button>
+<div id="content">
+<div class="filename" id="file-name"></div>
+<div id="content-area"></div>
+<button class="close-btn" onclick="closeContent()">CLOSE</button>
+</div>
+<audio id="click-sound" preload="auto" src="click.mp3"></audio>
+<script>
     // --- FILE ARRAYS ---
     const files = [
       "scene 5 meet the voices.script.txt","scene 4 what hunter believes explained.script.txt",
