@@ -138,11 +138,11 @@
   const happyFiles = [
     "latino heat.happy.mp4","piss is hot.happy.mp4","island boys.happy.mp4","the shower scene.happy.mp4",
     "no smoking.happy.mp4","meet jack.happy.mp4","drip.happy.mp4","talk the talk.happy.mp4","demon teen.happy.mp4",
-    "my guy.happy.mp4","alpha alternative.happy.mp4","bitch.happy.mp4","honey baby.happy.mp4","heartbreak hotel.happy.mp4",
-    "all american muscle.happy.mp4","cool guy goon.happy.mp4","balls.happy.mp4","brother.happy.mp4","thug.happy.mp4",
+    "my guy.happy.mp4","alpha alternative.happy.mp4","bitch.happy.mp4","honey baby.happy.mp4", “happiest.happy.mp4”,
+    "all american muscle.happy.mp4","cool guy goon.happy.mp4","balls.happy.mp4","thug.happy.mp4",
     "all for you.happy.mp4","charming.happy.mp4","another one.happy.mp4","generic wrestler.happy.mp4","public strip down.happy.mp4",
     "easy twink.happy.mp4","got goon.happy.mp4","mirror.happy.mp4","public bbc.happy.mp4","self 321.happy.mp4","big shot.happy.mp4",
-    "feet master.happy.mp4","stroke it.happy.mp4","suit and tie.happy.mp4","swinging.happy.mp4","the climax.happy.mp4","virtual insanity.happy.mp4"
+    "feet master.happy.mp4","stroke it.happy.mp4","suit and tie.happy.mp4","swinging.happy.mp4","the climax.happy.mp4","virtual insanity.happy.mp4", “real friends.happy.mp4”
   ];
 
   const files = [
@@ -176,6 +176,7 @@
 
   let audioSources=[], videoEls=[], unlocked=false, schizAudio=null, spiralAudio=null;
 
+  // --- EMOTIONAL WHEEL LOGIC ---
 function startSite() {
   document.getElementById('wheel-overlay').style.display = 'none';
   document.getElementById('puzzle-grid').style.display = 'flex';
@@ -198,8 +199,6 @@ function playClickOnce() {
 // --- BREAK THE SPIRAL ---
 function breakSpiral() {
   playClickOnce();
-
-  // Stop all previous spiral audio & floating videos
   if (spiralAudio || audioSources.length || videoEls.length) {
     if (spiralAudio) { spiralAudio.pause(); spiralAudio = null; }
     audioSources.forEach(s => s.stop && s.stop());
@@ -210,7 +209,6 @@ function breakSpiral() {
     return;
   }
 
-  // White flash effect
   const flash = document.createElement('div');
   Object.assign(flash.style, {
     position: 'fixed', inset: 0,
@@ -262,34 +260,76 @@ function openRandom() {
 
 // --- DISPLAY TILES ---
 function displayTiles() {
-  // First 7 are the feature scripts, special cover image:
-  const featureScripts = [
-    "scene 5 meet the voices.script.txt","scene 4 what hunter believes explained.script.txt",
-    "scene 3 meet hunter hardon.script.txt","scene 21 THE SPECTRAL ARCHIVE.script.txt",
-    "scene 2 the therapy session.script.txt","scene 1 schizophrenia disclaimer.script.txt",
-    "scene 25 new beginnings.script.txt"
-  ];
   const grid = document.getElementById('puzzle-grid');
-  let tileHtml = files.map((f, i) => `
+  grid.innerHTML = files.map((f, i) => {
+    // .happy.mp4 files shown as a single "HAPPY VAULT" tile at the right place in the grid:
+    if (i === 7) { // Place after 7th "scene" (update this if your order changes!)
+      return `
+        <div class="tile" onclick="openHappyVault()">
+          <div class="tile-number">H</div>
+          <img src="lost-pilot-jack-eye-open.gif" alt="happy-vault" />
+          <div class="tile-filename">HAPPY VAULT</div>
+        </div>
+      ` + tileHTML(f, i+1);
+    }
+    if (happyFiles.includes(f)) return ""; // Don't show individual .happy.mp4 tiles
+    return tileHTML(f, i+1);
+  }).join('');
+}
+
+// Helper for normal tiles
+function tileHTML(f, num) {
+  return `
     <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
-      <div class="tile-number">${i+1}</div>
+      <div class="tile-number">${num}</div>
       <img src="${
-        featureScripts.includes(f)           ? 'lost-pilot-jack-eye-open.gif' :
-        f.endsWith('.script.txt')           ? 'galaxy.gif' : 'spiral.gif'
+        f.endsWith('.script.txt') ? 'galaxy.gif' :
+        f.endsWith('.mp4') || f.endsWith('.mov') ? 'spiral.gif' : 'spiral.gif'
       }" alt="tile" />
       <div class="tile-filename">${f}</div>
     </div>
-  `).join('');
-  // --- Happy puzzle piece, only appears if unlocked ---
-  if (unlocked) {
-    tileHtml += `
-    <div class="tile" onclick="openFile('HAPPY-GRID')">
-      <div class="tile-number">★</div>
-      <img src="happy.gif" alt="happy" />
-      <div class="tile-filename">HAPPY VIDEOS</div>
-    </div>`;
+  `;
+}
+
+// --- HAPPY VAULT LOGIC ---
+function openHappyVault() {
+  playClickOnce();
+  const grid    = document.getElementById('puzzle-grid');
+  const content = document.getElementById('content');
+  const area    = document.getElementById('content-area');
+  document.getElementById('file-name').innerText = "HAPPY VAULT";
+  area.innerHTML = `
+    <div class="happy-grid-label">Unlocked Happy Files</div>
+    <div class="happy-grid">${happyFiles.map((file, idx) => `
+      <video tabindex="0" poster="happy.gif" src="${file}" id="happyvid-${idx}" onclick="playSingleHappy(${idx})" loop></video>
+    `).join('')}</div>
+  `;
+  grid.style.display    = 'none';
+  content.style.display = 'flex';
+  stopAllHappy(); // Pause all by default
+
+  // Keyboard navigation & click/loop logic
+  window.playSingleHappy = function(idx) {
+    // Pause all others, play only selected
+    happyFiles.forEach((f, i) => {
+      const v = document.getElementById(`happyvid-${i}`);
+      if (i === idx) {
+        v.currentTime = 0;
+        v.play();
+        v.focus();
+        v.style.borderColor = "#ffd700";
+      } else {
+        v.pause();
+        v.style.borderColor = "#333";
+      }
+    });
+  };
+  function stopAllHappy() {
+    happyFiles.forEach((f, i) => {
+      const v = document.getElementById(`happyvid-${i}`);
+      if (v) { v.pause(); v.currentTime = 0; v.style.borderColor = "#333"; }
+    });
   }
-  grid.innerHTML = tileHtml;
 }
 
 // --- OPEN / CLOSE CONTENT ---
@@ -302,18 +342,8 @@ function openFile(file) {
   area.innerHTML = '';
   if (schizAudio) { schizAudio.pause(); schizAudio = null; }
 
-  if (file === 'HAPPY-GRID') {
-    // Minimalist grid of all happy videos
-    let vids = happyFiles.map(f =>
-      `<video src="${f}" tabindex="0" controls preload="metadata" onclick="playSingleHappy(this)"></video>`
-    ).join('');
-    area.innerHTML = `<div class="happy-grid-label">The Happy Grid</div><div class="happy-grid">${vids}</div>`;
-    grid.style.display = 'none';
-    content.style.display = 'flex';
-    return;
-  }
-
   const ext = file.split('.').pop().toLowerCase();
+
   if (['mp3','wav','m4a'].includes(ext)) {
     area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
   }
@@ -336,24 +366,18 @@ function openFile(file) {
       vid.onended = () => {
         if (!unlocked) {
           unlocked = true;
-          displayTiles(); // now grid will show the happy puzzle piece!
-          alert('🔓 Happy videos unlocked!');
+          // Unlock happy vault by making the HAPPY VAULT tile appear
+          displayTiles();
+          alert('🔓 Happy Vault unlocked!');
         }
       };
-    } else {
+    }
+    else {
       vid.loop = true;
     }
   }
   grid.style.display    = 'none';
   content.style.display = 'flex';
-}
-
-// --- Only play 1 happy video at a time ---
-function playSingleHappy(el) {
-  document.querySelectorAll('.happy-grid video').forEach(v => {
-    if (v !== el) { v.pause(); v.currentTime = 0; }
-  });
-  el.play();
 }
 
 function closeContent() {
@@ -362,6 +386,13 @@ function closeContent() {
   document.querySelectorAll('#content-area audio, #content-area video')
     .forEach(m => { m.pause && m.pause(); m.currentTime = 0; });
   if (schizAudio) { schizAudio.pause(); schizAudio = null; }
+  // If in happy vault, pause all happy videos
+  if (document.getElementById('file-name').innerText === "HAPPY VAULT") {
+    happyFiles.forEach((f, i) => {
+      const v = document.getElementById(`happyvid-${i}`);
+      if (v) v.pause();
+    });
+  }
 }
 
 // --- SCHIZOPHRENIA BUTTON LOGIC ---
@@ -379,6 +410,7 @@ function playSchizophrenia() {
   schizAudio.play();
 }
 
+// --- COPY SCRIPT BUTTON ---
 function copyScript() {
   const pre = document.querySelector('#content-area pre');
   if (pre) {
@@ -393,6 +425,7 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('break-btn').onclick  = breakSpiral;
   document.getElementById('random-btn').onclick = openRandom;
 });
-</script>
+
+  </script>
 </body>
 </html>
