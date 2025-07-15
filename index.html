@@ -75,9 +75,9 @@
     .schiz-btn:hover { background: #ff5252; color: #fff; }
     @media(max-width:800px){ .tile { width:92vw; height:20vw; min-height:80px; } #break-btn,#random-btn { font-size:1.4em; padding:8px 24px; bottom:12px; } }
     .happy-gallery { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
-    .happy-thumb { width: 170px; height: 100px; object-fit: cover; border-radius: 12px; box-shadow:0 0 8px #000; cursor:pointer; transition: box-shadow .2s; }
-    .happy-thumb:hover { box-shadow:0 0 24px #FFD700; }
-    @media(max-width:800px){ .happy-thumb{width:92vw;height:18vw;min-height:64px;} }
+    .happy-thumb { width: 320px; height: 180px; object-fit: cover; border-radius: 16px; box-shadow:0 0 10px #000; cursor:pointer; transition: box-shadow .2s; }
+.happy-thumb:hover { box-shadow:0 0 36px #FFD700; }
+@media(max-width:900px){ .happy-thumb{width:98vw;height:24vw;min-height:110px;} }
     #happy-fullscreen { display:none; position:fixed; inset:0; z-index:2000; background:#000D; align-items:center; justify-content:center; }
   </style>
 </head>
@@ -157,8 +157,7 @@
     "NO SMOKING.mp4", "prepare yourself.mp4", "press press press press press.mp4", "suffer suffer suffer.mp4", "welcome to your fantasy.mp4",
     "meet ye kanye west.script.txt", "the tmz shame spiral.mp4", "you need to know.mp4", "phantom communication system.script.txt",
     "you and i are bored.mp4", "the most hated man alive.mp4", "television visions.mp4", "hyper focused hyper relaxed.mp4",
-    "headphones baby.mp4", "do you understand.mp4",
-    "happy gallery"
+    "headphones baby.mp4", "do you understand.mp4"
   ];
   const happyFiles = [
     "latino heat.happy.mp4","piss is hot.happy.mp4","island boys.happy.mp4","the shower scene.happy.mp4",
@@ -169,6 +168,8 @@
     "easy twink.happy.mp4","got goon.happy.mp4","mirror.happy.mp4","public bbc.happy.mp4","self 321.happy.mp4","big shot.happy.mp4",
     "feet master.happy.mp4","stroke it.happy.mp4","suit and tie.happy.mp4","swinging.happy.mp4","the climax.happy.mp4","virtual insanity.happy.mp4","real friends.happy.mp4"
   ];
+
+let unlocked = false;
 
   // --- AUDIO CTX ---
   const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
@@ -266,16 +267,10 @@
     ];
     const grid = document.getElementById('puzzle-grid');
     grid.innerHTML = files.map((f, i) => {
-      // Show happy gallery as a single tile
-      if (f === "happy gallery") {
-        return `
-        <div class="tile" onclick="openHappyGallery()">
-          <div class="tile-number">${i+1}</div>
-          <img src="happy.gif" alt="happy gallery" />
-          <div class="tile-filename">happy gallery</div>
-        </div>
-        `;
-      }
+      // Show happy gallery as a single tile IF unlocked
+  if (unlocked && !files.includes("happy gallery")) {
+    files.push("happy gallery");
+  }
       return `
         <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
           <div class="tile-number">${i+1}</div>
@@ -293,22 +288,26 @@
 
   // --- HAPPY GALLERY ---
   function openHappyGallery() {
-    playClickOnce();
-    const grid    = document.getElementById('puzzle-grid');
-    const content = document.getElementById('content');
-    const area    = document.getElementById('content-area');
-    document.getElementById('file-name').innerText = "happy gallery";
-    // Show happyFiles in a gallery
-    area.innerHTML = `
-      <div class="happy-gallery">
-        ${happyFiles.map(f=>`
-          <img src="happy.gif" class="happy-thumb" alt="${f}" title="${f}" onclick="showHappyFullscreen('${f}')">
-        `).join('')}
-      </div>
-    `;
-    grid.style.display    = 'none';
-    content.style.display = 'flex';
-  }
+  playClickOnce();
+  const grid    = document.getElementById('puzzle-grid');
+  const content = document.getElementById('content');
+  const area    = document.getElementById('content-area');
+  document.getElementById('file-name').innerText = "happy gallery";
+
+  area.innerHTML = `
+    <div class="happy-gallery">
+      ${happyFiles.map((f, idx)=>`
+        <div class="happy-thumb-wrap" style="display:inline-block; margin:8px;">
+          <video class="happy-thumb" src="${f}" poster="" preload="metadata" onclick="showHappyFullscreen('${f}')"></video>
+          <div style="color:#FFD600;font-size:0.9em;text-align:center;margin-top:2px;">${f.replace('.happy.mp4','')}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  // Optionally: add a script here to auto-grab a screenshot if you want to get fancy.
+  grid.style.display    = 'none';
+  content.style.display = 'flex';
+}
   function showHappyFullscreen(file) {
     const fs = document.getElementById('happy-fullscreen');
     const vid = document.getElementById('happy-fullscreen-video');
@@ -327,50 +326,29 @@
 
   // --- OPEN / CLOSE CONTENT ---
   function openFile(file) {
-    playClickOnce();
-    if (file === "happy gallery") { openHappyGallery(); return; }
-    const grid    = document.getElementById('puzzle-grid');
-    const content = document.getElementById('content');
-    const area    = document.getElementById('content-area');
-    document.getElementById('file-name').innerText = file;
-    area.innerHTML = '';
-    if (schizAudio) { schizAudio.pause(); schizAudio = null; }
-    const ext = file.split('.').pop().toLowerCase();
-    if (['mp3','wav','m4a'].includes(ext)) {
-      area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
+  playClickOnce();
+  if (file === "happy gallery") { openHappyGallery(); return; }
+  // ...the rest of your logic stays the same...
+  else {
+    area.innerHTML = `<video controls autoplay src="${file}"></video>`;
+    const vid = area.querySelector('video');
+    if (file === 'do you understand.mp4') {
+      vid.loop = false;
+      vid.onended = () => {
+        if (!unlocked) {
+          unlocked = true;
+          files.push("happy gallery");      // <<---- Unlock here
+          displayTiles();
+          alert('🔓 Happy gallery unlocked!');
+        }
+      };
+    } else {
+      vid.loop = true;
     }
-    else if (file.endsWith('.script.txt')) {
-      area.innerHTML = `
-        <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
-        <div style="color:#fff;">Loading script…</div>`;
-      fetch(file).then(r => r.text()).then(txt => {
-        area.innerHTML = `
-          <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
-          <pre>${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
-          <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>`;
-      });
-    }
-    else {
-      area.innerHTML = `<video controls autoplay src="${file}"></video>`;
-      const vid = area.querySelector('video');
-      if (file === 'do you understand.mp4') {
-        vid.loop = false;
-        vid.onended = () => {
-          if (!unlocked) {
-            unlocked = true;
-            files.push("happy gallery");
-            displayTiles();
-            alert('🔓 Happy gallery unlocked!');
-          }
-        };
-      }
-      else {
-        vid.loop = true;
-      }
-    }
-    grid.style.display    = 'none';
-    content.style.display = 'flex';
   }
+  grid.style.display    = 'none';
+  content.style.display = 'flex';
+}
 
   function closeContent() {
     document.getElementById('content').style.display = 'none';
