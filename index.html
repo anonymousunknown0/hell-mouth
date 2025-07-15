@@ -406,6 +406,7 @@ function openSingleHappyVideo(file, galleryTitle) {
   vid.currentTime = 0;
   vid.play();
   modal.style.display = 'flex';
+  document.querySelector('#content .close-btn').style.display = 'none';
 }
 
 function closeHappyModal() {
@@ -414,6 +415,7 @@ function closeHappyModal() {
   vid.pause();
   vid.src = '';
   modal.style.display = 'none';
+  document.querySelector('#content .close-btn').style.display = 'block';
 }
 
 function setHappyVideoSpeed() {
