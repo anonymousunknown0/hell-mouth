@@ -326,7 +326,7 @@ function openFile(file) {
       vid.onended = () => {
         if (!unlocked) {
           unlocked = true;
-          files.push(...hiddenHappy);
+          files.push(...hiddenFiles);
           displayTiles();
           alert('🔓 Happy videos unlocked!');
         }
