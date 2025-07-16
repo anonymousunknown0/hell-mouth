@@ -553,5 +553,104 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('random-btn').onclick = openRandom;
 });
   </script>
+<!-- Google Analytics + Custom Tracking -->
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q4JE6D9NDS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Q4JE6D9NDS');
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // TILE CLICK TRACKING
+    document.querySelectorAll(".tile").forEach(tile => {
+      tile.addEventListener("click", function () {
+        const name = tile.getAttribute("data-name") || tile.textContent.trim() || "unknown";
+        gtag('event', 'tile_click', {
+          'event_category': 'interaction',
+          'event_label': name
+        });
+      });
+    });
+
+    // VIDEO COMPLETION TRACKING
+    const trackedVideo = document.getElementById("main-video");
+    if (trackedVideo && trackedVideo.src.includes("do you understand.mp4")) {
+      trackedVideo.addEventListener("ended", () => {
+        gtag('event', 'video_complete', {
+          'event_category': 'video',
+          'event_label': 'Do You Understand'
+        });
+      });
+    }
+
+    // AUDIO TRACKING – BREAK THE SPIRAL
+    const breakAudio = new Audio("break the spiral.mp3");
+    let breakStart = null;
+    breakAudio.addEventListener("play", () => { breakStart = Date.now(); });
+    function endBreakTrack() {
+      if (breakStart) {
+        const duration = Math.round((Date.now() - breakStart) / 1000);
+        gtag('event', 'break_spiral_listen_duration', {
+          'event_category': 'audio_interaction',
+          'event_label': 'Break the Spiral',
+          'value': duration
+        });
+        breakStart = null;
+      }
+    }
+    breakAudio.addEventListener("pause", endBreakTrack);
+    breakAudio.addEventListener("ended", endBreakTrack);
+
+    // AUDIO TRACKING – SCHIZOPHRENIA
+    const schizoAudio = new Audio("schizophrenia.mp3");
+    let schizoStart = null;
+    schizoAudio.addEventListener("play", () => { schizoStart = Date.now(); });
+    function endSchizoTrack() {
+      if (schizoStart) {
+        const duration = Math.round((Date.now() - schizoStart) / 1000);
+        gtag('event', 'schizo_listen_duration', {
+          'event_category': 'audio_interaction',
+          'event_label': 'Schizophrenia Audio',
+          'value': duration
+        });
+        schizoStart = null;
+      }
+    }
+    schizoAudio.addEventListener("pause", endSchizoTrack);
+    schizoAudio.addEventListener("ended", endSchizoTrack);
+
+    // SCROLL DEPTH TRACKING
+    let scrollTriggered = {25:false,50:false,75:false,90:false};
+    window.addEventListener("scroll", () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const percent = (scrollTop / docHeight) * 100;
+      [25,50,75,90].forEach(th => {
+        if (!scrollTriggered[th] && percent > th) {
+          gtag('event','scroll_depth',{
+            'event_category':'scroll',
+            'event_label': `${th}%`
+          });
+          scrollTriggered[th] = true;
+        }
+      });
+    });
+
+    // TIME ON PAGE TRACKING
+    [30, 60, 120].forEach(seconds => {
+      setTimeout(() => {
+        gtag('event', 'time_on_page', {
+          'event_category': 'engagement',
+          'event_label': `${seconds} seconds`
+        });
+      }, seconds * 1000);
+    });
+  });
+
 </body>
 </html>
+
