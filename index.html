@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>🌀 Virtual Spiral Notebook</title>
-<style>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>🌀 Virtual Spiral Notebook</title>
+  <style>
     @keyframes melt {
       0%   { text-shadow: 0 0 0 #000, 0 0 0 #f00; }
       20%  { text-shadow: 0 2px 0 #c00, 0 6px 8px #e11; }
@@ -120,43 +119,38 @@
 </div>
 <audio id="click-sound" preload="auto" src="click.mp3"></audio>
 <script>
-    // --- FILE ARRAYS ---
-    const files = [
-      "scene 5 meet the voices.script.txt","scene 4 what hunter believes explained.script.txt",
-      "scene 3 meet hunter hardon.script.txt","scene 21 THE SPECTRAL ARCHIVE.script.txt",
-      "scene 2 the therapy session.script.txt","scene 1 schizophrenia disclaimer.script.txt",
-      "scene 25 new beginnings.script.txt","The Surveillance Tape.mp4","choose your player.mp4",
-      "hellmouth part one_1.mp4","333_leaked_therapy_smaller.mp4","go_gay_outro.script.txt",
-      "lunch with the narrator.script.txt","choose your player.script.txt","disclaimers.script.txt",
-      "why call tmz harvey levin.script.txt","confession press conference.script.txt","3 cock anatomy.mp4",
-      "why calls from gaga are SO important.script.txt","5 hypnotize.mp4","6 macbook air.mp4",
-      "why calls from YE are SO important.script.txt","7 male body.mp4","9 microchip.mp4",
-      "11 old school smoking.mp4","12 sperm microscope.mp4","17 heart.mp4","18 diagnosis final.mp4",
-      "23 window trees.mp4","24 diagnosis 1.mp4","25 muscle god.mp4","26 eyes.mp4","30 diagnosis 3.mp4",
-      "30 shadow man.mp4","meet the publicist.script.txt","31 the human brain.mp4","36 warner bros.mp4",
-      "38 facial expressions.mp4","41 my body.mp4","the hack, the leak explained.script.txt",
-      "42 diagnosis 2.mp4","xxxximportant important important.mp4","part 2.mp4","door opened, door closed.mp4",
-      "42 the emotional wheel.mp4","44 ups pimp my truck.mp4","45 weed.mp4","47 to write love....mp4",
-      "50 gay police 2.mp4","53 primetime boomboxx.mp4","54 77 johnson park.mp4","55 blu hair do care.mp4",
-      "61 the statue of david.mp4","the reinvention playbook.script.txt","67 fwmukigit.mp4","74 kylie jenner.mp4",
-      "hot body.mov.mp4","kim kardashian.mp4","lizzo.mp4","part 1.mov.mp4","part 3.mov.mp4","part 4.mov.mp4",
-      "part 5.mov.mp4","part 6.mov.mp4","part 9.mp4","part 10.mov.mp4","stress.mov.mp4","the crying room.mov.mp4",
-      "the dopeiest of dopeness.mp4","scandal roll call.script.txt","part 11.mp4","part 16.mp4","part 13.mp4",
-      "part 33.mp4","part 27.mp4","part 18.mp4","white noise.mp4","the weekend.mp4","the cum spiral.mp4",
-      "the brain spiral 2.mp4","speed me up angel.mp4","same old fucking mistakes.mp4","rated mature.mp4",
-      "paparazzi control.mp4","jesus christ was here.mp4","i am a god.mp4","hellmouth night walk.mp4",
-      "instant gratification.script.txt","heaven sent.mp4","gentleman justin bieber.mp4",
-      "diagnosis equals schizophrenia.mp4","demons shut up.mp4","be chill life.mp4","back to my old ways.mp4",
-      "ai equals overwhelmed.mp4","workout with daddy.script.txt","brain hair.mp4","fame kills act 1.mp4",
-      "fame kills act 2.mp4","hollywood baby.mp4","inside the actor studio.mp4","NO SMOKING.mp4",
-      "prepare yourself.mp4","press press press press press.mp4","suffer suffer suffer.mp4",
-      "welcome to your fantasy.mp4","meet ye kanye west.script.txt","the tmz shame spiral.mp4",
-      "you need to know.mp4","phantom communication system.script.txt","you and i are bored.mp4",
-      "the most hated man alive.mp4","television visions.mp4","hyper focused hyper relaxed.mp4",
-      "headphones baby.mp4","do you understand.mp4"
-    ];
+// --- FILE ARRAYS ---
+const files = [
+  "scene 5 meet the voices.script.txt", "scene 4 what hunter believes explained.script.txt",
+  "scene 3 meet hunter hardon.script.txt", "scene 21 THE SPECTRAL ARCHIVE.script.txt",
+  "scene 2 the therapy session.script.txt", "scene 1 schizophrenia disclaimer.script.txt",
+  "scene 25 new beginnings.script.txt",
+  "the hack, the leak explained.script.txt", "meet the publicist.script.txt", "why calls from YE are SO important.script.txt", "why calls from gaga are SO important.script.txt",
+  "confession press conference.script.txt", "why call tmz harvey levin.script.txt", "disclaimers.script.txt", "choose your player.script.txt", "lunch with the narrator.script.txt",
+  "go_gay_outro.script.txt", "phantom communication system.script.txt", "meet ye kanye west.script.txt", "workout with daddy.script.txt", "instant gratification.script.txt",
+  "scandal roll call.script.txt", "the reinvention playbook.script.txt", "scene 6 dissection of the human mind.script (1).txt", "scene 7 degenerate radio.script.txt",
+  "the deposition of hunter hardon.script.txt",
+  "headphones baby.mp4", "eye snap.mp4", "prepare yourself.mp4", "young and attractive.mp4", "3 cock anatomy.mp4", "5 hypnotize.mp4", "cant threaten me with death id be glad to do it.mp4", "6 macbook air.mp4", "this is they way you wish your voice sounds.mp4", "7 male body.mp4", "9 microchip.mp4", "demons shut up.mp4", "chapter 1.mp4",
+  "shy bitch.mp4", "sometimes the truth dont sound like the truth.mp4", "11 old school smoking.mp4", "12 sperm microscope.mp4", "17 heart.mp4", "18 diagnosis final.mp4", "23 window trees.mp4", "i just want to be the best.mp4", "chapter 2.mp4",
+  "mindurfnbizbitch.mp4", "24 diagnosis 1.mp4", "25 muscle god.mp4", "26 eyes.mp4", "assume ill be doomed.mp4", "The Surveillance Tape Files: you need to know.mp4", "you and i are bored.mp4", "television visions.mp4", "hyper focused hyper relaxed.mp4", "confessions part 2.mp4", "chapter 3.mp4",
+  "i watch and listen -you.mp4", "30 diagnosis 3.mp4", "30 shadow man.mp4", "sing about the inbetween.mp4", "stress.mp4", "ai equals overwhelmed.mp4", "chapter 4.mp4",
+  "and if you ask-i dont know.mp4", "part 6.mp4", "31 the human brain.mp4", "36 warner bros.mp4", "38 facial expressions.mp4", "41 my body.mp4", "chapter 5.mp4",
+  "throatbby.mp4", "42 diagnosis 2.mp4", "42 the emotional wheel.mp4", "it ends tonight motherfucker.mp4", "45 weed.mp4", "part 16.mp4", "gentleman justin bieber.mp4", "chapter 6.mp4",
+  "yuck-tell me im pretty.mp4", "54 77 johnson park.mp4", "55 blu hair do care.mp4", "61 the statue of david.mp4", "53 primetime boomboxx.mp4", "part 33.mp4", "chapter 7.mp4",
+  "people you know to people you dont.mp4", "67 fwmukigit.mp4", "same old fucking mistakes.mp4", "who not game bitch let me find out.mp4", "chapter 11.mp4",
+  "mania running wild on you.mp4", "im super psycho.mp4", "rated mature.mp4", "jesus christ was here.mp4", "i am a god.mp4", "hellmouth night walk.mp4", "white noise.mp4", "chapter 12.mp4",
+  "main character whispers.mp4", "your gonna need a body bag.mp4", "tmz cold open.mp4", "the weekend.mp4", "(the dopeiest of dopeness.mp4 audio)", "hollywood baby.mp4", "be chill life.mp4", "part 2.mp4", "eye contact analysis.mp4", "paparazzi control.mp4", "new york times affect on man.mp4", "chapter 13.mp4",
+  "to be continued title card.mp4", "im frightened to think.mp4", "part 4.mp4", "chapter 14.mp4",
+  "flowers.mp4", "part 11.mp4", "thats exactly how i feel.mp4", "chapter 15.mp4",
+  "part 5.mp4", "burried alive match.mp4", "how in the fuck would you feel.mp4", "chapter 16.mp4",
+  "part 9.mp4", "trapped in a box.mp4", "trophies.mp4", "chapter 17.mp4",
+  "murder a mother fucking murder.mp4", "we made you famous.mp4", "choose your player.mp4", "part 13.mp4", "chapter 18.mp4",
+  "question question question.mp4", "the way i always play that shit.mp4", "the most hated man alive.mp4", "welcome to your fantasy.mp4", "press press press press press.mp4", "fame kills act 2.mp4", "xxxximportant important important.mp4", "part 27.mp4", "it doesnt matter what your name is.mp4", "the tmz shame spiral.mp4", "chapter 19.mp4",
+  "watching always watching.mp4", "devil in the details.mp4", "back to my old ways.mp4", "chapter 20.mp4",
+  "door opened, door closed.mp4", "going back to the workroom.mp4", "74 kylie jenner.mp4", "right now im naughty naughty.mp4", "kim kardashian.mp4", "the cum spiral.mp4", "chapter 21.mp4", "do you understand.mp4"
+];
 
-    const happyFiles = [
+const happyFiles = [
       "latino heat.happy.mp4","piss is hot.happy.mp4","the shower scene.happy.mp4",
       "no smoking.happy.mp4","meet jack.happy.mp4","drip.happy.mp4","talk the talk.happy.mp4","demon teen.happy.mp4",
       "my guy.happy.mp4","alpha alternative.happy.mp4","bitch.happy.mp4","honey baby.happy.mp4",
@@ -175,37 +169,15 @@
   "zzzzzzz.happy.mp4"
 ];
 
-// --- PARTS SERIES FILES (for custom GIF cover) ---
-const partsSeriesFiles = [
-  "choose your player.mp4",
-  "11 old school smoking.mp4",
-  "part 1.mov.mp4",
-  "part 3.mov.mp4",
-  "part 4.mov.mp4",
-  "part 5.mov.mp4",
-  "part 6.mov.mp4",
-  "part 9.mp4",
-  "part 10.mov.mp4",
-  "part 11.mp4",
-  "part 16.mp4",
-  "part 13.mp4",
-  "part 33.mp4",
-  "part 27.mp4",
-  "part 18.mp4",
-  "the weekend.mp4",
-  "the brain spiral 2.mp4",
-  "rated mature.mp4",
-  "paparazzi control.mp4",
-  "jesus christ was here.mp4",
-  "i am a god.mp4",
-  "hellmouth night walk.mp4",
-  "demons shut up.mp4",
-  "be chill life.mp4",
-  "fame kills act 2.mp4",
-  "prepare yourself.mp4",
-  "press press press press press.mp4",
-  "headphones baby.mp4"
-];
+// --- CHAPTER GIFS MAPPING ---
+const chapterGifs = {
+  "chapter 1.mp4": "chapter 1.gif",  "chapter 2.mp4": "chapter 2.gif",  "chapter 3.mp4": "chapter 3.gif",
+  "chapter 4.mp4": "chapter 4.gif",  "chapter 5.mp4": "chapter 5.gif",  "chapter 6.mp4": "chapter 6.gif",
+  "chapter 7.mp4": "chapter 7.gif",  "chapter 11.mp4": "chapter 11.gif", "chapter 12.mp4": "chapter 12.gif",
+  "chapter 13.mp4": "chapter 13.gif", "chapter 14.mp4": "chapter 14.gif", "chapter 15.mp4": "chapter 15.gif",
+  "chapter 16.mp4": "chapter 16.gif", "chapter 17.mp4": "chapter 17.gif", "chapter 18.mp4": "chapter 18.gif",
+  "chapter 19.mp4": "chapter 19.gif", "chapter 20.mp4": "chapter 20.gif", "chapter 21.mp4": "chapter 21.gif"
+};
 
 // --- UNLOCKING STATE ---
 let unlocked1 = false, unlocked2 = false;
@@ -247,28 +219,21 @@ function breakSpiral() {
     document.getElementById('break-btn').textContent = 'BREAK THE SPIRAL';
     return;
   }
-  // White flash effect
   const flash = document.createElement('div');
   Object.assign(flash.style, {
-    position: 'fixed', inset: 0,
-    background: '#fff', opacity: 1,
-    zIndex: 10000, transition: 'opacity 0.6s'
+    position: 'fixed', inset: 0, background: '#fff', opacity: 1, zIndex: 10000, transition: 'opacity 0.6s'
   });
   document.body.appendChild(flash);
   requestAnimationFrame(() => flash.style.opacity = '0');
   flash.addEventListener('transitionend', () => flash.remove());
-  // Play break the spiral.mp3 from a random point, loop
   spiralAudio = new Audio('break the spiral.mp3');
   spiralAudio.loop = true;
   spiralAudio.volume = 1.0;
   spiralAudio.addEventListener('loadedmetadata', () => {
-    if (spiralAudio.duration > 3) {
-      spiralAudio.currentTime = Math.random() * (spiralAudio.duration - 2);
-    }
+    if (spiralAudio.duration > 3) spiralAudio.currentTime = Math.random() * (spiralAudio.duration - 2);
     spiralAudio.play();
   });
   spiralAudio.play();
-  // Floating videos (all .mp4/.mov from files array)
   files.filter(f => /\.(mp4|mov)$/i.test(f)).forEach(file => {
     const v = document.createElement('video');
     v.src = file;
@@ -309,13 +274,14 @@ function displayTiles() {
   const grid = document.getElementById('puzzle-grid');
   let tileHTML = '';
 
-  // Happy galleries always at the top when unlocked
+// Happy galleries always at the top when unlocked
+  let tileHTML = "";
   if (unlocked1) {
     tileHTML += `
-      <div class="tile" onclick="openFile('happy gallery')">
+      <div class="tile" onclick="openFile('happy gallery 1')">
         <div class="tile-number">🎉</div>
-        <img src="happy.gif" alt="happy gallery" />
-        <div class="tile-filename">happy gallery</div>
+        <img src="happy.gif" alt="happy gallery 1" />
+        <div class="tile-filename">happy gallery 1</div>
       </div>
     `;
   }
@@ -329,26 +295,131 @@ function displayTiles() {
     `;
   }
 
-  // Now main files
-  tileHTML += files.map((f, i) => {
-    let imgSrc =
-      f === "do you understand.mp4"     ? "do you understand.gif"
-    : partsSeriesFiles.includes(f)      ? "part series.gif"
-    : featureScripts.includes(f)        ? 'lost-pilot-jack-eye-open.gif'
-    : f.endsWith('.happy.mp4')          ? 'happy.gif'
-    : f.endsWith('.script.txt')         ? 'galaxy.gif'
-    :                                     'spiral.gif';
-
-    return `
+  // Main file grid
+  files.forEach((f, i) => {
+    // Cover image logic
+    let imgSrc = 'spiral.gif';
+    if (f.endsWith('.script.txt')) imgSrc = 'galaxy.gif';
+    else if (chapterGifs[f]) imgSrc = chapterGifs[f];
+    else if (f === "do you understand.mp4") imgSrc = "do you understand.gif";
+    tileHTML += `
       <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
         <div class="tile-number">${i+1}</div>
         <img src="${imgSrc}" alt="tile" />
         <div class="tile-filename">${f}</div>
       </div>
     `;
-  }).join('');
+  });
+
+  // Happy galleries ALSO at the **bottom** if unlocked
+  if (unlocked1) {
+    tileHTML += `
+      <div class="tile" onclick="openFile('happy gallery 1')">
+        <div class="tile-number">🎉</div>
+        <img src="happy.gif" alt="happy gallery 1" />
+        <div class="tile-filename">happy gallery 1</div>
+      </div>
+    `;
+  }
+  if (unlocked2) {
+    tileHTML += `
+      <div class="tile" onclick="openFile('happy gallery 2')">
+        <div class="tile-number">🎈</div>
+        <img src="happy.gif" alt="happy gallery 2" />
+        <div class="tile-filename">happy gallery 2</div>
+      </div>
+    `;
+  }
 
   grid.innerHTML = tileHTML;
+}
+
+// --- OPEN / CLOSE CONTENT ---
+function openFile(file) {
+  playClickOnce();
+
+  // --- HAPPY GALLERY HANDLING ---
+  if (file === "happy gallery 1") {
+    openHappyFileList(happyFiles, "happy gallery 1");
+    return;
+  }
+  if (file === "happy gallery 2") {
+    openHappyFileList(happyFiles2, "happy gallery 2");
+    return;
+  }
+
+  // --- STANDARD CONTENT LOGIC ---
+  const grid    = document.getElementById('puzzle-grid');
+  const content = document.getElementById('content');
+  const area    = document.getElementById('content-area');
+  document.getElementById('file-name').innerText = file;
+  area.innerHTML = '';
+  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
+  const ext = file.split('.').pop().toLowerCase();
+
+  // Audio file
+  if (['mp3','wav','m4a'].includes(ext)) {
+    area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
+  }
+  // Script file
+  else if (file.endsWith('.script.txt')) {
+    area.innerHTML = `
+      <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
+      <div style="color:#fff;">Loading script…</div>`;
+    fetch(file).then(r => r.text()).then(txt => {
+      area.innerHTML = `
+        <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
+        <pre>${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
+        <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>`;
+    });
+  }
+  // Video file
+  else {
+    area.innerHTML = `
+      <div style="display:flex;align-items:center;gap:18px;">
+        <video id="main-video" controls autoplay src="${file}" style="max-width:92vw;max-height:74vh;border-radius:12px;"></video>
+        <div>
+          <label>Speed: 
+            <select id="video-speed" onchange="setVideoSpeed()">
+              <option value="0.5">0.5x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+          </label>
+        </div>
+      </div>
+    `;
+    const vid = area.querySelector('#main-video');
+    if (file === 'do you understand.mp4') {
+      vid.loop = false;
+      vid.onended = () => {
+        doYouUnderstandCount++;
+        if (doYouUnderstandCount === 1 && !unlocked1) {
+          unlocked1 = true;
+          displayTiles();
+          alert('🔓 Happy gallery 1 unlocked!');
+        } else if (doYouUnderstandCount === 2 && !unlocked2) {
+          unlocked2 = true;
+          displayTiles();
+          alert('🔓 Happy gallery 2 unlocked!');
+        }
+      };
+    } else {
+      vid.loop = true;
+    }
+  }
+
+  grid.style.display    = 'none';
+  content.style.display = 'flex';
+}
+
+function closeContent() {
+  document.getElementById('content').style.display = 'none';
+  document.getElementById('puzzle-grid').style.display = 'flex';
+  document.querySelectorAll('#content-area audio, #content-area video')
+    .forEach(m => { m.pause && m.pause(); m.currentTime = 0; });
+  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
 }
 
 // --- HAPPY FILE LIST VIEWER ---
@@ -387,7 +458,6 @@ function openHappyFileList(fileArray, galleryTitle) {
   `;
   grid.style.display    = 'none';
   content.style.display = 'flex';
-  document.onkeydown = function(e){ if (e.key==="Escape") closeHappyModal(); };
 }
 
 function openSingleHappyVideo(file, galleryTitle) {
@@ -397,7 +467,6 @@ function openSingleHappyVideo(file, galleryTitle) {
   vid.currentTime = 0;
   vid.play();
   modal.style.display = 'flex';
-  document.querySelector('#content .close-btn').style.display = 'none';
 }
 
 function closeHappyModal() {
@@ -406,109 +475,17 @@ function closeHappyModal() {
   vid.pause();
   vid.src = '';
   modal.style.display = 'none';
-  document.querySelector('#content .close-btn').style.display = 'block';
-}
-
-function setHappyVideoSpeed() {
-  const v = document.getElementById('happy-modal-video');
-  const s = document.getElementById('happy-video-speed');
-  if (v && s) v.playbackRate = parseFloat(s.value);
-}
-
-// --- OPEN / CLOSE CONTENT ---
-function openFile(file) {
-  playClickOnce(); // Play click sound
-
-  // --- HAPPY GALLERY HANDLING ---
-  if (file === "happy gallery") {
-    openHappyFileList(happyFiles, "happy gallery");
-    return;
-  }
-  if (file === "happy gallery 2") {
-    openHappyFileList(happyFiles2, "happy gallery 2");
-    return;
-  }
-
-  const grid    = document.getElementById('puzzle-grid');
-  const content = document.getElementById('content');
-  const area    = document.getElementById('content-area');
-  document.getElementById('file-name').innerText = file;
-  area.innerHTML = '';
-  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
-  const ext = file.split('.').pop().toLowerCase();
-
-  if (['mp3','wav','m4a'].includes(ext)) {
-    area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
-  }
-  else if (file.endsWith('.script.txt')) {
-    area.innerHTML = `
-      <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
-      <div style="color:#fff;">Loading script…</div>`;
-    fetch(file).then(r => r.text()).then(txt => {
-      area.innerHTML = `
-        <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
-        <pre>${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
-        <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>`;
-    });
-  }
-  else {
-    area.innerHTML = `
-      <div style="display:flex;flex-direction:column;align-items:center;gap:16px;">
-        <div>
-          <video id="main-video" controls autoplay src="${file}" style="max-width:92vw;max-height:74vh;border-radius:12px;"></video>
-        </div>
-        <div style="margin-top: 8px;">
-          <label>Speed: 
-            <select id="video-speed" onchange="setVideoSpeed()">
-              <option value="0.5">0.5x</option>
-              <option value="1" selected>1x</option>
-              <option value="1.5">1.5x</option>
-              <option value="2">2x</option>
-            </select>
-          </label>
-        </div>
-        <button class="close-btn" onclick="closeContent()">CLOSE</button>
-      </div>
-    `;
-    const vid = area.querySelector('#main-video');
-    if (file === 'do you understand.mp4') {
-      vid.loop = false;
-      vid.onended = () => {
-        doYouUnderstandCount++;
-        if (doYouUnderstandCount === 1 && !unlocked1) {
-          unlocked1 = true;
-          displayTiles();
-          alert('🔓 Happy Gallery 1 unlocked!');
-        }
-        if (doYouUnderstandCount === 2 && !unlocked2) {
-          unlocked2 = true;
-          displayTiles();
-          alert('🔓 Happy Gallery 2 unlocked!');
-        }
-      };
-    } else {
-      vid.loop = true;
-    }
-  }
-
-  grid.style.display    = 'none';
-  content.style.display = 'flex';
-}
-
-function closeContent() {
-  document.getElementById('content').style.display = 'none';
-  document.getElementById('puzzle-grid').style.display = 'flex';
-  document.querySelectorAll('#content-area audio, #content-area video')
-    .forEach(m => { m.pause && m.pause(); m.currentTime = 0; });
-  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
-  // Also close happy modal if present
-  closeHappyModal();
 }
 
 // --- SPEED BUTTON LOGIC ---
 function setVideoSpeed() {
   const v = document.getElementById('main-video');
   const s = document.getElementById('video-speed');
+  if (v && s) v.playbackRate = parseFloat(s.value);
+}
+function setHappyVideoSpeed() {
+  const v = document.getElementById('happy-modal-video');
+  const s = document.getElementById('happy-video-speed');
   if (v && s) v.playbackRate = parseFloat(s.value);
 }
 
@@ -542,105 +519,6 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('break-btn').onclick  = breakSpiral;
   document.getElementById('random-btn').onclick = openRandom;
 });
-  </script>
-<!-- Google Analytics + Custom Tracking -->
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q4JE6D9NDS"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-Q4JE6D9NDS');
 </script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // TILE CLICK TRACKING
-    document.querySelectorAll(".tile").forEach(tile => {
-      tile.addEventListener("click", function () {
-        const name = tile.getAttribute("data-name") || tile.textContent.trim() || "unknown";
-        gtag('event', 'tile_click', {
-          'event_category': 'interaction',
-          'event_label': name
-        });
-      });
-    });
-
-    // VIDEO COMPLETION TRACKING
-    const trackedVideo = document.getElementById("main-video");
-    if (trackedVideo && trackedVideo.src.includes("do you understand.mp4")) {
-      trackedVideo.addEventListener("ended", () => {
-        gtag('event', 'video_complete', {
-          'event_category': 'video',
-          'event_label': 'Do You Understand'
-        });
-      });
-    }
-
-    // AUDIO TRACKING – BREAK THE SPIRAL
-    const breakAudio = new Audio("break the spiral.mp3");
-    let breakStart = null;
-    breakAudio.addEventListener("play", () => { breakStart = Date.now(); });
-    function endBreakTrack() {
-      if (breakStart) {
-        const duration = Math.round((Date.now() - breakStart) / 1000);
-        gtag('event', 'break_spiral_listen_duration', {
-          'event_category': 'audio_interaction',
-          'event_label': 'Break the Spiral',
-          'value': duration
-        });
-        breakStart = null;
-      }
-    }
-    breakAudio.addEventListener("pause", endBreakTrack);
-    breakAudio.addEventListener("ended", endBreakTrack);
-
-    // AUDIO TRACKING – SCHIZOPHRENIA
-    const schizoAudio = new Audio("schizophrenia.mp3");
-    let schizoStart = null;
-    schizoAudio.addEventListener("play", () => { schizoStart = Date.now(); });
-    function endSchizoTrack() {
-      if (schizoStart) {
-        const duration = Math.round((Date.now() - schizoStart) / 1000);
-        gtag('event', 'schizo_listen_duration', {
-          'event_category': 'audio_interaction',
-          'event_label': 'Schizophrenia Audio',
-          'value': duration
-        });
-        schizoStart = null;
-      }
-    }
-    schizoAudio.addEventListener("pause", endSchizoTrack);
-    schizoAudio.addEventListener("ended", endSchizoTrack);
-
-    // SCROLL DEPTH TRACKING
-    let scrollTriggered = {25:false,50:false,75:false,90:false};
-    window.addEventListener("scroll", () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const percent = (scrollTop / docHeight) * 100;
-      [25,50,75,90].forEach(th => {
-        if (!scrollTriggered[th] && percent > th) {
-          gtag('event','scroll_depth',{
-            'event_category':'scroll',
-            'event_label': `${th}%`
-          });
-          scrollTriggered[th] = true;
-        }
-      });
-    });
-
-    // TIME ON PAGE TRACKING
-    [30, 60, 120].forEach(seconds => {
-      setTimeout(() => {
-        gtag('event', 'time_on_page', {
-          'event_category': 'engagement',
-          'event_label': `${seconds} seconds`
-        });
-      }, seconds * 1000);
-    });
-  });
-
 </body>
 </html>
-
