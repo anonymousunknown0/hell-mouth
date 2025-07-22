@@ -196,10 +196,16 @@ function startSite() {
 }
 
 // --- ENTRY SCREEN LOGIC ---
-document.getElementById('enter-btn').onclick = function() {
-  document.getElementById('entry-screen').style.display = 'none';
-  document.getElementById('wheel-overlay').style.display = 'flex';
-};
+window.addEventListener('DOMContentLoaded', () => {
+  displayTiles();
+  document.getElementById('break-btn').onclick  = breakSpiral;
+  document.getElementById('random-btn').onclick = openRandom;
+  // --- FIX ENTRY BUTTON LOGIC HERE ---
+  document.getElementById('enter-btn').onclick = function() {
+    document.getElementById('entry-screen').style.display = 'none';
+    document.getElementById('wheel-overlay').style.display = 'flex';
+  };
+});
 
 // --- CLICK SOUND ---
 function playClickOnce() {
