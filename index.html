@@ -1,19 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🌀 Virtual Spiral Notebook</title>
   <style>
-    @keyframes melt {
-      0%   { text-shadow: 0 0 0 #000, 0 0 0 #f00; }
-      20%  { text-shadow: 0 2px 0 #c00, 0 6px 8px #e11; }
-      35%  { text-shadow: 0 6px 2px #e11, 0 12px 16px #900; }
-      50%  { text-shadow: 0 12px 4px #b00, 0 18px 32px #200; }
-      70%  { text-shadow: 0 3px 0 #c00, 0 5px 4px #f00; }
-      85%  { text-shadow: 0 1px 0 #f00, 0 4px 8px #900; }
-      100% { text-shadow: 0 0 0 #000, 0 0 0 #f00; }
-    }
     body {
       margin: 0;
       background: #111 url('spiral.gif') center center fixed;
@@ -23,6 +14,15 @@
       overflow-x: hidden;
       min-height: 100vh;
     }
+    @keyframes melt {
+      0% { text-shadow: 0 0 0 #000, 0 0 0 #f00; }
+      20% { text-shadow: 0 2px 0 #c00, 0 6px 8px #e11; }
+      35% { text-shadow: 0 6px 2px #e11, 0 12px 16px #900; }
+      50% { text-shadow: 0 12px 4px #b00, 0 18px 32px #200; }
+      70% { text-shadow: 0 3px 0 #c00, 0 5px 4px #f00; }
+      85% { text-shadow: 0 1px 0 #f00, 0 4px 8px #900; }
+      100% { text-shadow: 0 0 0 #000, 0 0 0 #f00; }
+    }
     #entry-screen {
       position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
       background: #000; z-index: 9999; flex-direction: column; overflow: hidden;
@@ -31,96 +31,171 @@
       position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1;
     }
     #entry-screen h1 {
-      color: #ff0000;
-      font-size: 6rem;
-      font-weight: 900;
-      letter-spacing: 2rem;
-      text-align: center;
-      text-transform: uppercase;
-      font-stretch: ultra-expanded;
-      margin-bottom: 40px;
-      filter: blur(1px) contrast(130%);
+      color: #ff0000; font-size: 6rem; font-weight: 900; letter-spacing: 2rem;
+      text-align: center; text-transform: uppercase; font-stretch: ultra-expanded;
+      margin-bottom: 40px; filter: blur(1px) contrast(130%);
       animation: melt 3s infinite alternate cubic-bezier(.8,0,.2,1);
       font-family: Impact, 'Arial Black', sans-serif;
-      text-shadow: 0 3px 0 #fff1, 0 10px 15px #e00c, 0 20px 30px #600b;
-      line-height: .9;
+      text-shadow: 0 3px 0 #fff1, 0 10px 15px #e00c, 0 20px 30px #600b; line-height: .9;
     }
-    #entry-screen button { padding: 14px 40px; font-size: 1.4rem; background: #000; color: #fff; border: 3px solid #fff; border-radius: 12px; cursor: pointer; }
-    #schiz-btn-top { display:block; margin: 22px auto 0 auto; padding: 11px 32px; font-size: 1.12em; font-weight: bold; border: 2.5px solid #ff5252; border-radius: 13px; background:#111; color: #ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s; }
-    #schiz-btn-top:hover { background: #ff5252; color: #fff; }
-    #wheel-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; flex-wrap: wrap; align-items: center; justify-content: center; z-index: 9998; color: #ffd700; text-align: center; padding: 20px; text-transform: capitalize; }
+    #entry-screen button {
+      padding: 14px 40px; font-size: 1.4rem; background: #000; color: #fff;
+      border: 3px solid #fff; border-radius: 12px; cursor: pointer;
+    }
+    #wheel-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+      flex-wrap: wrap; align-items: center; justify-content: center; z-index: 9998;
+      color: #ffd700; text-align: center; padding: 20px; text-transform: capitalize;
+    }
     #wheel-overlay h1 { flex-basis: 100%; font-size: 2rem; margin-bottom: 1rem; }
-    .emotion-btn { background: #222; color: #ffd700; border: 2px solid #ffd700; border-radius: 12px; padding: 12px 24px; margin: 6px; font-size: 1rem; cursor: pointer; flex: 1 0 120px; transition: background 0.2s, color 0.2s; }
+    .emotion-btn {
+      background: #222; color: #ffd700; border: 2px solid #ffd700;
+      border-radius: 12px; padding: 12px 24px; margin: 6px; font-size: 1rem;
+      cursor: pointer; flex: 1 0 120px; transition: background 0.2s, color 0.2s;
+    }
     .emotion-btn:hover { background: #ffd700; color: #111; }
-    .puzzle-grid { display: none; flex-wrap: wrap; justify-content: center; gap: 14px; padding: 30px 10px 140px 10px; }
-    .tile { position: relative; width: 190px; height: 106px; background: rgba(0,0,0,0.15); border: 2px solid #fff; border-radius: 20px; box-shadow: 0 0 16px #0008; cursor: pointer; overflow: hidden; transition: transform 0.18s, box-shadow 0.18s; }
+    .puzzle-grid {
+      display: none; flex-wrap: wrap; justify-content: center;
+      gap: 14px; padding: 30px 10px 140px 10px;
+    }
+    .tile {
+      position: relative; width: 190px; height: 106px; background: rgba(0,0,0,0.15);
+      border: 2px solid #fff; border-radius: 20px; box-shadow: 0 0 16px #0008;
+      cursor: pointer; overflow: hidden; transition: transform 0.18s, box-shadow 0.18s;
+    }
     .tile img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
     .tile:hover { transform: scale(1.08); box-shadow: 0 0 26px #fff8; border-color: #ffd700; }
-    .tile-number { position: absolute; top: 8px; left: 12px; font-size: 1.4rem; font-weight: bold; color: #FFD600; text-shadow: 1px 1px 6px #000; pointer-events: none; }
-    .tile-filename { position: absolute; bottom: 6px; left: 0; width: 100%; text-align: center; font-size: 0.85em; font-weight: bold; color: #FFD600; background: rgba(0,0,0,0.18); padding: 2px 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
-    #break-btn, #random-btn { display: none; position: fixed; left: 50%; transform: translateX(-50%); cursor: pointer; box-shadow: 0 0 18px #0005; z-index: 1000; transition: background 0.2s; }
-    #break-btn { bottom: 32px; background: #fff; color: #000; border: 4px solid #000; border-radius: 25px; padding: 12px 38px; font-size: 2em; font-weight: 900; }
+    .tile-number {
+      position: absolute; top: 8px; left: 12px; font-size: 1.4rem; font-weight: bold;
+      color: #FFD600; text-shadow: 1px 1px 6px #000; pointer-events: none;
+    }
+    .tile-filename {
+      position: absolute; bottom: 6px; left: 0; width: 100%; text-align: center;
+      font-size: 0.85em; font-weight: bold; color: #FFD600;
+      background: rgba(0,0,0,0.18); padding: 2px 4px; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis; pointer-events: none;
+    }
+    #break-btn, #random-btn {
+      display: none; position: fixed; left: 50%; transform: translateX(-50%);
+      cursor: pointer; box-shadow: 0 0 18px #0005; z-index: 1000; transition: background 0.2s;
+    }
+    #break-btn {
+      bottom: 32px; background: #fff; color: #000; border: 4px solid #000;
+      border-radius: 25px; padding: 12px 38px; font-size: 2em; font-weight: 900;
+    }
     #break-btn:active { background: #000; color: #fff; }
-    #random-btn { bottom: 100px; background: #333; color: #ffd700; border: 3px solid #ffd700; border-radius: 20px; padding: 8px 24px; font-size: 1.2em; font-weight: bold; }
+    #random-btn {
+      bottom: 100px; background: #333; color: #ffd700; border: 3px solid #ffd700;
+      border-radius: 20px; padding: 8px 24px; font-size: 1.2em; font-weight: bold;
+    }
     #random-btn:hover { background: #ffd700; color: #111; }
-    #content { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.93); overflow-y: auto; padding: 30px 10px; box-sizing: border-box; z-index: 20; }
-    #content .filename { color: #ffd700; font-size: 1.2rem; font-weight: bold; margin-bottom: 12px; text-align: center; word-break: break-all; }
-    #content-area { width: 100%; max-width: 700px; margin: 0 auto; max-height: calc(100vh - 200px); overflow-y: auto; }
-    #content-area pre { background: #111; color: #fff; padding: 24px; border-radius: 14px; font-family: 'Courier New', monospace; font-size: 1.05em; line-height: 1.5; white-space: pre-wrap; word-break: break-word; box-shadow: 0 0 12px #0008; margin-bottom: 16px; }
-    #content-area audio, #content-area video { width: 100%; max-width: 700px; border-radius: 12px; box-shadow: 0 0 12px #0008; margin-bottom: 16px; }
-    .close-btn, .copy-btn, .schiz-btn { display: block; margin: 24px auto 0 auto; padding: 8px 24px; font-size: 1em; font-weight: bold; border: 2px solid #fff; border-radius: 12px; cursor: pointer; transition: background 0.2s; }
-    .close-btn { background: rgba(0,0,0,0.5); color: #fff; margin-top: 24px;}
+    #content {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.93);
+      overflow-y: auto; padding: 30px 10px; box-sizing: border-box; z-index: 20;
+    }
+    #content .filename {
+      color: #ffd700; font-size: 1.2rem; font-weight: bold;
+      margin-bottom: 12px; text-align: center; word-break: break-all;
+    }
+    #content-area {
+      width: 100%; max-width: 700px; margin: 0 auto; max-height: calc(100vh - 200px); overflow-y: auto;
+    }
+    #content-area pre {
+      background: #111; color: #fff; padding: 24px; border-radius: 14px;
+      font-family: 'Courier New', monospace; font-size: 1.05em; line-height: 1.5;
+      white-space: pre-wrap; word-break: break-word; box-shadow: 0 0 12px #0008; margin-bottom: 16px;
+    }
+    #content-area audio, #content-area video {
+      width: 100%; max-width: 700px; border-radius: 12px; box-shadow: 0 0 12px #0008; margin-bottom: 16px;
+    }
+    .close-btn, .copy-btn, .schiz-btn {
+      display: block; margin: 8px auto; padding: 8px 24px; font-size: 1em;
+      font-weight: bold; border: 2px solid #fff; border-radius: 12px;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .close-btn { background: rgba(0,0,0,0.5); color: #fff; }
     .close-btn:hover { background: #e00; }
     .copy-btn { background: #ffd700; color: #111; border-color: #ffd700; }
     .copy-btn:active { background: #ffc107; }
     .schiz-btn { background: #111; color: #ff5252; border-color: #ff5252; font-weight: 900; margin-bottom: 18px; text-transform: uppercase; letter-spacing: .2em; }
     .schiz-btn:hover { background: #ff5252; color: #fff; }
+    #schiz-btn-top { display:block; margin: 22px auto 0 auto; padding: 11px 32px; font-size: 1.12em; font-weight: bold; border: 2.5px solid #ff5252; border-radius: 13px; background:#111; color: #ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s; }
+    #schiz-btn-top:hover { background: #ff5252; color: #fff; }
+    /* Happy Modal & List styling */
+    .happy-file-list button {
+      background:#111;color:#FFD700;font-size:1.1em;border:2px solid #FFD700;border-radius:10px;
+      padding:8px 24px;cursor:pointer;min-width:240px;margin:4px 0;
+    }
+    .happy-file-list button:hover { background: #232; }
+    #happy-video-modal {
+      display:none;position:fixed;inset:0;z-index:5000;background:#000E;
+      align-items:center;justify-content:center;flex-direction:column;
+    }
+    #happy-modal-video {
+      max-width:92vw;max-height:78vh;border-radius:16px;
+      box-shadow:0 0 36px #000;
+    }
+    @media(max-width:800px){ .tile { width:92vw; height:20vw; min-height:80px; } #break-btn,#random-btn { font-size:1.4em; padding:8px 24px; bottom:12px; } }
   </style>
 </head>
 <body>
-<div id="entry-screen">
-<video autoplay="" id="entry-bg-video" loop="" muted="" playsinline="">
-<source src="5 hypnotize.mp4" type="video/mp4"/>
-</video>
-<h1>H E L L M O U T H</h1>
-<button id="enter-btn">ENTER</button>
-</div>
-<div id="wheel-overlay">
-<h1>Pick an Emotion to Enter</h1>
-<button class="emotion-btn" onclick="startSite()">Joy</button>
-<button class="emotion-btn" onclick="startSite()">Sadness</button>
-<button class="emotion-btn" onclick="startSite()">Anger</button>
-<button class="emotion-btn" onclick="startSite()">Fear</button>
-<button class="emotion-btn" onclick="startSite()">Surprise</button>
-<button class="emotion-btn" onclick="startSite()">Disgust</button>
-<button class="emotion-btn" onclick="startSite()">Trust</button>
-<button class="emotion-btn" onclick="startSite()">Anticipation</button>
-<button class="emotion-btn" onclick="startSite()">Love</button>
-<button class="emotion-btn" onclick="startSite()">Shame</button>
-<button class="emotion-btn" onclick="startSite()">Pride</button>
-<button class="emotion-btn" onclick="startSite()">Envy</button>
-<button class="emotion-btn" onclick="startSite()">Guilt</button>
-<button class="emotion-btn" onclick="startSite()">Hope</button>
-<button class="emotion-btn" onclick="startSite()">Boredom</button>
-<button class="emotion-btn" onclick="startSite()">Confusion</button>
-<button class="emotion-btn" onclick="startSite()">Calm</button>
-<button class="emotion-btn" onclick="startSite()">Anxiety</button>
-<button class="emotion-btn" onclick="startSite()">Awe</button>
-<button class="emotion-btn" onclick="startSite()">Nostalgia</button>
-</div>
-<button id="schiz-btn-top" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
-<div class="puzzle-grid" id="puzzle-grid"></div>
-<button id="break-btn">BREAK THE SPIRAL</button>
-<button id="random-btn">random</button>
-<div id="content">
-<div class="filename" id="file-name"></div>
-<div id="content-area"></div>
-<button class="close-btn" onclick="closeContent()">CLOSE</button>
-</div>
-<audio id="click-sound" preload="auto" src="click.mp3"></audio>
+  <div id="entry-screen">
+    <video id="entry-bg-video" autoplay loop muted playsinline>
+      <source src="5 hypnotize.mp4" type="video/mp4">
+    </video>
+    <h1>H E L L M O U T H</h1>
+    <button id="enter-btn">ENTER</button>
+  </div>
+  <div id="wheel-overlay">
+    <h1>Pick an Emotion to Enter</h1>
+    <button class="emotion-btn" onclick="startSite()">Joy</button>
+    <button class="emotion-btn" onclick="startSite()">Sadness</button>
+    <button class="emotion-btn" onclick="startSite()">Anger</button>
+    <button class="emotion-btn" onclick="startSite()">Fear</button>
+    <button class="emotion-btn" onclick="startSite()">Surprise</button>
+    <button class="emotion-btn" onclick="startSite()">Disgust</button>
+    <button class="emotion-btn" onclick="startSite()">Trust</button>
+    <button class="emotion-btn" onclick="startSite()">Anticipation</button>
+    <button class="emotion-btn" onclick="startSite()">Love</button>
+    <button class="emotion-btn" onclick="startSite()">Shame</button>
+    <button class="emotion-btn" onclick="startSite()">Pride</button>
+    <button class="emotion-btn" onclick="startSite()">Envy</button>
+    <button class="emotion-btn" onclick="startSite()">Guilt</button>
+    <button class="emotion-btn" onclick="startSite()">Hope</button>
+    <button class="emotion-btn" onclick="startSite()">Boredom</button>
+    <button class="emotion-btn" onclick="startSite()">Confusion</button>
+    <button class="emotion-btn" onclick="startSite()">Calm</button>
+    <button class="emotion-btn" onclick="startSite()">Anxiety</button>
+    <button class="emotion-btn" onclick="startSite()">Awe</button>
+    <button class="emotion-btn" onclick="startSite()">Nostalgia</button>
+  </div>
+  <button id="schiz-btn-top" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
+  <div class="puzzle-grid" id="puzzle-grid"></div>
+  <button id="break-btn">BREAK THE SPIRAL</button>
+  <button id="random-btn">random</button>
+  <div id="content">
+    <div class="filename" id="file-name"></div>
+    <div id="content-area"></div>
+    <button class="close-btn" onclick="closeContent()">CLOSE</button>
+    <div id="happy-video-modal">
+      <video id="happy-modal-video" controls autoplay loop></video>
+      <div style="margin-top:12px;text-align:center;">
+        <label>Speed: 
+          <select id="happy-video-speed" onchange="setHappyVideoSpeed()">
+            <option value="0.5">0.5x</option>
+            <option value="1" selected>1x</option>
+            <option value="1.5">1.5x</option>
+            <option value="2">2x</option>
+          </select>
+        </label>
+      </div>
+      <button onclick="closeHappyModal()" style="position:absolute;top:30px;right:40px;font-size:2em;padding:8px 24px;background:#FFD700;color:#111;border:none;border-radius:10px;cursor:pointer;">CLOSE</button>
+    </div>
+  </div>
+  <audio id="click-sound" src="click.mp3" preload="auto"></audio>
 <script>
-// --- FILE ARRAYS ---
-const files = [
+  // --- FILE ARRAYS ---
+  const files = [
   "scene 5 meet the voices.script.txt", "scene 4 what hunter believes explained.script.txt",
   "scene 3 meet hunter hardon.script.txt", "scene 21 THE SPECTRAL ARCHIVE.script.txt",
   "scene 2 the therapy session.script.txt", "scene 1 schizophrenia disclaimer.script.txt",
@@ -169,51 +244,46 @@ const happyFiles = [
   "zzzzzzz.happy.mp4"
 ];
 
-// --- CHAPTER GIFS MAPPING ---
-const chapterGifs = {
-  "chapter 1.mp4": "chapter 1.gif",  "chapter 2.mp4": "chapter 2.gif",  "chapter 3.mp4": "chapter 3.gif",
-  "chapter 4.mp4": "chapter 4.gif",  "chapter 5.mp4": "chapter 5.gif",  "chapter 6.mp4": "chapter 6.gif",
-  "chapter 7.mp4": "chapter 7.gif",  "chapter 11.mp4": "chapter 11.gif", "chapter 12.mp4": "chapter 12.gif",
-  "chapter 13.mp4": "chapter 13.gif", "chapter 14.mp4": "chapter 14.gif", "chapter 15.mp4": "chapter 15.gif",
-  "chapter 16.mp4": "chapter 16.gif", "chapter 17.mp4": "chapter 17.gif", "chapter 18.mp4": "chapter 18.gif",
-  "chapter 19.mp4": "chapter 19.gif", "chapter 20.mp4": "chapter 20.gif", "chapter 21.mp4": "chapter 21.gif"
-};
+  // --- CHAPTER COVER IMAGE MAP ---
+  const customCoverMap = {
+    "chapter 1.mp4": "chapter 1.gif",  "chapter 2.mp4": "chapter 2.gif",
+    "chapter 3.mp4": "chapter 3.gif",  "chapter 4.mp4": "chapter 4.gif",
+    "chapter 5.mp4": "chapter 5.gif",  "chapter 6.mp4": "chapter 6.gif",
+    "chapter 7.mp4": "chapter 7.gif",  "chapter 11.mp4": "chapter 11.gif",
+    "chapter 12.mp4": "chapter 12.gif", "chapter 13.mp4": "chapter 13.gif",
+    "chapter 14.mp4": "chapter 14.gif", "chapter 15.mp4": "chapter 15.gif",
+    "chapter 16.mp4": "chapter 16.gif", "chapter 17.mp4": "chapter 17.gif",
+    "chapter 18.mp4": "chapter 18.gif", "chapter 19.mp4": "chapter 19.gif",
+    "chapter 20.mp4": "chapter 20.gif", "chapter 21.mp4": "chapter 21.gif"
+  };
 
-// --- UNLOCKING STATE ---
-let unlocked1 = false, unlocked2 = false;
-let doYouUnderstandCount = 0;
+  // --- UNLOCK STATES ---
+  let unlocked1 = false, unlocked2 = false;
 
-// --- AUDIO CTX ---
-const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-let audioSources=[], videoEls=[], schizAudio=null, spiralAudio=null;
+  // --- AUDIO CTX ---
+  let audioSources=[], videoEls=[], schizAudio=null, spiralAudio=null;
 
-// --- EMOTIONAL WHEEL LOGIC ---
-function startSite() {
-  document.getElementById('wheel-overlay').style.display = 'none';
-  document.getElementById('puzzle-grid').style.display = 'flex';
-  document.getElementById('break-btn').style.display = 'block';
-  document.getElementById('random-btn').style.display = 'block';
-}
+  // --- EMOTIONAL WHEEL LOGIC ---
+  function startSite() {
+    document.getElementById('wheel-overlay').style.display = 'none';
+    document.getElementById('puzzle-grid').style.display = 'flex';
+    document.getElementById('break-btn').style.display = 'block';
+    document.getElementById('random-btn').style.display = 'block';
+  }
 
-// --- ENTRY SCREEN LOGIC ---
-window.addEventListener('DOMContentLoaded', () => {
-  displayTiles();
-  document.getElementById('break-btn').onclick  = breakSpiral;
-  document.getElementById('random-btn').onclick = openRandom;
-  // --- FIX ENTRY BUTTON LOGIC HERE ---
+  // --- ENTRY SCREEN LOGIC ---
   document.getElementById('enter-btn').onclick = function() {
     document.getElementById('entry-screen').style.display = 'none';
     document.getElementById('wheel-overlay').style.display = 'flex';
   };
-});
 
-// --- CLICK SOUND ---
-function playClickOnce() {
-  const a = document.getElementById('click-sound');
-  if (a) { a.currentTime = 0; a.play(); }
-}
+  // --- CLICK SOUND ---
+  function playClickOnce() {
+    const a = document.getElementById('click-sound');
+    if (a) { a.currentTime = 0; a.play(); }
+  }
 
-// --- BREAK THE SPIRAL ---
+  // --- BREAK THE SPIRAL ---
 function breakSpiral() {
   playClickOnce();
   if (spiralAudio || audioSources.length || videoEls.length) {
@@ -225,22 +295,29 @@ function breakSpiral() {
     document.getElementById('break-btn').textContent = 'BREAK THE SPIRAL';
     return;
   }
+  // White flash effect
   const flash = document.createElement('div');
   Object.assign(flash.style, {
-    position: 'fixed', inset: 0, background: '#fff', opacity: 1, zIndex: 10000, transition: 'opacity 0.6s'
+    position: 'fixed', inset: 0,
+    background: '#fff', opacity: 1,
+    zIndex: 10000, transition: 'opacity 0.6s'
   });
   document.body.appendChild(flash);
   requestAnimationFrame(() => flash.style.opacity = '0');
   flash.addEventListener('transitionend', () => flash.remove());
+  // Play break the spiral.mp3 from a random point, loop
   spiralAudio = new Audio('break the spiral.mp3');
   spiralAudio.loop = true;
   spiralAudio.volume = 1.0;
   spiralAudio.addEventListener('loadedmetadata', () => {
-    if (spiralAudio.duration > 3) spiralAudio.currentTime = Math.random() * (spiralAudio.duration - 2);
+    if (spiralAudio.duration > 3) {
+      spiralAudio.currentTime = Math.random() * (spiralAudio.duration - 2);
+    }
     spiralAudio.play();
   });
   spiralAudio.play();
-  files.filter(f => /\.(mp4|mov)$/i.test(f)).forEach(file => {
+  // Floating videos (all .mp4 from files array)
+  files.filter(f => /\.(mp4)$/i.test(f)).forEach(file => {
     const v = document.createElement('video');
     v.src = file;
     v.autoplay = v.loop = true;
@@ -267,47 +344,31 @@ function openRandom() {
 
 // --- DISPLAY TILES ---
 function displayTiles() {
-  const featureScripts = [
-    "scene 5 meet the voices.script.txt",
-    "scene 4 what hunter believes explained.script.txt",
-    "scene 3 meet hunter hardon.script.txt",
-    "scene 21 THE SPECTRAL ARCHIVE.script.txt",
-    "scene 2 the therapy session.script.txt",
-    "scene 1 schizophrenia disclaimer.script.txt",
-    "scene 25 new beginnings.script.txt"
-  ];
-
   const grid = document.getElementById('puzzle-grid');
   let tileHTML = '';
+  // Happy galleries always at the top when unlocked
+  if (unlocked1) tileHTML += `
+    <div class="tile" onclick="openFile('happy gallery')">
+      <div class="tile-number">🎉</div>
+      <img src="happy.gif" alt="happy" />
+      <div class="tile-filename">happy gallery</div>
+    </div>
+  `;
+  if (unlocked2) tileHTML += `
+    <div class="tile" onclick="openFile('happy gallery 2')">
+      <div class="tile-number">🎈</div>
+      <img src="happy.gif" alt="happy" />
+      <div class="tile-filename">happy gallery 2</div>
+    </div>
+  `;
 
-// Happy galleries always at the top when unlocked
-  let tileHTML = "";
-  if (unlocked1) {
-    tileHTML += `
-      <div class="tile" onclick="openFile('happy gallery 1')">
-        <div class="tile-number">🎉</div>
-        <img src="happy.gif" alt="happy gallery 1" />
-        <div class="tile-filename">happy gallery 1</div>
-      </div>
-    `;
-  }
-  if (unlocked2) {
-    tileHTML += `
-      <div class="tile" onclick="openFile('happy gallery 2')">
-        <div class="tile-number">🎈</div>
-        <img src="happy.gif" alt="happy gallery 2" />
-        <div class="tile-filename">happy gallery 2</div>
-      </div>
-    `;
-  }
-
-  // Main file grid
   files.forEach((f, i) => {
-    // Cover image logic
-    let imgSrc = 'spiral.gif';
-    if (f.endsWith('.script.txt')) imgSrc = 'galaxy.gif';
-    else if (chapterGifs[f]) imgSrc = chapterGifs[f];
-    else if (f === "do you understand.mp4") imgSrc = "do you understand.gif";
+    // Determine image:
+    let imgSrc = customCoverMap[f]
+      ? customCoverMap[f]
+      : (f.endsWith('.script.txt')
+        ? 'galaxy.gif'
+        : 'spiral.gif');
     tileHTML += `
       <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
         <div class="tile-number">${i+1}</div>
@@ -316,27 +377,6 @@ function displayTiles() {
       </div>
     `;
   });
-
-  // Happy galleries ALSO at the **bottom** if unlocked
-  if (unlocked1) {
-    tileHTML += `
-      <div class="tile" onclick="openFile('happy gallery 1')">
-        <div class="tile-number">🎉</div>
-        <img src="happy.gif" alt="happy gallery 1" />
-        <div class="tile-filename">happy gallery 1</div>
-      </div>
-    `;
-  }
-  if (unlocked2) {
-    tileHTML += `
-      <div class="tile" onclick="openFile('happy gallery 2')">
-        <div class="tile-number">🎈</div>
-        <img src="happy.gif" alt="happy gallery 2" />
-        <div class="tile-filename">happy gallery 2</div>
-      </div>
-    `;
-  }
-
   grid.innerHTML = tileHTML;
 }
 
@@ -344,17 +384,10 @@ function displayTiles() {
 function openFile(file) {
   playClickOnce();
 
-  // --- HAPPY GALLERY HANDLING ---
-  if (file === "happy gallery 1") {
-    openHappyFileList(happyFiles, "happy gallery 1");
-    return;
-  }
-  if (file === "happy gallery 2") {
-    openHappyFileList(happyFiles2, "happy gallery 2");
-    return;
-  }
+  // Happy galleries
+  if (file === "happy gallery") { openHappyFileList(happyFiles, "happy gallery"); return; }
+  if (file === "happy gallery 2") { openHappyFileList(happyFiles2, "happy gallery 2"); return; }
 
-  // --- STANDARD CONTENT LOGIC ---
   const grid    = document.getElementById('puzzle-grid');
   const content = document.getElementById('content');
   const area    = document.getElementById('content-area');
@@ -400,12 +433,11 @@ function openFile(file) {
     if (file === 'do you understand.mp4') {
       vid.loop = false;
       vid.onended = () => {
-        doYouUnderstandCount++;
-        if (doYouUnderstandCount === 1 && !unlocked1) {
+        if (!unlocked1) {
           unlocked1 = true;
           displayTiles();
           alert('🔓 Happy gallery 1 unlocked!');
-        } else if (doYouUnderstandCount === 2 && !unlocked2) {
+        } else if (!unlocked2) {
           unlocked2 = true;
           displayTiles();
           alert('🔓 Happy gallery 2 unlocked!');
@@ -415,7 +447,6 @@ function openFile(file) {
       vid.loop = true;
     }
   }
-
   grid.style.display    = 'none';
   content.style.display = 'flex';
 }
@@ -425,6 +456,7 @@ function closeContent() {
   document.getElementById('puzzle-grid').style.display = 'flex';
   document.querySelectorAll('#content-area audio, #content-area video')
     .forEach(m => { m.pause && m.pause(); m.currentTime = 0; });
+  closeHappyModal();
   if (schizAudio) { schizAudio.pause(); schizAudio = null; }
 }
 
@@ -434,7 +466,6 @@ function openHappyFileList(fileArray, galleryTitle) {
   const content = document.getElementById('content');
   const area    = document.getElementById('content-area');
   document.getElementById('file-name').innerText = galleryTitle;
-
   area.innerHTML = `
     <div style="display:flex;flex-direction:column;align-items:center;gap:14px;margin:30px 0;">
       <h2 style="color:#FFD700;">${galleryTitle.replace(/gallery/i,'Happy Gallery')}</h2>
@@ -447,7 +478,7 @@ function openHappyFileList(fileArray, galleryTitle) {
         `).join('')}
       </div>
     </div>
-    <div id="happy-video-modal" style="display:none;position:fixed;inset:0;z-index:5000;background:#000E;align-items:center;justify-content:center;">
+    <div id="happy-video-modal" style="display:none;position:fixed;inset:0;z-index:5000;background:#000E;align-items:center;justify-content:center;flex-direction:column;">
       <video id="happy-modal-video" controls autoplay loop style="max-width:92vw;max-height:78vh;border-radius:16px;"></video>
       <div style="margin-top:12px;text-align:center;">
         <label>Speed: 
@@ -524,7 +555,17 @@ window.addEventListener('DOMContentLoaded', () => {
   displayTiles();
   document.getElementById('break-btn').onclick  = breakSpiral;
   document.getElementById('random-btn').onclick = openRandom;
+
+  // Fix for Enter button if it's being weird in some browsers
+  let enter = document.getElementById('enter-btn');
+  if (enter) {
+    enter.onclick = function() {
+      document.getElementById('entry-screen').style.display = 'none';
+      document.getElementById('wheel-overlay').style.display = 'flex';
+    }
+  }
 });
 </script>
 </body>
 </html>
+
