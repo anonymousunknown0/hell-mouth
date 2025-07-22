@@ -21,6 +21,7 @@
     #entry-screen video#entry-bg-video {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1;
     }
+    #entry-screen audio { display: none; }
     #entry-screen h1 {
       color: #ff0000;
       font-size: 6rem;
@@ -65,20 +66,18 @@
     #content-area { width: 100%; max-width: 700px; margin: 0 auto; max-height: calc(100vh - 200px); overflow-y: auto; }
     #content-area pre { background: #111; color: #fff; padding: 24px; border-radius: 14px; font-family: 'Courier New', monospace; font-size: 1.05em; line-height: 1.5; white-space: pre-wrap; word-break: break-word; box-shadow: 0 0 12px #0008; margin-bottom: 16px; }
     #content-area audio, #content-area video { width: 100%; max-width: 700px; border-radius: 12px; box-shadow: 0 0 12px #0008; margin-bottom: 16px; }
-    .close-btn, .copy-btn, .schiz-btn { display: block; margin: 8px auto; padding: 8px 24px; font-size: 1em; font-weight: bold; border: 2px solid #fff; border-radius: 12px; cursor: pointer; transition: background 0.2s; }
-    .close-btn { background: rgba(0,0,0,0.5); color: #fff; z-index:9999; position:relative; }
+    .close-btn, .copy-btn, .schiz-btn { display: block; margin: 12px auto; padding: 8px 24px; font-size: 1em; font-weight: bold; border: 2px solid #fff; border-radius: 12px; cursor: pointer; transition: background 0.2s; }
+    .close-btn { background: rgba(0,0,0,0.5); color: #fff; z-index:30; position:relative; }
     .close-btn:hover { background: #e00; }
     .copy-btn { background: #ffd700; color: #111; border-color: #ffd700; }
     .copy-btn:active { background: #ffc107; }
     .schiz-btn { background: #111; color: #ff5252; border-color: #ff5252; font-weight: 900; margin-bottom: 18px; text-transform: uppercase; letter-spacing: .2em; }
     .schiz-btn:hover { background: #ff5252; color: #fff; }
+    .tts-btn, .stop-btn { display:inline-block; margin:0 8px 10px 0; padding:7px 18px;font-size:0.98em;font-weight:bold; border:2px solid #ffd700; border-radius:9px; background:#111;color:#ffd700;cursor:pointer; }
+    .tts-btn:hover,.stop-btn:hover { background:#ffd700;color:#111; }
+    .voice-select { padding:6px 14px;font-size:1em;border-radius:7px;border:1.5px solid #FFD700;background:#111;color:#FFD700;margin-bottom:8px;}
+    .happy-file-list button { margin-bottom:4px;}
     @media(max-width:800px){ .tile { width:92vw; height:20vw; min-height:80px; } #break-btn,#random-btn { font-size:1.4em; padding:8px 24px; bottom:12px; } }
-    .happy-gallery { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; padding: 18px 0 34px 0; }
-    .happy-thumb { width: 340px; height: 200px; object-fit: cover; border-radius: 16px; box-shadow:0 0 10px #000; cursor:pointer; transition: box-shadow .2s; background: #111; }
-    .happy-thumb:hover { box-shadow:0 0 36px #FFD700; }
-    #happy-fullscreen { display:none; position:fixed; inset:0; z-index:2000; background:#000D; align-items:center; justify-content:center; }
-    #happy-fullscreen video { border-radius:18px; box-shadow:0 0 36px #000; max-width:90vw; max-height:90vh;}
-    #happy-fullscreen button { position:absolute; top:30px; right:40px; font-size:2em; padding:8px 24px;}
   </style>
 </head>
 <body>
@@ -92,7 +91,7 @@
   </div>
   <div id="wheel-overlay">
     <h1>Pick an Emotion to Enter</h1>
-    <!-- ... all emotion buttons ... -->
+    <!-- EMOTIONS LIST (customize if needed) -->
     <button class="emotion-btn" onclick="startSite()">Joy</button>
     <button class="emotion-btn" onclick="startSite()">Sadness</button>
     <button class="emotion-btn" onclick="startSite()">Anger</button>
@@ -114,7 +113,7 @@
     <button class="emotion-btn" onclick="startSite()">Awe</button>
     <button class="emotion-btn" onclick="startSite()">Nostalgia</button>
   </div>
-  <button id="schiz-btn-top" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
+  <button id="schiz-btn-top" onclick="playSchizophrenia()" style="display:block; margin:22px auto 0 auto; padding:11px 32px; font-size:1.12em; font-weight:bold; border:2.5px solid #ff5252; border-radius:13px; background:#111; color:#ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s;">SCHIZOPHRENIA</button>
   <div class="puzzle-grid" id="puzzle-grid"></div>
   <button id="break-btn">BREAK THE SPIRAL</button>
   <button id="random-btn">random</button>
@@ -122,14 +121,11 @@
     <div class="filename" id="file-name"></div>
     <div id="content-area"></div>
     <button class="close-btn" onclick="closeContent()">CLOSE</button>
-    <div id="happy-fullscreen">
-      <video id="happy-fullscreen-video" controls autoplay loop></video>
-      <button onclick="closeHappyFullscreen()">CLOSE</button>
-    </div>
   </div>
   <audio id="click-sound" src="click.mp3" preload="auto"></audio>
   <script>
-  // --- FILE ARRAYS HERE 
+  // --------- JS CODE STARTS HERE ---------
+
 const files = [
   "scene 5 meet the voices.script.txt", "scene 4 what hunter believes explained.script.txt",
   "scene 3 meet hunter hardon.script.txt", "scene 21 THE SPECTRAL ARCHIVE.script.txt",
@@ -138,7 +134,7 @@ const files = [
   "the hack, the leak explained.script.txt", "meet the publicist.script.txt", "why calls from YE are SO important.script.txt", "why calls from gaga are SO important.script.txt",
   "confession press conference.script.txt", "why call tmz harvey levin.script.txt", "disclaimers.script.txt", "choose your player.script.txt", "lunch with the narrator.script.txt",
   "go_gay_outro.script.txt", "phantom communication system.script.txt", "meet ye kanye west.script.txt", "workout with daddy.script.txt", "instant gratification.script.txt",
-  "scandal roll call.script.txt", "the reinvention playbook.script.txt", "scene 7 degenerate radio.script.txt",
+  "scandal roll call.script.txt", "the reinvention playbook.script.txt", "scene 6 dissection of the human mind.script (1).txt", "scene 7 degenerate radio.script.txt",
   "the deposition of hunter hardon.script.txt",
   "headphones baby.mp4", "eye snap.mp4", "prepare yourself.mp4", "young and attractive.mp4", "3 cock anatomy.mp4", "5 hypnotize.mp4", "cant threaten me with death id be glad to do it.mp4", "6 macbook air.mp4", "this is they way you wish your voice sounds.mp4", "7 male body.mp4", "9 microchip.mp4", "demons shut up.mp4", "chapter 1.mp4",
   "shy bitch.mp4", "sometimes the truth dont sound like the truth.mp4", "11 old school smoking.mp4", "12 sperm microscope.mp4", "17 heart.mp4", "18 diagnosis final.mp4", "23 window trees.mp4", "i just want to be the best.mp4", "chapter 2.mp4",
@@ -187,50 +183,66 @@ const happyFiles = [
       "chapter 13.mp4": "chapter 13.gif", "chapter 14.mp4": "chapter 14.gif", "chapter 15.mp4": "chapter 15.gif",
       "chapter 16.mp4": "chapter 16.gif", "chapter 17.mp4": "chapter 17.gif", "chapter 18.mp4": "chapter 18.gif",
       "chapter 19.mp4": "chapter 19.gif", "chapter 20.mp4": "chapter 20.gif", "chapter 21.mp4": "chapter 21.gif"
-    };
+    };  
 
-    // --- UNLOCK STATE ---
-    let unlocked = false, unlocked2 = false;
+// --- AUDIO CONTEXT ---
+const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+let audioSources=[], videoEls=[], schizAudio=null, spiralAudio=null, ttsUtterance=null;
+let unlocked = false, unlocked2 = false;
 
-    // --- AUDIO CTX ---
-    const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-    let audioSources=[], videoEls=[], schizAudio=null, spiralAudio=null;
+// --- CUSTOM COVER LOGIC ---
+function getTileCover(f) {
+  // Custom: all .script.txt = galaxy.gif
+  if (f.endsWith('.script.txt')) return 'galaxy.gif';
+  // Custom chapter covers:
+  if (customChapterCovers[f]) return customChapterCovers[f];
+  // do you understand.mp4
+  if (f === 'do you understand.mp4') return 'do you understand.gif';
+  // Default
+  return 'spiral.gif';
+}
 
-    // --- EMOTIONAL WHEEL LOGIC ---
-    function startSite() {
-      document.getElementById('wheel-overlay').style.display = 'none';
-      document.getElementById('puzzle-grid').style.display = 'flex';
-      document.getElementById('break-btn').style.display = 'block';
-      document.getElementById('random-btn').style.display = 'block';
-    }
+// --- DISPLAY TILES ---
+function displayTiles() {
+  const grid = document.getElementById('puzzle-grid');
+  // Happy galleries always at the top when unlocked
+  let happyTiles = '';
+  if (unlocked) {
+    happyTiles += `<div class="tile" onclick="openFile('happy gallery')">
+      <div class="tile-number">🎉</div>
+      <img src="happy.gif" alt="happy" />
+      <div class="tile-filename">happy gallery</div>
+    </div>`;
+  }
+  if (unlocked2) {
+    happyTiles += `<div class="tile" onclick="openFile('happy gallery 2')">
+      <div class="tile-number">🎈</div>
+      <img src="happy.gif" alt="happy" />
+      <div class="tile-filename">happy gallery 2</div>
+    </div>`;
+  }
+  // The rest of the tiles
+  let mainTiles = files.map((f, i) => `
+    <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
+      <div class="tile-number">${i+1}</div>
+      <img src="${getTileCover(f)}" alt="tile" />
+      <div class="tile-filename">${f}</div>
+    </div>
+  `).join('');
+  grid.innerHTML = happyTiles + mainTiles;
+}
 
-    // --- ENTRY SCREEN LOGIC ---
-    document.getElementById('enter-btn').onclick = function() {
-      // Fade out entry audio
-      let entryAudio = document.getElementById('entry-audio');
-      if (entryAudio) { entryAudio.pause(); entryAudio.currentTime = 0; }
-      document.getElementById('entry-screen').style.display = 'none';
-      document.getElementById('wheel-overlay').style.display = 'flex';
-    };
-    window.addEventListener('DOMContentLoaded', function(){
-      let entryAudio = document.getElementById('entry-audio');
-      if (entryAudio) {
-        entryAudio.volume = 1.0;
-        entryAudio.playbackRate = 1;
-        entryAudio.play();
-        entryAudio.muted = false;
-      }
-    });
+// --- CLOSE CONTENT ---
+function closeContent() {
+  document.getElementById('content').style.display = 'none';
+  document.getElementById('puzzle-grid').style.display = 'flex';
+  document.querySelectorAll('#content-area audio, #content-area video').forEach(m => { m.pause && m.pause(); m.currentTime = 0; });
+  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
+  if (ttsUtterance) { window.speechSynthesis.cancel(); ttsUtterance = null; }
+}
 
-    // --- CLICK SOUND ---
-    function playClickOnce() {
-      const a = document.getElementById('click-sound');
-      if (a) { a.currentTime = 0; a.play(); }
-    }
-
-  // --- BREAK THE SPIRAL ---
-  function breakSpiral() {
-    function breakSpiral() {
+// --- BREAK THE SPIRAL ---
+function breakSpiral() {
   playClickOnce();
   if (spiralAudio || audioSources.length || videoEls.length) {
     if (spiralAudio) { spiralAudio.pause(); spiralAudio = null; }
@@ -241,15 +253,13 @@ const happyFiles = [
     document.getElementById('break-btn').textContent = 'BREAK THE SPIRAL';
     return;
   }
+  // White flash
   const flash = document.createElement('div');
-  Object.assign(flash.style, {
-    position: 'fixed', inset: 0,
-    background: '#fff', opacity: 1,
-    zIndex: 10000, transition: 'opacity 0.6s'
-  });
+  Object.assign(flash.style, { position: 'fixed', inset: 0, background: '#fff', opacity: 1, zIndex: 10000, transition: 'opacity 0.6s' });
   document.body.appendChild(flash);
   requestAnimationFrame(() => flash.style.opacity = '0');
   flash.addEventListener('transitionend', () => flash.remove());
+  // Play break the spiral.mp3 from random point
   spiralAudio = new Audio('break the spiral.mp3');
   spiralAudio.loop = true;
   spiralAudio.volume = 1.0;
@@ -260,11 +270,10 @@ const happyFiles = [
     spiralAudio.play();
   });
   spiralAudio.play();
+  // Floating videos
   files.filter(f => /\.(mp4|mov)$/i.test(f)).forEach(file => {
     const v = document.createElement('video');
-    v.src = file;
-    v.autoplay = v.loop = true;
-    v.muted = true;
+    v.src = file; v.autoplay = v.loop = true; v.muted = true;
     const size = 100 + Math.random() * 200;
     Object.assign(v.style, {
       position: 'fixed',
@@ -279,54 +288,78 @@ const happyFiles = [
   document.getElementById('break-btn').textContent = 'STOP SPIRAL';
 }
 
-
-  // --- RANDOM BUTTON ---
-  function openRandom() {
+// --- RANDOM BUTTON ---
+function openRandom() {
   const idx = Math.floor(Math.random() * files.length);
   openFile(files[idx]);
 }
 
-  // --- DISPLAY TILES ---
-  function displayTiles() {
-    function displayTiles() {
-  const grid = document.getElementById('puzzle-grid');
-  let mainTiles = files.map((f, i) => {
-    let imgSrc = 'spiral.gif';
-    // chapter custom covers
-    if (customChapterCovers[f]) imgSrc = customChapterCovers[f];
-    else if (f.endsWith('.script.txt')) imgSrc = 'galaxy.gif';
-    return `
-      <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
-        <div class="tile-number">${i+1}</div>
-        <img src="${imgSrc}" alt="tile" />
-        <div class="tile-filename">${f}</div>
-      </div>
-    `;
-  }).join('');
+// --- ENTRY LOGIC ---
+document.getElementById('enter-btn').onclick = function() {
+  document.getElementById('entry-screen').style.display = 'none';
+  document.getElementById('wheel-overlay').style.display = 'flex';
+  // Fade out entry audio
+  let entryAudio = document.getElementById('entry-audio');
+  if (entryAudio) { entryAudio.pause(); entryAudio.currentTime = 0; }
+};
 
-  // --- Happy galleries always at the top when unlocked ---
-  let happyTile = unlocked ? `
-    <div class="tile" onclick="openFile('happy gallery')">
-      <div class="tile-number">🎉</div>
-      <img src="happy.gif" alt="happy" />
-      <div class="tile-filename">happy gallery</div>
-    </div>
-  ` : '';
-  let happyTile2 = unlocked2 ? `
-    <div class="tile" onclick="openFile('happy gallery 2')">
-      <div class="tile-number">🎈</div>
-      <img src="happy.gif" alt="happy" />
-      <div class="tile-filename">happy gallery 2</div>
-    </div>
-  ` : '';
+// --- EMOTIONAL WHEEL LOGIC ---
+function startSite() {
+  document.getElementById('wheel-overlay').style.display = 'none';
+  document.getElementById('puzzle-grid').style.display = 'flex';
+  document.getElementById('break-btn').style.display = 'block';
+  document.getElementById('random-btn').style.display = 'block';
+}
 
-  grid.innerHTML = happyTile + happyTile2 + mainTiles;
+// --- CLICK SOUND ---
+function playClickOnce() {
+  const a = document.getElementById('click-sound');
+  if (a) { a.currentTime = 0; a.play(); }
+}
+
+// --- SCHIZOPHRENIA BUTTON LOGIC ---
+function playSchizophrenia() {
+  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
+  schizAudio = new Audio('schizophrenia.mp3');
+  schizAudio.loop = true;
+  schizAudio.volume = 1.0;
+  schizAudio.addEventListener('loadedmetadata', () => {
+    if (schizAudio.duration > 3) {
+      schizAudio.currentTime = Math.random() * (schizAudio.duration - 2);
+    }
+    schizAudio.play();
+  });
+  schizAudio.play();
+}
+
+// --- TEXT-TO-SPEECH FOR SCRIPTS ---
+let ttsVoices = [];
+function loadVoices() {
+  ttsVoices = window.speechSynthesis.getVoices();
+  // Some browsers require this hack to load voices the first time:
+  if (!ttsVoices.length) setTimeout(loadVoices, 150);
+}
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+}
+function speakScript(text, voiceIdx) {
+  if (!window.speechSynthesis) return;
+  if (ttsUtterance) window.speechSynthesis.cancel();
+  ttsUtterance = new SpeechSynthesisUtterance(text);
+  if (ttsVoices[voiceIdx]) ttsUtterance.voice = ttsVoices[voiceIdx];
+  ttsUtterance.rate = 1.0;
+  window.speechSynthesis.speak(ttsUtterance);
+}
+function stopSpeakScript() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  ttsUtterance = null;
 }
 
 // --- OPEN / CLOSE CONTENT ---
 function openFile(file) {
   playClickOnce();
-  // --- Happy Gallery handling ---
+  // Happy gallery handling
   if (file === "happy gallery") {
     openHappyFileList(happyFiles, "happy gallery");
     return;
@@ -335,47 +368,44 @@ function openFile(file) {
     openHappyFileList(happyFiles2, "happy gallery 2");
     return;
   }
-
   const grid    = document.getElementById('puzzle-grid');
   const content = document.getElementById('content');
   const area    = document.getElementById('content-area');
   document.getElementById('file-name').innerText = file;
   area.innerHTML = '';
   if (schizAudio) { schizAudio.pause(); schizAudio = null; }
+  if (ttsUtterance) { window.speechSynthesis.cancel(); ttsUtterance = null; }
   const ext = file.split('.').pop().toLowerCase();
-
-  // Audio file
+  // Audio
   if (['mp3','wav','m4a'].includes(ext)) {
     area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
   }
-  // Script file
+  // Script
   else if (file.endsWith('.script.txt')) {
     area.innerHTML = `
       <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
-      <select class="tts-voice" id="tts-voice"></select>
-      <button class="tts-btn" onclick="speakScript()">Speak</button>
-      <button class="tts-btn" onclick="stopTTS()">Stop</button>
-      <div style="color:#fff;">Loading script…</div>
-    `;
+      <select class="voice-select" id="voiceSelect"></select>
+      <button class="tts-btn" onclick="doSpeakScript()">Speak</button>
+      <button class="stop-btn" onclick="stopSpeakScript()">Stop</button>
+      <div style="color:#fff;">Loading script…</div>`;
     fetch(file).then(r => r.text()).then(txt => {
       area.innerHTML = `
         <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
-        <select class="tts-voice" id="tts-voice"></select>
-        <button class="tts-btn" onclick="speakScript()">Speak</button>
-        <button class="tts-btn" onclick="stopTTS()">Stop</button>
-        <pre id="script-txt">${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
-        <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>
-      `;
-      populateVoiceList();
+        <select class="voice-select" id="voiceSelect"></select>
+        <button class="tts-btn" onclick="doSpeakScript()">Speak</button>
+        <button class="stop-btn" onclick="stopSpeakScript()">Stop</button>
+        <pre>${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
+        <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>`;
+      loadVoicesToSelect();
     });
   }
-  // Video file
+  // Video
   else {
     area.innerHTML = `
       <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
         <video id="main-video" controls autoplay src="${file}" style="max-width:92vw;max-height:74vh;border-radius:12px;"></video>
         <div>
-          <label>Speed: 
+          <label>Speed:
             <select id="video-speed" onchange="setVideoSpeed()">
               <option value="0.5">0.5x</option>
               <option value="1" selected>1x</option>
@@ -404,53 +434,91 @@ function openFile(file) {
       vid.loop = true;
     }
   }
-
   grid.style.display    = 'none';
   content.style.display = 'flex';
 }
 
-  function closeContent() {
-    // Hide the content area
-    document.getElementById('content').style.display = 'none';
-    // Show the grid
-    document.getElementById('puzzle-grid').style.display = 'flex';
-    // Pause and reset all media
-    document.querySelectorAll('#content-area audio, #content-area video')
-      .forEach(m => { m.pause && m.pause(); m.currentTime = 0; });
-    // Hide happy video modal if open
-    const happyModal = document.getElementById('happy-video-modal');
-    if (happyModal) happyModal.style.display = 'none';
-    // Stop schizophrenia audio
-    if (window.schizAudio) { window.schizAudio.pause(); window.schizAudio = null; }
-    // Stop TTS if running
-    if (window.speechSynthesis) window.speechSynthesis.cancel();
-  }
+// --- TTS LOGIC: LOAD VOICES ---
+function loadVoicesToSelect() {
+  const select = document.getElementById('voiceSelect');
+  if (!select) return;
+  select.innerHTML = '';
+  ttsVoices.forEach((voice, idx) => {
+    select.innerHTML += `<option value="${idx}">${voice.name} (${voice.lang})</option>`;
+  });
+}
+function doSpeakScript() {
+  const pre = document.querySelector('#content-area pre');
+  const select = document.getElementById('voiceSelect');
+  if (pre && select) speakScript(pre.innerText, select.value);
+}
 
-  // --- SPEED BUTTON LOGIC ---
+// --- SPEED BUTTON LOGIC ---
 function setVideoSpeed() {
   const v = document.getElementById('main-video');
   const s = document.getElementById('video-speed');
   if (v && s) v.playbackRate = parseFloat(s.value);
 }
+
+// --- HAPPY FILES LOGIC ---
+function openHappyFileList(fileArray, galleryTitle) {
+  const grid    = document.getElementById('puzzle-grid');
+  const content = document.getElementById('content');
+  const area    = document.getElementById('content-area');
+  document.getElementById('file-name').innerText = galleryTitle;
+
+  area.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;gap:14px;margin:30px 0;">
+      <h2 style="color:#FFD700;">${galleryTitle.replace(/gallery/i,'Happy Gallery')}</h2>
+      <div class="happy-file-list" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+        ${fileArray.map((f, i) => `
+          <button onclick="openSingleHappyVideo('${f.replace(/'/g,"\\'")}', '${galleryTitle}')" 
+                  style="background:#111;color:#FFD700;font-size:1.1em;border:2px solid #FFD700;border-radius:10px;padding:8px 24px;cursor:pointer;min-width:240px;">
+            ${i+1}. ${f}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+    <div id="happy-video-modal" style="display:none;position:fixed;inset:0;z-index:5000;background:#000E;align-items:center;justify-content:center;">
+      <video id="happy-modal-video" controls autoplay loop style="max-width:92vw;max-height:78vh;border-radius:16px;"></video>
+      <div style="margin-top:12px;text-align:center;">
+        <label>Speed: 
+          <select id="happy-video-speed" onchange="setHappyVideoSpeed()">
+            <option value="0.5">0.5x</option>
+            <option value="1" selected>1x</option>
+            <option value="1.5">1.5x</option>
+            <option value="2">2x</option>
+          </select>
+        </label>
+      </div>
+      <button onclick="closeHappyModal()" style="position:absolute;top:30px;right:40px;font-size:2em;padding:8px 24px;background:#FFD700;color:#111;border:none;border-radius:10px;cursor:pointer;">CLOSE</button>
+    </div>
+  `;
+  grid.style.display    = 'none';
+  content.style.display = 'flex';
+}
+
+function openSingleHappyVideo(file, galleryTitle) {
+  const modal = document.getElementById('happy-video-modal');
+  const vid = document.getElementById('happy-modal-video');
+  vid.src = file;
+  vid.currentTime = 0;
+  vid.play();
+  modal.style.display = 'flex';
+}
+
+function closeHappyModal() {
+  const modal = document.getElementById('happy-video-modal');
+  const vid = document.getElementById('happy-modal-video');
+  vid.pause();
+  vid.src = '';
+  modal.style.display = 'none';
+}
+
 function setHappyVideoSpeed() {
   const v = document.getElementById('happy-modal-video');
   const s = document.getElementById('happy-video-speed');
   if (v && s) v.playbackRate = parseFloat(s.value);
-}
-
-// --- SCHIZOPHRENIA BUTTON LOGIC ---
-function playSchizophrenia() {
-  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
-  schizAudio = new Audio('schizophrenia.mp3');
-  schizAudio.loop = true;
-  schizAudio.volume = 1.0;
-  schizAudio.addEventListener('loadedmetadata', () => {
-    if (schizAudio.duration > 3) {
-      schizAudio.currentTime = Math.random() * (schizAudio.duration - 2);
-    }
-    schizAudio.play();
-  });
-  schizAudio.play();
 }
 
 // --- COPY SCRIPT BUTTON ---
@@ -462,61 +530,12 @@ function copyScript() {
   }
 }
 
-// --- TTS SCRIPT BUTTON LOGIC ---
-let ttsUtterance = null;
-function speakScript() {
-  stopTTS();
-  const txt = document.getElementById('script-txt');
-  if (!txt) return;
-  ttsUtterance = new SpeechSynthesisUtterance(txt.innerText);
-  const voiceSel = document.getElementById('tts-voice');
-  if (voiceSel && voiceSel.selectedOptions.length > 0) {
-    const selectedVoiceName = voiceSel.selectedOptions[0].value;
-    const voices = window.speechSynthesis.getVoices();
-    const matched = voices.find(v => v.name === selectedVoiceName);
-    if (matched) ttsUtterance.voice = matched;
-  }
-  ttsUtterance.rate = 1;
-  window.speechSynthesis.speak(ttsUtterance);
-}
-function stopTTS() {
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-}
-function populateVoiceList() {
-  const voiceSel = document.getElementById('tts-voice');
-  if (!voiceSel) return;
-  let voices = window.speechSynthesis.getVoices();
-  voiceSel.innerHTML = '';
-  voices.forEach(voice => {
-    let opt = document.createElement('option');
-    opt.value = voice.name;
-    opt.innerText = voice.name + (voice.lang ? ` [${voice.lang}]` : '');
-    voiceSel.appendChild(opt);
-  });
-}
-// For browsers where voices are loaded asynchronously
-if (typeof speechSynthesis !== 'undefined') {
-  speechSynthesis.onvoiceschanged = populateVoiceList;
-}
-
-  // --- INIT ---
-  window.addEventListener('DOMContentLoaded', () => {
-    displayTiles();
-    document.getElementById('break-btn').onclick  = breakSpiral;
-    document.getElementById('random-btn').onclick = openRandom;
-    // Entry page audio: play at max volume
-    const entryAudio = document.getElementById('entry-audio');
-    if (entryAudio) {
-      entryAudio.volume = 1.0; // Browsers may cap volume, but 1.0 is max in code
-      try { entryAudio.play(); } catch (e) { /* ignore */ }
-    }
-    // Allow Enter to proceed
-    document.getElementById('enter-btn').onclick = function() {
-      document.getElementById('entry-screen').style.display = 'none';
-      document.getElementById('wheel-overlay').style.display = 'flex';
-      if (entryAudio) { entryAudio.pause(); entryAudio.currentTime = 0; }
-    };
-  });
+// --- INIT ---
+window.addEventListener('DOMContentLoaded', () => {
+  displayTiles();
+  document.getElementById('break-btn').onclick  = breakSpiral;
+  document.getElementById('random-btn').onclick = openRandom;
+});
   </script>
 </body>
 </html>
