@@ -82,6 +82,7 @@
 </head>
 <body>
   <div id="entry-screen">
+    <audio id="entry-audio" src="let me in.mp3" autoplay loop></audio>
     <video id="entry-bg-video" autoplay loop muted playsinline>
       <source src="5 hypnotize.mp4" type="video/mp4">
     </video>
@@ -199,9 +200,21 @@ const happyFiles = [
 
     // --- ENTRY SCREEN LOGIC ---
     document.getElementById('enter-btn').onclick = function() {
+      // Fade out entry audio
+      let entryAudio = document.getElementById('entry-audio');
+      if (entryAudio) { entryAudio.pause(); entryAudio.currentTime = 0; }
       document.getElementById('entry-screen').style.display = 'none';
       document.getElementById('wheel-overlay').style.display = 'flex';
     };
+    window.addEventListener('DOMContentLoaded', function(){
+      let entryAudio = document.getElementById('entry-audio');
+      if (entryAudio) {
+        entryAudio.volume = 1.0;
+        entryAudio.playbackRate = 1;
+        entryAudio.play();
+        entryAudio.muted = false;
+      }
+    });
 
     // --- CLICK SOUND ---
     function playClickOnce() {
@@ -209,7 +222,7 @@ const happyFiles = [
       if (a) { a.currentTime = 0; a.play(); }
     }
 
-    // --- BREAK THE SPIRAL ---
+// --- BREAK THE SPIRAL ---
 function breakSpiral() {
   playClickOnce();
   if (spiralAudio || audioSources.length || videoEls.length) {
@@ -268,50 +281,43 @@ function openRandom() {
 // --- DISPLAY TILES ---
 function displayTiles() {
   const grid = document.getElementById('puzzle-grid');
-  let tiles = [];
-
-  // Happy galleries always at the top when unlocked
-  if (unlocked) {
-    tiles.push(`
-      <div class="tile" onclick="openFile('happy gallery')">
-        <div class="tile-number">🎉</div>
-        <img src="happy.gif" alt="happy" />
-        <div class="tile-filename">happy gallery</div>
-      </div>
-    `);
-  }
-  if (unlocked2) {
-    tiles.push(`
-      <div class="tile" onclick="openFile('happy gallery 2')">
-        <div class="tile-number">🎈</div>
-        <img src="happy.gif" alt="happy" />
-        <div class="tile-filename">happy gallery 2</div>
-      </div>
-    `);
-  }
-
-  // Normal grid tiles
-  files.forEach((f, i) => {
+  let mainTiles = files.map((f, i) => {
     let imgSrc = 'spiral.gif';
-    if (f.endsWith('.script.txt')) imgSrc = 'galaxy.gif';
+    // chapter custom covers
     if (customChapterCovers[f]) imgSrc = customChapterCovers[f];
-    tiles.push(`
+    else if (f.endsWith('.script.txt')) imgSrc = 'galaxy.gif';
+    return `
       <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
         <div class="tile-number">${i+1}</div>
         <img src="${imgSrc}" alt="tile" />
         <div class="tile-filename">${f}</div>
       </div>
-    `);
-  });
+    `;
+  }).join('');
 
-  grid.innerHTML = tiles.join('');
+  // --- Happy galleries always at the top when unlocked ---
+  let happyTile = unlocked ? `
+    <div class="tile" onclick="openFile('happy gallery')">
+      <div class="tile-number">🎉</div>
+      <img src="happy.gif" alt="happy" />
+      <div class="tile-filename">happy gallery</div>
+    </div>
+  ` : '';
+  let happyTile2 = unlocked2 ? `
+    <div class="tile" onclick="openFile('happy gallery 2')">
+      <div class="tile-number">🎈</div>
+      <img src="happy.gif" alt="happy" />
+      <div class="tile-filename">happy gallery 2</div>
+    </div>
+  ` : '';
+
+  grid.innerHTML = happyTile + happyTile2 + mainTiles;
 }
 
 // --- OPEN / CLOSE CONTENT ---
 function openFile(file) {
   playClickOnce();
-
-  // Happy gallery logic
+  // --- Happy Gallery handling ---
   if (file === "happy gallery") {
     openHappyFileList(happyFiles, "happy gallery");
     return;
@@ -333,19 +339,24 @@ function openFile(file) {
   if (['mp3','wav','m4a'].includes(ext)) {
     area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
   }
-  // Script file with TTS and controls
+  // Script file
   else if (file.endsWith('.script.txt')) {
     area.innerHTML = `
       <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
-      <div style="color:#fff;">Loading script…</div>`;
+      <select class="tts-voice" id="tts-voice"></select>
+      <button class="tts-btn" onclick="speakScript()">Speak</button>
+      <button class="tts-btn" onclick="stopTTS()">Stop</button>
+      <div style="color:#fff;">Loading script…</div>
+    `;
     fetch(file).then(r => r.text()).then(txt => {
       area.innerHTML = `
         <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
         <select class="tts-voice" id="tts-voice"></select>
-        <button class="tts-btn" onclick="speakScript()">SPEAK</button>
-        <button class="tts-btn" onclick="stopSpeech()">STOP</button>
-        <pre id="script-pre">${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
-        <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>`;
+        <button class="tts-btn" onclick="speakScript()">Speak</button>
+        <button class="tts-btn" onclick="stopTTS()">Stop</button>
+        <pre id="script-txt">${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
+        <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>
+      `;
       populateVoiceList();
     });
   }
@@ -384,17 +395,9 @@ function openFile(file) {
       vid.loop = true;
     }
   }
+
   grid.style.display    = 'none';
   content.style.display = 'flex';
-}
-
-function closeContent() {
-  document.getElementById('content').style.display = 'none';
-  document.getElementById('puzzle-grid').style.display = 'flex';
-  document.querySelectorAll('#content-area audio, #content-area video')
-    .forEach(m => { m.pause && m.pause(); m.currentTime = 0; });
-  stopSpeech();
-  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
 }
 
 // --- HAPPY FILE LIST VIEWER ---
@@ -443,6 +446,7 @@ function openSingleHappyVideo(file, galleryTitle) {
   vid.play();
   modal.style.display = 'flex';
 }
+
 function closeHappyModal() {
   const modal = document.getElementById('happy-video-modal');
   const vid = document.getElementById('happy-modal-video');
@@ -480,51 +484,48 @@ function playSchizophrenia() {
 
 // --- COPY SCRIPT BUTTON ---
 function copyScript() {
-  const pre = document.getElementById('script-pre');
+  const pre = document.querySelector('#content-area pre');
   if (pre) {
     navigator.clipboard.writeText(pre.innerText);
     alert('Script copied!');
   }
 }
 
-// --- TEXT TO SPEECH FOR SCRIPT FILES ---
-let synth = window.speechSynthesis;
-let utter = null;
+// --- TTS SCRIPT BUTTON LOGIC ---
+let ttsUtterance = null;
+function speakScript() {
+  stopTTS();
+  const txt = document.getElementById('script-txt');
+  if (!txt) return;
+  ttsUtterance = new SpeechSynthesisUtterance(txt.innerText);
+  const voiceSel = document.getElementById('tts-voice');
+  if (voiceSel && voiceSel.selectedOptions.length > 0) {
+    const selectedVoiceName = voiceSel.selectedOptions[0].value;
+    const voices = window.speechSynthesis.getVoices();
+    const matched = voices.find(v => v.name === selectedVoiceName);
+    if (matched) ttsUtterance.voice = matched;
+  }
+  ttsUtterance.rate = 1;
+  window.speechSynthesis.speak(ttsUtterance);
+}
+function stopTTS() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+}
 function populateVoiceList() {
-  let voices = synth.getVoices();
-  let voiceSel = document.getElementById('tts-voice');
+  const voiceSel = document.getElementById('tts-voice');
   if (!voiceSel) return;
+  let voices = window.speechSynthesis.getVoices();
   voiceSel.innerHTML = '';
-  voices.forEach((v, i) => {
+  voices.forEach(voice => {
     let opt = document.createElement('option');
-    opt.value = i;
-    opt.text = v.name + (v.lang ? ' ('+v.lang+')' : '');
+    opt.value = voice.name;
+    opt.innerText = voice.name + (voice.lang ? ` [${voice.lang}]` : '');
     voiceSel.appendChild(opt);
   });
 }
+// For browsers where voices are loaded asynchronously
 if (typeof speechSynthesis !== 'undefined') {
   speechSynthesis.onvoiceschanged = populateVoiceList;
-}
-
-function speakScript() {
-  stopSpeech();
-  let pre = document.getElementById('script-pre');
-  if (!pre) return;
-  let txt = pre.innerText;
-  if (!txt) return;
-  utter = new SpeechSynthesisUtterance(txt);
-  let voices = synth.getVoices();
-  let voiceSel = document.getElementById('tts-voice');
-  if (voiceSel && voices.length > 0) {
-    let vIdx = parseInt(voiceSel.value);
-    if (!isNaN(vIdx) && voices[vIdx]) utter.voice = voices[vIdx];
-  }
-  utter.rate = 1.0;
-  synth.speak(utter);
-}
-function stopSpeech() {
-  if (synth && synth.speaking) synth.cancel();
-  utter = null;
 }
 
 // --- INIT ---
@@ -532,7 +533,6 @@ window.addEventListener('DOMContentLoaded', () => {
   displayTiles();
   document.getElementById('break-btn').onclick  = breakSpiral;
   document.getElementById('random-btn').onclick = openRandom;
-  populateVoiceList();
 });
   </script>
 </body>
