@@ -156,7 +156,7 @@ function insertSoundtrackTile(gridElement) {
   const tile = document.createElement("div");
   tile.className = "tile";
   tile.innerHTML = `
-    <img src="hellmouth_soundtrack.gif" class="tile-image" />
+    <img src="soundtrack.gif" class="tile-image" />
     <div class="tile-label">official hellmouth soundtrack</div>
   `;
   tile.onclick = () => openSoundtrackPlayer();
@@ -276,7 +276,7 @@ const happyFiles = [
   "best sleepover ever.happy.mp4",
 ];
 
-const soundtrackTracks = [
+const hellmouthSoundtrack = [
   { title: "Be By Myself", artist: "Asher Roth", filename: "01_be_by_myself.mp3" },
   { title: "Bad Computer", artist: "B.o.B", filename: "02_bad_computer.mp3" },
   { title: "Okay I Believe You But My Tommy Gun Don’t", artist: "Brand New", filename: "03_okay_i_believe_you_but_my_tommy_gun_dont.mp3" },
@@ -366,7 +366,7 @@ soundtrackTile.className = "tile";
 soundtrackTile.innerHTML = `
   <div class="tile-number">🎵</div>
   <img src="soundtrack.gif" alt="Soundtrack" />
-  <div class="tile-filename">Soundtrack</div>
+  <div class="tile-filename">💿SOUNDTRACK🎧</div>
 `;
 soundtrackTile.onclick = () => {
   document.getElementById("soundtrack-overlay").style.display = "block";
@@ -711,16 +711,17 @@ function copyScript() {
   }
 }
 function displaySoundtrackList() {
-  const list = document.getElementById("soundtrack-list");
-  list.innerHTML = "";
-  soundtrackTracks.forEach(track => {
+  const container = document.querySelector(".soundtrack-container");
+  container.innerHTML = "";
+
+  hellmouthSoundtrack.forEach(track => {
     const div = document.createElement("div");
     div.className = "track";
     div.innerHTML = `
       <strong>${track.title}</strong> — ${track.artist}<br/>
-      <audio controls src="${track.filename}"></audio>
+      <audio controls src="${track.filename}" loop></audio>
     `;
-    list.appendChild(div);
+    container.appendChild(div);
   });
 }
 
