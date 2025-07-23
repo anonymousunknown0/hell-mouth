@@ -78,7 +78,24 @@
     .voice-select { padding:6px 14px;font-size:1em;border-radius:7px;border:1.5px solid #FFD700;background:#111;color:#FFD700;margin-bottom:8px;}
     .happy-file-list button { margin-bottom:4px;}
     @media(max-width:800px){ .tile { width:92vw; height:20vw; min-height:80px; } #break-btn,#random-btn { font-size:1.4em; padding:8px 24px; bottom:12px; } }
-  </style>
+  
+.tracks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  margin: 2rem 0;
+}
+.track-card {
+  background: #111;
+  border: 2px solid #FFD700;
+  border-radius: 12px;
+  padding: 1rem;
+}
+.track-card h2 { margin: 0; font-size: 1rem; color: #FFD700; }
+.track-card p  { margin: 0.5rem 0; font-size: 0.9rem; color: #ccc; }
+.track-card audio { width: 100%; }
+
+</style>
 </head>
 <body>
   <div id="entry-screen">
@@ -127,6 +144,8 @@
   // --------- JS CODE STARTS HERE ---------
 
 const files = [
+  { name: "🎧 OFFICIAL SOUNDTRACK", type: "soundtrack", onClick: openSoundtrack },
+
   "scene 5 meet the voices.script.txt", "scene 4 what hunter believes explained.script.txt",
   "scene 3 meet hunter hardon.script.txt", "scene 21 THE SPECTRAL ARCHIVE.script.txt",
   "scene 2 the therapy session.script.txt", "scene 1 schizophrenia disclaimer.script.txt",
@@ -569,6 +588,38 @@ document.getElementById('break-btn').addEventListener('click', () => {
   document.getElementById('puzzle-grid').style.display = 'flex';
   displayTiles();
 });
+
+
+const soundtrackTracks = [
+  { title: "Be By Myself", artist: "Asher Roth", filename: "01 - Be_By_Myself.mp3" },
+  { title: "Bad Computer", artist: "B.o.B", filename: "02 - Bad_Computer.mp3" },
+  { title: "Okay I Believe You But My Tommy Gun Don’t", artist: "Brand New", filename: "03 - Tommy_Gun.mp3" },
+  { title: "Shut Up", artist: "Ariana Grande", filename: "04 - Shut_Up.mp3" },
+  { title: "Good News", artist: "Mac Miller", filename: "05 - Good_News.mp3" },
+  { title: "The Best", artist: "AWOLNATION", filename: "06 - The_Best.mp3" },
+  { title: "Beach Boy", artist: "Aminé", filename: "07 - Beach_Boy.mp3" },
+  { title: "When I'm Down", artist: "Oliver Tree & Whethan", filename: "08 - When_Im_Down.mp3" },
+  { title: "Right Now (Na Na Na)", artist: "Akon", filename: "09 - Right_Now.mp3" },
+  { title: "Kangaroo Court", artist: "Capital Cities", filename: "10 - Kangaroo_Court.mp3" },
+  // ... You can add the rest as needed
+];
+
+function openSoundtrack() {
+  playClickOnce();
+  const content = document.getElementById('content-area');
+  document.getElementById('content').style.display = 'flex';
+  content.innerHTML = \`
+    <header><h1>🎧 OFFICIAL SOUNDTRACK</h1></header>
+    <div class="tracks-grid">
+      \${soundtrackTracks.map((track, i) => \`
+        <div class="track-card">
+          <h2>\${i + 1}. \${track.title}</h2>
+          <p>\${track.artist}</p>
+          <audio controls src="\${track.filename}"></audio>
+        </div>
+      \`).join('')}
+    </div>\`;
+}
 
 </script>
 </body>
