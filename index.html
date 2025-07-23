@@ -126,8 +126,15 @@
   <script>
   // --------- JS CODE STARTS HERE ---------
 
+const grid = document.getElementById("puzzle-grid");
+
+insertSoundtrackTile(grid);
+displayFiles(files, grid, "default");
+displayFiles(happyFiles, grid, "happy1");
+displayFiles(happyFiles2, grid, "happy2");
+
 const files = [
-  "scene 5 meet the voices.script.txt", "scene 4 what hunter believes explained.script.txt",
+  "official_hellmouth_soundtrack.tile”, "scene 5 meet the voices.script.txt", "scene 4 what hunter believes explained.script.txt",
   "scene 3 meet hunter hardon.script.txt", "scene 21 THE SPECTRAL ARCHIVE.script.txt",
   "scene 2 the therapy session.script.txt", "scene 1 schizophrenia disclaimer.script.txt",
   "scene 25 new beginnings.script.txt",
@@ -242,6 +249,24 @@ function displayTiles() {
       <div class="tile-filename">happy gallery 2</div>
     </div>`;
   }
+function insertSoundtrackTile(grid) {
+  const tile = document.createElement("div");
+  tile.className = "tile";
+  tile.onclick = () => openTile("soundtrack");
+
+  const img = document.createElement("img");
+  img.src = "soundtrack.gif";
+  img.alt = "official hellmouth soundtrack";
+  img.className = "tile-cover soundtrack-glow";
+
+  const title = document.createElement("div");
+  title.className = "tile-title";
+  title.innerText = "official hellmouth soundtrack";
+
+  tile.appendChild(img);
+  tile.appendChild(title);
+  grid.appendChild(tile);
+}
   // The rest of the tiles
   let mainTiles = files.map((f, i) => `
     <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
@@ -573,3 +598,4 @@ document.getElementById('break-btn').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
