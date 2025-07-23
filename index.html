@@ -152,16 +152,6 @@
   <audio id="click-sound" src="click.mp3" preload="auto"></audio>
   <script>
   // --------- JS CODE STARTS HERE ---------
-function insertSoundtrackTile(gridElement) {
-  const tile = document.createElement("div");
-  tile.className = "tile";
-  tile.innerHTML = `
-    <img src="hellmouth_soundtrack.gif" class="tile-image" />
-    <div class="tile-label">official hellmouth soundtrack</div>
-  `;
-  tile.onclick = () => openSoundtrackPlayer();
-  gridElement.insertBefore(tile, gridElement.firstChild);
-}
 
 function openSoundtrackPlayer() {
   const overlay = document.createElement("div");
@@ -728,8 +718,7 @@ function displaySoundtrackList() {
 window.addEventListener('DOMContentLoaded', () => {
   const grid = document.getElementById("puzzle-grid");
 
-  insertSoundtrackTile(grid); // ⬅️ Add soundtrack tile FIRST
-  displayFiles(files, grid, "default");
+    displayFiles(files, grid, "default");
   displayFiles(happyFiles, grid, "happy1");
   displayFiles(happyFiles2, grid, "happy2");
 
@@ -747,5 +736,6 @@ window.addEventListener('DOMContentLoaded', () => {
 </div>
 </body>
 </html>
+
 
 
