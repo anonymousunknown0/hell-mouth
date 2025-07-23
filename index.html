@@ -207,7 +207,7 @@ function openSoundtrackPlayer() {
   document.body.appendChild(overlay);
 }
 const files = [
-  "official_hellmouth_soundtrack.tile", "scene 5 meet the voices.script.txt", "scene 4 what hunter believes explained.script.txt",
+  "soundtrack.tile”, "scene 5 meet the voices.script.txt", "scene 4 what hunter believes explained.script.txt",
   "scene 3 meet hunter hardon.script.txt", "scene 21 THE SPECTRAL ARCHIVE.script.txt",
   "scene 2 the therapy session.script.txt", "scene 1 schizophrenia disclaimer.script.txt",
   "scene 25 new beginnings.script.txt",
@@ -366,7 +366,7 @@ soundtrackTile.className = "tile";
 soundtrackTile.innerHTML = `
   <div class="tile-number">🎵</div>
   <img src="soundtrack.gif" alt="Soundtrack" />
-  <div class="tile-filename">💿SOUNDTRACK🎧</div>
+  <div class="tile-filename">soundtrack</div>
 `;
 soundtrackTile.onclick = () => {
   document.getElementById("soundtrack-overlay").style.display = "block";
@@ -534,11 +534,11 @@ function stopSpeakScript() {
 // --- OPEN / CLOSE CONTENT —
 function openFile(file) {
   playClickOnce();
-if (file === "🎵 SOUNDTRACK 🎵") {
-    document.getElementById("soundtrack-overlay").style.display = "flex";
-    displaySoundtrackList();
-    return;
-  }
+if (file === "soundtrack") {
+  document.getElementById("soundtrack-overlay").style.display = "flex";
+  displaySoundtrackList();
+  return;
+}
 
   // Happy gallery handling
   if (file === "happy gallery") {
@@ -740,10 +740,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
 </script>
 <div id="soundtrack-overlay" class="overlay" style="display: none;">
-  <div class="soundtrack-container">
-    <h1>OFFICIAL HELL-MOUTH SOUNDTRACK</h1>
-    <button onclick="document.getElementById('soundtrack-overlay').style.display='none'">Close</button>
-    <div id="soundtrack-list"></div>
+  <div class="soundtrack-container" style="padding: 20px; max-height: 90vh; overflow-y: auto; background-color: black; color: white;">
+    <h1>🎧 OFFICIAL SOUNDTRACK 💿</h1>
+    <button style="margin-bottom: 20px;" onclick="document.getElementById('soundtrack-overlay').style.display='none'">Close</button>
+    <!-- The audio tracks will be injected into this container by JS -->
   </div>
 </div>
 </body>
