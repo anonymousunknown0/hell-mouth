@@ -266,47 +266,54 @@ function closeContent() {
 // --- BREAK THE SPIRAL ---
 function breakSpiral() {
   playClickOnce();
-  if (spiralAudio || audioSources.length || videoEls.length) {
-    if (spiralAudio) { spiralAudio.pause(); spiralAudio = null; }
-    audioSources.forEach(s => s.stop && s.stop());
-    audioSources = [];
+  // If the spiral is already active, stop and clear everything.
+  if (spiralAudio || videoEls.length) {
+    if (spiralAudio) {
+      spiralAudio.pause();
+      spiralAudio = null;
+    }
     videoEls.forEach(v => v.remove());
     videoEls = [];
     document.getElementById('break-btn').textContent = 'BREAK THE SPIRAL';
     return;
   }
-  // White flash
+
+  // Flash effect for fun
   const flash = document.createElement('div');
-  Object.assign(flash.style, { position: 'fixed', inset: 0, background: '#fff', opacity: 1, zIndex: 10000, transition: 'opacity 0.6s' });
+  Object.assign(flash.style, {
+    position: 'fixed', inset: 0, background: '#fff', opacity: 1, zIndex: 10000, transition: 'opacity 0.6s'
+  });
   document.body.appendChild(flash);
   requestAnimationFrame(() => flash.style.opacity = '0');
   flash.addEventListener('transitionend', () => flash.remove());
-  // Play break the spiral.mp3 from random point
+
+  // --- Play break the spiral.mp3 ---
   spiralAudio = new Audio('break the spiral.mp3');
   spiralAudio.loop = true;
   spiralAudio.volume = 1.0;
-  spiralAudio.addEventListener('loadedmetadata', () => {
-    if (spiralAudio.duration > 3) {
-      spiralAudio.currentTime = Math.random() * (spiralAudio.duration - 2);
-    }
-    spiralAudio.play();
-  });
   spiralAudio.play();
-  // Floating videos
+
+  // --- Show floating videos from main video files ---
   files.filter(f => /\.(mp4|mov)$/i.test(f)).forEach(file => {
     const v = document.createElement('video');
-    v.src = file; v.autoplay = v.loop = true; v.muted = true;
+    v.src = file;
+    v.autoplay = v.loop = true;
+    v.muted = true;
     const size = 100 + Math.random() * 200;
     Object.assign(v.style, {
       position: 'fixed',
       width: size + 'px',
       top: Math.random() * (window.innerHeight - size) + 'px',
       left: Math.random() * (window.innerWidth - size) + 'px',
-      zIndex: 999
+      zIndex: 999,
+      pointerEvents: 'none',
+      borderRadius: '22px',
+      boxShadow: '0 0 18px #000c'
     });
     document.body.appendChild(v);
     videoEls.push(v);
   });
+
   document.getElementById('break-btn').textContent = 'STOP SPIRAL';
 }
 
