@@ -566,5 +566,39 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('random-btn').onclick = openRandom;
 });
   </script>
-</body>
+<script>
+      let selectedEmotion = '';
+      function storeEmotion(emotion) {
+        selectedEmotion = emotion;
+        console.log("Emotion selected:", selectedEmotion);
+      }
+
+      function openFile(file) {
+        document.getElementById('break-button').style.display = 'none';
+        document.getElementById('random-button').style.display = 'none';
+        // existing openFile logic continues...
+      }
+
+      function closeFile() {
+        document.getElementById('break-button').style.display = 'block';
+        document.getElementById('random-button').style.display = 'block';
+        // existing closeFile logic continues...
+      }
+    </script>
+
+    <button id="reset-button" onclick="location.reload()" style="
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      z-index: 9999;
+      background: #ff0070;
+      color: white;
+      font-weight: bold;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    ">🔁 RESET</button>
+
+    </body>
 </html>
