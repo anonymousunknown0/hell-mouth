@@ -174,12 +174,12 @@ const happyFiles = [
   "three is not a crowd.happy.mp4",
   "zzzzzzz.happy.mp4",
   "bbc in the wild.happy.mp4",
-  "boy + toy.happy.mp4",
+  "boy and toy.happy.mp4",
   "hot guy big shot.happy.mp4",
   "its your spit lol.happy.mp4",
   "major flex.happy.mp4",
-  "older versus younger.happy.mp4",
-  "one for one for one.happy.mp4",
+  "got milk.happy.mp4",
+  "latino daddy.happy.mp4",
   "secret bff.happy.mp4",
   "shhhhhhh dont move.happy.mp4",
   "steady as he goes.happy.mp4",
@@ -194,7 +194,6 @@ const happyFiles = [
   "mr perfect.happy.mp4",
   "crazy rich asian.happy.mp4",
   "best sleepover ever.happy.mp4",
-  "19 candles.happy.mp4"
 ];
 
     // --- COVER ART LOGIC ---
@@ -566,39 +565,5 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('random-btn').onclick = openRandom;
 });
   </script>
-<script>
-      let selectedEmotion = '';
-      function storeEmotion(emotion) {
-        selectedEmotion = emotion;
-        console.log("Emotion selected:", selectedEmotion);
-      }
-
-      function openFile(file) {
-        document.getElementById('break-button').style.display = 'none';
-        document.getElementById('random-button').style.display = 'none';
-        // existing openFile logic continues...
-      }
-
-      function closeFile() {
-        document.getElementById('break-button').style.display = 'block';
-        document.getElementById('random-button').style.display = 'block';
-        // existing closeFile logic continues...
-      }
-    </script>
-
-    <button id="reset-button" onclick="location.reload()" style="
-      position: fixed;
-      bottom: 16px;
-      left: 16px;
-      z-index: 9999;
-      background: #ff0070;
-      color: white;
-      font-weight: bold;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-    ">🔁 RESET</button>
-
-    </body>
+</body>
 </html>
