@@ -78,28 +78,7 @@
     .voice-select { padding:6px 14px;font-size:1em;border-radius:7px;border:1.5px solid #FFD700;background:#111;color:#FFD700;margin-bottom:8px;}
     .happy-file-list button { margin-bottom:4px;}
     @media(max-width:800px){ .tile { width:92vw; height:20vw; min-height:80px; } #break-btn,#random-btn { font-size:1.4em; padding:8px 24px; bottom:12px; } }
-  
-    /* Official Soundtrack styling */
-    .tracks-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px,1fr));
-      gap: 16px;
-      margin: 20px 0;
-    }
-    .track-card {
-      background: #222;
-      border: 2px solid #FFD600;
-      border-radius: 12px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .track-card h2 { margin: 0; color: #FFD600; font-size: 1.1rem; }
-    .track-card p  { margin: 0; color: #ccc; font-size: .9rem; }
-    .track-card audio { width: 100%; outline: none; }
-
-</style>
+  </style>
 </head>
 <body>
   <div id="entry-screen">
@@ -113,26 +92,26 @@
   <div id="wheel-overlay">
     <h1>Pick an Emotion to Enter</h1>
     <!-- EMOTIONS LIST (customize if needed) -->
-    <button class="emotion-btn" onclick="startSite('Joy')">Joy</button>
-<button class="emotion-btn" onclick="startSite('Sadness')">Sadness</button>
-<button class="emotion-btn" onclick="startSite('Anger')">Anger</button>
-<button class="emotion-btn" onclick="startSite('Fear')">Fear</button>
-<button class="emotion-btn" onclick="startSite('Surprise')">Surprise</button>
-<button class="emotion-btn" onclick="startSite('Disgust')">Disgust</button>
-<button class="emotion-btn" onclick="startSite('Trust')">Trust</button>
-<button class="emotion-btn" onclick="startSite('Anticipation')">Anticipation</button>
-<button class="emotion-btn" onclick="startSite('Love')">Love</button>
-<button class="emotion-btn" onclick="startSite('Shame')">Shame</button>
-<button class="emotion-btn" onclick="startSite('Pride')">Pride</button>
-<button class="emotion-btn" onclick="startSite('Envy')">Envy</button>
-<button class="emotion-btn" onclick="startSite('Guilt')">Guilt</button>
-<button class="emotion-btn" onclick="startSite('Hope')">Hope</button>
-<button class="emotion-btn" onclick="startSite('Boredom')">Boredom</button>
-<button class="emotion-btn" onclick="startSite('Confusion')">Confusion</button>
-<button class="emotion-btn" onclick="startSite('Calm')">Calm</button>
-<button class="emotion-btn" onclick="startSite('Anxiety')">Anxiety</button>
-<button class="emotion-btn" onclick="startSite('Awe')">Awe</button>
-<button class="emotion-btn" onclick="startSite('Nostalgia')">Nostalgia</button>
+    <button class="emotion-btn" onclick="startSite()">Joy</button>
+    <button class="emotion-btn" onclick="startSite()">Sadness</button>
+    <button class="emotion-btn" onclick="startSite()">Anger</button>
+    <button class="emotion-btn" onclick="startSite()">Fear</button>
+    <button class="emotion-btn" onclick="startSite()">Surprise</button>
+    <button class="emotion-btn" onclick="startSite()">Disgust</button>
+    <button class="emotion-btn" onclick="startSite()">Trust</button>
+    <button class="emotion-btn" onclick="startSite()">Anticipation</button>
+    <button class="emotion-btn" onclick="startSite()">Love</button>
+    <button class="emotion-btn" onclick="startSite()">Shame</button>
+    <button class="emotion-btn" onclick="startSite()">Pride</button>
+    <button class="emotion-btn" onclick="startSite()">Envy</button>
+    <button class="emotion-btn" onclick="startSite()">Guilt</button>
+    <button class="emotion-btn" onclick="startSite()">Hope</button>
+    <button class="emotion-btn" onclick="startSite()">Boredom</button>
+    <button class="emotion-btn" onclick="startSite()">Confusion</button>
+    <button class="emotion-btn" onclick="startSite()">Calm</button>
+    <button class="emotion-btn" onclick="startSite()">Anxiety</button>
+    <button class="emotion-btn" onclick="startSite()">Awe</button>
+    <button class="emotion-btn" onclick="startSite()">Nostalgia</button>
   </div>
   <button id="schiz-btn-top" onclick="playSchizophrenia()" style="display:block; margin:22px auto 0 auto; padding:11px 32px; font-size:1.12em; font-weight:bold; border:2.5px solid #ff5252; border-radius:13px; background:#111; color:#ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s;">SCHIZOPHRENIA</button>
   <div class="puzzle-grid" id="puzzle-grid"></div>
@@ -217,58 +196,6 @@ const happyFiles = [
   "best sleepover ever.happy.mp4",
 ];
 
-// --- SOUNDTRACK DATA ---
-const soundtrackTracks = [
-  { title: "Be By Myself",    artist: "Asher Roth", filename: "01 - Be_By_Myself.mp3" },
-  { title: "Bad Computer",     artist: "B.o.B",      filename: "02 - Bad_Computer.mp3" },
-  { title: "Okay I Believe You, But My Tommy Gun Don't", artist: "Brand New", filename: "03 - Okay_I_Believe_You_But_My_Tommy_Gun_Dont.mp3" },
-  { title: "Shut Up",           artist: "Ariana Grande", filename: "04 - Shut_Up.mp3" },
-  { title: "Good News",         artist: "Mac Miller",      filename: "05 - Good_News.mp3" },
-  { title: "The Best",          artist: "AWOLNATION",      filename: "06 - The_Best.mp3" },
-  { title: "Beach Boy",         artist: "Amine",           filename: "07 - Beach_Boy.mp3" },
-  { title: "When I'm Down",     artist: "Oliver Tree & Whethan", filename: "08 - When_Im_Down.mp3" },
-  { title: "Right Now (Na Na Na)", artist: "Akon",         filename: "09 - Right_Now_Na_Na_Na.mp3" },
-  { title: "Kangaroo Court",    artist: "Capital Cities", filename: "10 - Kangaroo_Court.mp3" },
-  { title: "Suga's Interlude",  artist: "Halsey",         filename: "11 - Sugas_Interlude.mp3" },
-  { title: "Overwhelmed",       artist: "Royal & the Serpent", filename: "12 - Overwhelmed.mp3" },
-  { title: "NASA",              artist: "Ariana Grande", filename: "13 - NASA.mp3" },
-  { title: "420 Freestyle",     artist: "Wiz Khalifa",    filename: "14 - 420_Freestyle.mp3" },
-  { title: "Dancing Queen",     artist: "ABBA",           filename: "15 - Dancing_Queen.mp3" },
-  { title: "Solo",              artist: "Frank Ocean",    filename: "16 - Solo.mp3" },
-  { title: "Mood Ring",         artist: "Lorde",          filename: "17 - Mood_Ring.mp3" },
-  { title: "It Ends Tonight",   artist: "The All-American Rejects", filename: "18 - It_Ends_Tonight.mp3" },
-  { title: "Phantom (Redux)",   artist: "Shirt",          filename: "19 - Phantom_Redux.mp3" },
-  { title: "What's Your Fantasy", artist: "Ludacris & Shawnna", filename: "20 - Whats_Your_Fantasy.mp3" },
-  { title: "Yuck",              artist: "Charli XCX",     filename: "21 - Yuck.mp3" },
-  { title: "People You Know",   artist: "Selena Gomez",   filename: "22 - People_You_Know.mp3" },
-  { title: "New Person, Same Old Mistakes", artist: "Tame Impala", filename: "23 - New_Person_Same_Old_Mistakes.mp3" },
-  { title: "Gyalchester",       artist: "Drake",          filename: "24 - Gyalchester.mp3" },
-  { title: "Sour Candy",        artist: "Lady Gaga",      filename: "25 - Sour_Candy.mp3" },
-  { title: "I Am a God",        artist: "Kanye West",     filename: "26 - I_Am_a_God.mp3" },
-  { title: "Let It Happen (Soulwax Remix)", artist: "Tame Impala", filename: "27 - Let_It_Happen_Soulwax_Remix.mp3" },
-  { title: "Palm of My Hands",  artist: "Zho",            filename: "28 - Palm_of_My_Hands.mp3" },
-  { title: "8",                 artist: "Billie Eilish",  filename: "29 - 8.mp3" },
-  { title: "Body Bag",          artist: "Hit The Lights", filename: "30 - Body_Bag.mp3" },
-  { title: "Overheated",        artist: "Billie Eilish",  filename: "31 - Overheated.mp3" },
-  { title: "Freak on a Leash",  artist: "Korn",           filename: "32 - Freak_on_a_Leash.mp3" },
-  { title: "Stayin' Alive",     artist: "Bee Gees",       filename: "33 - Stayin_Alive.mp3" },
-  { title: "The Man (Ed Sheeran)", artist: "Ed Sheeran",   filename: "34 - The_Man_Ed_Sheeran.mp3" },
-  { title: "The Man (The Killers)", artist: "The Killers", filename: "35 - The_Man_The_Killers.mp3" },
-  { title: "That's Exactly How I Feel", artist: "Lizzo",   filename: "36 - Thats_Exactly_How_I_Feel.mp3" },
-  { title: "Stronger",          artist: "Christina Aguilera", filename: "37 - Stronger.mp3" },
-  { title: "Trapped in a Box",  artist: "No Doubt",       filename: "38 - Trapped_in_a_Box.mp3" },
-  { title: "Drug Dealers Dream", artist: "Rick Ross",     filename: "39 - Drug_Dealers_Dream.mp3" },
-  { title: "King of the Clouds", artist: "Panic! At The Disco", filename: "40 - King_of_the_Clouds.mp3" },
-  { title: "Save That Shit",    artist: "Lil Peep",       filename: "41 - Save_That_Shit.mp3" },
-  { title: "Welcome to Your Fantasy", artist: "Fantasy Guys", filename: "42 - Welcome_to_Your_Fantasy.mp3" },
-  { title: "Closer",            artist: "Kings of Leon",  filename: "43 - Closer.mp3" },
-  { title: "Alien",             artist: "Kanye West",     filename: "44 - Alien.mp3" },
-  { title: "Escapism",          artist: "RAYE",           filename: "45 - Escapism.mp3" },
-  { title: "Bring Back My Girls", artist: "RuPaul",        filename: "46 - Bring_Back_My_Girls.mp3" },
-  { title: "Nightmare",         artist: "Halsey",         filename: "47 - Nightmare.mp3" }
-];
-
-
     // --- COVER ART LOGIC ---
     const customChapterCovers = {
       "chapter 1.mp4": "chapter 1.gif", "chapter 2.mp4": "chapter 2.gif", "chapter 3.mp4": "chapter 3.gif",
@@ -316,14 +243,7 @@ function displayTiles() {
     </div>`;
   }
   // The rest of the tiles
-  
-      // Soundtrack tile
-      html += `<div class="tile" onclick="openSoundtrack()">
-        <div class="tile-number">🎧</div>
-        <img src="soundtrack-cover.gif" alt="Soundtrack Cover"/>
-        <div class="tile-filename">Official Soundtrack</div>
-      </div>`;
-    let mainTiles = files.map((f, i) => `
+  let mainTiles = files.map((f, i) => `
     <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
       <div class="tile-number">${i+1}</div>
       <img src="${getTileCover(f)}" alt="tile" />
@@ -334,26 +254,6 @@ function displayTiles() {
 }
 
 // --- CLOSE CONTENT ---
-
-// --- OPEN SOUNDTRACK VIEW ---
-function openSoundtrack() {
-  playClickOnce();
-  hideControls();
-  const area = document.getElementById('content-area');
-  area.innerHTML = `
-    <header><h1>🌀 HELL-MOUTH Official Soundtrack</h1><p>${soundtrackTracks.length} Tracks</p></header>
-    <section class="tracks-grid">
-      ${soundtrackTracks.map((t,i) => `
-        <div class="track-card">
-          <h2>${i+1}. ${t.title}</h2>
-          <p>${t.artist}</p>
-          <audio controls src="${t.filename}"></audio>
-        </div>
-      `).join('')}
-    </section>`;
-  document.getElementById('content').style.display = 'flex';
-}
-
 function closeContent() {
   document.getElementById('content').style.display = 'none';
   document.getElementById('puzzle-grid').style.display = 'flex';
@@ -664,7 +564,12 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('break-btn').onclick  = breakSpiral;
   document.getElementById('random-btn').onclick = openRandom;
 });
-  </script>
+  
+document.getElementById('break-btn').addEventListener('click', () => {
+  document.getElementById('puzzle-grid').style.display = 'flex';
+  displayTiles();
+});
+
+</script>
 </body>
 </html>
-
