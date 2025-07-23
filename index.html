@@ -358,7 +358,21 @@ function getTileCover(f) {
 
 // --- DISPLAY TILES ---
 function displayTiles() {
-  const grid = document.getElementById('puzzle-grid');
+const grid = document.getElementById('puzzle-grid');
+
+// 🌀 Insert the soundtrack tile FIRST in the grid
+const soundtrackTile = document.createElement("div");
+soundtrackTile.className = "tile";
+soundtrackTile.innerHTML = `
+  <div class="tile-number">🎵</div>
+  <img src="soundtrack.gif" alt="Soundtrack" />
+  <div class="tile-filename">Soundtrack</div>
+`;
+soundtrackTile.onclick = () => {
+  document.getElementById("soundtrack-overlay").style.display = "block";
+};
+grid.appendChild(soundtrackTile);
+
   // Happy galleries always at the top when unlocked
   let happyTiles = '';
   if (unlocked) {
@@ -517,9 +531,15 @@ function stopSpeakScript() {
   ttsUtterance = null;
 }
 
-// --- OPEN / CLOSE CONTENT ---
+// --- OPEN / CLOSE CONTENT —
 function openFile(file) {
   playClickOnce();
+if (file === "🎵 SOUNDTRACK 🎵") {
+    document.getElementById("soundtrack-overlay").style.display = "flex";
+    displaySoundtrackList();
+    return;
+  }
+
   // Happy gallery handling
   if (file === "happy gallery") {
     openHappyFileList(happyFiles, "happy gallery");
@@ -690,6 +710,19 @@ function copyScript() {
     alert('Script copied!');
   }
 }
+function displaySoundtrackList() {
+  const list = document.getElementById("soundtrack-list");
+  list.innerHTML = "";
+  soundtrackTracks.forEach(track => {
+    const div = document.createElement("div");
+    div.className = "track";
+    div.innerHTML = `
+      <strong>${track.title}</strong> — ${track.artist}<br/>
+      <audio controls src="${track.filename}"></audio>
+    `;
+    list.appendChild(div);
+  });
+}
 
 // --- INIT ---
 window.addEventListener('DOMContentLoaded', () => {
@@ -705,6 +738,14 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
+<div id="soundtrack-overlay" class="overlay" style="display: none;">
+  <div class="soundtrack-container">
+    <h1>OFFICIAL HELL-MOUTH SOUNDTRACK</h1>
+    <button onclick="document.getElementById('soundtrack-overlay').style.display='none'">Close</button>
+    <div id="soundtrack-list"></div>
+  </div>
+</div>
 </body>
 </html>
+
 
