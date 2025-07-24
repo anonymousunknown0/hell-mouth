@@ -119,26 +119,26 @@
   <div id="wheel-overlay">
     <h1>Pick an Emotion to Enter</h1>
     <!-- EMOTIONS LIST (customize if needed) -->
-    <button class="emotion-button" onclick="startSite()">Joy</button>
-    <button class="emotion-button" onclick="startSite()">Sadness</button>
-    <button class="emotion-button" onclick="startSite()">Anger</button>
-    <button class="emotion-button" onclick="startSite()">Fear</button>
-    <button class="emotion-button" onclick="startSite()">Surprise</button>
-    <button class="emotion-button" onclick="startSite()">Disgust</button>
-    <button class="emotion-button" onclick="startSite()">Trust</button>
-    <button class="emotion-button" onclick="startSite()">Anticipation</button>
-    <button class="emotion-button" onclick="startSite()">Love</button>
-    <button class="emotion-button" onclick="startSite()">Shame</button>
-    <button class="emotion-button" onclick="startSite()">Pride</button>
-    <button class="emotion-button" onclick="startSite()">Envy</button>
-    <button class="emotion-button" onclick="startSite()">Guilt</button>
-    <button class="emotion-button" onclick="startSite()">Hope</button>
-    <button class="emotion-button" onclick="startSite()">Boredom</button>
-    <button class="emotion-button" onclick="startSite()">Confusion</button>
-    <button class="emotion-button" onclick="startSite()">Calm</button>
-    <button class="emotion-button" onclick="startSite()">Anxiety</button>
-    <button class="emotion-button" onclick="startSite()">Awe</button>
-    <button class="emotion-button" onclick="startSite()">Nostalgia</button>
+    <button class="emotion-btn" onclick="startSite()">Joy</button>
+    <button class="emotion-btn" onclick="startSite()">Sadness</button>
+    <button class="emotion-btn" onclick="startSite()">Anger</button>
+    <button class="emotion-btn" onclick="startSite()">Fear</button>
+    <button class="emotion-btn" onclick="startSite()">Surprise</button>
+    <button class="emotion-btn" onclick="startSite()">Disgust</button>
+    <button class="emotion-btn" onclick="startSite()">Trust</button>
+    <button class="emotion-btn" onclick="startSite()">Anticipation</button>
+    <button class="emotion-btn" onclick="startSite()">Love</button>
+    <button class="emotion-btn" onclick="startSite()">Shame</button>
+    <button class="emotion-btn" onclick="startSite()">Pride</button>
+    <button class="emotion-btn" onclick="startSite()">Envy</button>
+    <button class="emotion-btn" onclick="startSite()">Guilt</button>
+    <button class="emotion-btn" onclick="startSite()">Hope</button>
+    <button class="emotion-btn" onclick="startSite()">Boredom</button>
+    <button class="emotion-btn" onclick="startSite()">Confusion</button>
+    <button class="emotion-btn" onclick="startSite()">Calm</button>
+    <button class="emotion-btn" onclick="startSite()">Anxiety</button>
+    <button class="emotion-btn" onclick="startSite()">Awe</button>
+    <button class="emotion-btn" onclick="startSite()">Nostalgia</button>
   </div>
   <button id="schiz-btn-top" onclick="playSchizophrenia()" style="display:block; margin:22px auto 0 auto; padding:11px 32px; font-size:1.12em; font-weight:bold; border:2.5px solid #ff5252; border-radius:13px; background:#111; color:#ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s;">SCHIZOPHRENIA</button>
   <div class="puzzle-grid" id="puzzle-grid"></div>
@@ -747,40 +747,26 @@ window.addEventListener('DOMContentLoaded', () => {
   </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const enterBtn = document.getElementById('enter-btn');
-  const entryScreen = document.getElementById('entry-screen');
-  const wheelOverlay = document.getElementById('wheel-overlay');
-  const entryAudio = document.getElementById('entry-audio');
+  document.addEventListener("DOMContentLoaded", function () {
+    const enterBtn = document.getElementById('enter-btn');
+    const entryScreen = document.getElementById('entry-screen');
+    const wheelOverlay = document.getElementById('wheel-overlay');
+    const entryAudio = document.getElementById('entry-audio');
 
-  if (enterBtn && entryScreen && wheelOverlay) {
-    enterBtn.onclick = function () {
-      entryScreen.style.display = 'none';
-      wheelOverlay.style.display = 'flex';
-      if (entryAudio) {
-        entryAudio.pause();
-        entryAudio.currentTime = 0;
-      }
-    };
-  }
-
-  const emotionButtons = document.querySelectorAll(".emotion-button");
-
-  emotionButtons.forEach(button => {
-    button.addEventListener("click", function () {
-      entryScreen.style.display = 'none';
-      wheelOverlay.style.display = 'flex';
-      if (entryAudio) {
-        entryAudio.pause();
-        entryAudio.currentTime = 0;
-      }
-    });
+    if (enterBtn && entryScreen && wheelOverlay) {
+      enterBtn.onclick = function () {
+        entryScreen.style.display = 'none';
+        wheelOverlay.style.display = 'flex';
+        if (entryAudio) {
+          entryAudio.pause();
+          entryAudio.currentTime = 0;
+        }
+      };
+    }
   });
-});
 </script>
 </div>
 </body>
 </html>
-
 
 
