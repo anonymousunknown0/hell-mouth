@@ -745,26 +745,6 @@ window.addEventListener('DOMContentLoaded', () => {
     <button style="margin-bottom: 20px;" onclick="document.getElementById('soundtrack-overlay').style.display='none'">Close</button>
     <!-- The audio tracks will be injected into this container by JS -->
   </div>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const enterBtn = document.getElementById('enter-btn');
-    const entryScreen = document.getElementById('entry-screen');
-    const wheelOverlay = document.getElementById('wheel-overlay');
-    const entryAudio = document.getElementById('entry-audio');
-
-    if (enterBtn && entryScreen && wheelOverlay) {
-      enterBtn.onclick = function () {
-        entryScreen.style.display = 'none';
-        wheelOverlay.style.display = 'flex';
-        if (entryAudio) {
-          entryAudio.pause();
-          entryAudio.currentTime = 0;
-        }
-      };
-    }
-  });
-</script>
 </div>
 </body>
 </html>
