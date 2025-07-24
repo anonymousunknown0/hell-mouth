@@ -116,28 +116,30 @@
     <h1>H E L L M O U T H</h1>
     <button id="enter-btn">ENTER</button>
   </div>
-  <div id="emotion-buttons" style="text-align: center; margin-top: 20px;">
-  <button class="emotion-btn">Joy</button>
-  <button class="emotion-btn">Sadness</button>
-  <button class="emotion-btn">Anger</button>
-  <button class="emotion-btn">Fear</button>
-  <button class="emotion-btn">Surprise</button>
-  <button class="emotion-btn">Disgust</button>
-  <button class="emotion-btn">Trust</button>
-  <button class="emotion-btn">Anticipation</button>
-  <button class="emotion-btn">Love</button>
-  <button class="emotion-btn">Shame</button>
-  <button class="emotion-btn">Pride</button>
-  <button class="emotion-btn">Envy</button>
-  <button class="emotion-btn">Guilt</button>
-  <button class="emotion-btn">Hope</button>
-  <button class="emotion-btn">Boredom</button>
-  <button class="emotion-btn">Confusion</button>
-  <button class="emotion-btn">Calm</button>
-  <button class="emotion-btn">Anxiety</button>
-  <button class="emotion-btn">Awe</button>
-  <button class="emotion-btn">Nostalgia</button>
-</div>
+  <div id="wheel-overlay">
+    <h1>Pick an Emotion to Enter</h1>
+    <!-- EMOTIONS LIST (customize if needed) -->
+    <button class="emotion-button" onclick="startSite()">Joy</button>
+    <button class="emotion-button" onclick="startSite()">Sadness</button>
+    <button class="emotion-button" onclick="startSite()">Anger</button>
+    <button class="emotion-button" onclick="startSite()">Fear</button>
+    <button class="emotion-button" onclick="startSite()">Surprise</button>
+    <button class="emotion-button" onclick="startSite()">Disgust</button>
+    <button class="emotion-button" onclick="startSite()">Trust</button>
+    <button class="emotion-button" onclick="startSite()">Anticipation</button>
+    <button class="emotion-button" onclick="startSite()">Love</button>
+    <button class="emotion-button" onclick="startSite()">Shame</button>
+    <button class="emotion-button" onclick="startSite()">Pride</button>
+    <button class="emotion-button" onclick="startSite()">Envy</button>
+    <button class="emotion-button" onclick="startSite()">Guilt</button>
+    <button class="emotion-button" onclick="startSite()">Hope</button>
+    <button class="emotion-button" onclick="startSite()">Boredom</button>
+    <button class="emotion-button" onclick="startSite()">Confusion</button>
+    <button class="emotion-button" onclick="startSite()">Calm</button>
+    <button class="emotion-button" onclick="startSite()">Anxiety</button>
+    <button class="emotion-button" onclick="startSite()">Awe</button>
+    <button class="emotion-button" onclick="startSite()">Nostalgia</button>
+  </div>
   <button id="schiz-btn-top" onclick="playSchizophrenia()" style="display:block; margin:22px auto 0 auto; padding:11px 32px; font-size:1.12em; font-weight:bold; border:2.5px solid #ff5252; border-radius:13px; background:#111; color:#ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s;">SCHIZOPHRENIA</button>
   <div class="puzzle-grid" id="puzzle-grid"></div>
   <button id="break-btn">BREAK THE SPIRAL</button>
@@ -741,9 +743,6 @@ window.addEventListener('DOMContentLoaded', () => {
   <div class="soundtrack-container" style="padding: 20px; max-height: 90vh; overflow-y: auto; background-color: black; color: white;">
     <h1>🎧 OFFICIAL SOUNDTRACK 💿</h1>
     <button style="margin-bottom: 20px;" onclick="document.getElementById('soundtrack-overlay').style.display='none'">Close</button>
-
-<div id="soundtrack-list"></div>
-
     <!-- The audio tracks will be injected into this container by JS -->
   </div>
 
@@ -779,8 +778,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
-</div> 
+</div>
 </body>
 </html>
+
 
 
