@@ -126,18 +126,6 @@
   <script>
   // --------- JS CODE STARTS HERE ---------
 
-function checkPasswordAndOpen(galleryNum) {
-  const password = prompt("Enter password to access this gallery:");
-  const correctPassword = galleryNum === 1 ? "gallery1" : "gallery2";
-
-  if (password === correctPassword) {
-    openGallery(galleryNum);
-  } else if (password !== null) {
-    alert("Incorrect password.");
-  }
-}
-
-
 const files = [
   "scene 5 meet the voices.script.txt", "scene 4 what hunter believes explained.script.txt",
   "scene 3 meet hunter hardon.script.txt", "scene 21 THE SPECTRAL ARCHIVE.script.txt",
@@ -252,32 +240,35 @@ function getTileCover(f) {
 // --- DISPLAY TILES ---
 function displayTiles() {
   const grid = document.getElementById('puzzle-grid');
+
   // Happy galleries always at the top when unlocked
   let happyTiles = '';
-if (unlocked) {
-  happyTiles += `
-    <div class="tile" onclick="checkPasswordAndOpen(1)">
-      <div class="tile-number">💌</div>
-      <img src="gallery.gif" class="tile-image" />
-      <div class="tile-filename">HappyFiles 1</div>
-    </div>`;
-}
-if (unlocked2) {
-  happyTiles += `
-    <div class="tile" onclick="checkPasswordAndOpen(2)">
-      <div class="tile-number">🎁</div>
-      <img src="gallery.gif" class="tile-image" />
-      <div class="tile-filename">HappyFiles 2</div>
-    </div>`;
-}
+  if (unlocked) {
+    happyTiles += `
+      <div class="tile" onclick="openHappyFileList(happyFiles, 'happy gallery')">
+        <div class="tile-number">💌</div>
+        <img src="gallery.gif" class="tile-image" />
+        <div class="tile-filename">HappyFiles 1</div>
+      </div>`;
+  }
+  if (unlocked2) {
+    happyTiles += `
+      <div class="tile" onclick="openHappyFileList(happyFiles2, 'happy gallery 2')">
+        <div class="tile-number">🎁</div>
+        <img src="gallery.gif" class="tile-image" />
+        <div class="tile-filename">HappyFiles 2</div>
+      </div>`;
+  }
+
   // The rest of the tiles
   let mainTiles = files.map((f, i) => `
-    <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
-      <div class="tile-number">${i+1}</div>
+    <div class="tile" onclick="openFile('${f.replace(/'/g, "\\'")}')">
+      <div class="tile-number">${i + 1}</div>
       <img src="${getTileCover(f)}" alt="tile" />
       <div class="tile-filename">${f}</div>
     </div>
   `).join('');
+
   grid.innerHTML = happyTiles + mainTiles;
 }
 
