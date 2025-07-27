@@ -2,100 +2,132 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🌀 Virtual Spiral Notebook</title>
   <style>
     body {
       margin: 0;
-      font-family: sans-serif;
-      background-color: black;
-      color: white;
+      background: #111 url('spiral.gif') center center fixed;
+      background-size: cover;
+      font-family: monospace;
+      color: #eee;
+      overflow-x: hidden;
+      min-height: 100vh;
     }
-
-    /* --- ENTRY SCREEN --- */
-    #entry-screen, #wheel-overlay, #puzzle-grid {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 9999;
+    #entry-screen {
+      position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+      background: #000; z-index: 9999; flex-direction: column; overflow: hidden;
     }
-
-    #puzzle-grid {
-      display: none;
-      flex-wrap: wrap;
-      overflow-y: scroll;
-      padding: 20px;
+    #entry-screen video#entry-bg-video {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1;
     }
-
-    .tile {
-      width: 150px;
-      height: 100px;
-      background: white;
-      margin: 10px;
-      border: 2px solid #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: black;
-      cursor: pointer;
+    #entry-screen audio { display: none; }
+    #entry-screen h1 {
+      color: #ff0000;
+      font-size: 6rem;
+      font-weight: 900;
+      letter-spacing: 2rem;
+      text-align: center;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+      filter: blur(1px) contrast(130%);
+      font-family: Impact, 'Arial Black', sans-serif;
+      text-shadow: 0 3px 0 #fff1, 0 10px 15px #e00c, 0 20px 30px #600b;
+      line-height: .9;
+      animation: melt 3s infinite alternate cubic-bezier(.8,0,.2,1);
     }
-
-    .overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.95);
-      z-index: 9999;
-      overflow-y: auto;
-      padding: 40px;
-      color: white;
+    @keyframes melt {
+      0%   { text-shadow: 0 0 0 #000, 0 0 0 #f00; }
+      20%  { text-shadow: 0 2px 0 #c00, 0 6px 8px #e11; }
+      35%  { text-shadow: 0 6px 2px #e11, 0 12px 16px #900; }
+      50%  { text-shadow: 0 12px 4px #b00, 0 18px 32px #200; }
+      70%  { text-shadow: 0 3px 0 #c00, 0 5px 4px #f00; }
+      85%  { text-shadow: 0 1px 0 #f00, 0 4px 8px #900; }
+      100% { text-shadow: 0 0 0 #000, 0 0 0 #f00; }
     }
-
-    /* --- SOUNDTRACK TILE STYLE --- */
-    .soundtrack-container {
-      max-width: 800px;
-      margin: auto;
-    }
-
-    .track {
-      margin-bottom: 1.2em;
-      border-bottom: 1px solid #444;
-      padding-bottom: 1em;
-    }
-
-    .tile-image {
-      border: 3px solid white;
-      box-shadow: 0 0 12px white;
-    }
+    #entry-screen button { padding: 14px 40px; font-size: 1.4rem; background: #000; color: #fff; border: 3px solid #fff; border-radius: 12px; cursor: pointer; }
+    #wheel-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; flex-wrap: wrap; align-items: center; justify-content: center; z-index: 9998; color: #ffd700; text-align: center; padding: 20px; text-transform: capitalize; }
+    #wheel-overlay h1 { flex-basis: 100%; font-size: 2rem; margin-bottom: 1rem; }
+    .emotion-btn { background: #222; color: #ffd700; border: 2px solid #ffd700; border-radius: 12px; padding: 12px 24px; margin: 6px; font-size: 1rem; cursor: pointer; flex: 1 0 120px; transition: background 0.2s, color 0.2s; }
+    .emotion-btn:hover { background: #ffd700; color: #111; }
+    .puzzle-grid { display: none; flex-wrap: wrap; justify-content: center; gap: 14px; padding: 30px 10px 140px 10px; }
+    .tile { position: relative; width: 190px; height: 106px; background: rgba(0,0,0,0.15); border: 2px solid #fff; border-radius: 20px; box-shadow: 0 0 16px #0008; cursor: pointer; overflow: hidden; transition: transform 0.18s, box-shadow 0.18s; }
+    .tile img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+    .tile:hover { transform: scale(1.08); box-shadow: 0 0 26px #fff8; border-color: #ffd700; }
+    .tile-number { position: absolute; top: 8px; left: 12px; font-size: 1.4rem; font-weight: bold; color: #FFD600; text-shadow: 1px 1px 6px #000; pointer-events: none; }
+    .tile-filename { position: absolute; bottom: 6px; left: 0; width: 100%; text-align: center; font-size: 0.85em; font-weight: bold; color: #FFD600; background: rgba(0,0,0,0.18); padding: 2px 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
+    #break-btn, #random-btn { display: none; position: fixed; left: 50%; transform: translateX(-50%); cursor: pointer; box-shadow: 0 0 18px #0005; z-index: 1000; transition: background 0.2s; }
+    #break-btn { bottom: 32px; background: #fff; color: #000; border: 4px solid #000; border-radius: 25px; padding: 12px 38px; font-size: 2em; font-weight: 900; }
+    #break-btn:active { background: #000; color: #fff; }
+    #random-btn { bottom: 100px; background: #333; color: #ffd700; border: 3px solid #ffd700; border-radius: 20px; padding: 8px 24px; font-size: 1.2em; font-weight: bold; }
+    #random-btn:hover { background: #ffd700; color: #111; }
+    #content { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.93); overflow-y: auto; padding: 30px 10px; box-sizing: border-box; z-index: 20; }
+    #content .filename { color: #ffd700; font-size: 1.2rem; font-weight: bold; margin-bottom: 12px; text-align: center; word-break: break-all; }
+    #content-area { width: 100%; max-width: 700px; margin: 0 auto; max-height: calc(100vh - 200px); overflow-y: auto; }
+    #content-area pre { background: #111; color: #fff; padding: 24px; border-radius: 14px; font-family: 'Courier New', monospace; font-size: 1.05em; line-height: 1.5; white-space: pre-wrap; word-break: break-word; box-shadow: 0 0 12px #0008; margin-bottom: 16px; }
+    #content-area audio, #content-area video { width: 100%; max-width: 700px; border-radius: 12px; box-shadow: 0 0 12px #0008; margin-bottom: 16px; }
+    .close-btn, .copy-btn, .schiz-btn { display: block; margin: 12px auto; padding: 8px 24px; font-size: 1em; font-weight: bold; border: 2px solid #fff; border-radius: 12px; cursor: pointer; transition: background 0.2s; }
+    .close-btn { background: rgba(0,0,0,0.5); color: #fff; z-index:30; position:relative; }
+    .close-btn:hover { background: #e00; }
+    .copy-btn { background: #ffd700; color: #111; border-color: #ffd700; }
+    .copy-btn:active { background: #ffc107; }
+    .schiz-btn { background: #111; color: #ff5252; border-color: #ff5252; font-weight: 900; margin-bottom: 18px; text-transform: uppercase; letter-spacing: .2em; }
+    .schiz-btn:hover { background: #ff5252; color: #fff; }
+    .tts-btn, .stop-btn { display:inline-block; margin:0 8px 10px 0; padding:7px 18px;font-size:0.98em;font-weight:bold; border:2px solid #ffd700; border-radius:9px; background:#111;color:#ffd700;cursor:pointer; }
+    .tts-btn:hover,.stop-btn:hover { background:#ffd700;color:#111; }
+    .voice-select { padding:6px 14px;font-size:1em;border-radius:7px;border:1.5px solid #FFD700;background:#111;color:#FFD700;margin-bottom:8px;}
+    .happy-file-list button { margin-bottom:4px;}
+    @media(max-width:800px){ .tile { width:92vw; height:20vw; min-height:80px; } #break-btn,#random-btn { font-size:1.4em; padding:8px 24px; bottom:12px; } }
   </style>
 </head>
 <body>
+  <div id="entry-screen">
+    <video id="entry-bg-video" autoplay loop muted playsinline>
+      <source src="5 hypnotize.mp4" type="video/mp4">
+    </video>
+    <audio id="entry-audio" src="let me in.mp3" autoplay loop></audio>
+    <h1>H E L L M O U T H</h1>
+    <button id="enter-btn">ENTER</button>
+  </div>
+  <div id="wheel-overlay">
+    <h1>Pick an Emotion to Enter</h1>
+    <!-- EMOTIONS LIST (customize if needed) -->
+    <button class="emotion-btn" onclick="startSite()">Joy</button>
+    <button class="emotion-btn" onclick="startSite()">Sadness</button>
+    <button class="emotion-btn" onclick="startSite()">Anger</button>
+    <button class="emotion-btn" onclick="startSite()">Fear</button>
+    <button class="emotion-btn" onclick="startSite()">Surprise</button>
+    <button class="emotion-btn" onclick="startSite()">Disgust</button>
+    <button class="emotion-btn" onclick="startSite()">Trust</button>
+    <button class="emotion-btn" onclick="startSite()">Anticipation</button>
+    <button class="emotion-btn" onclick="startSite()">Love</button>
+    <button class="emotion-btn" onclick="startSite()">Shame</button>
+    <button class="emotion-btn" onclick="startSite()">Pride</button>
+    <button class="emotion-btn" onclick="startSite()">Envy</button>
+    <button class="emotion-btn" onclick="startSite()">Guilt</button>
+    <button class="emotion-btn" onclick="startSite()">Hope</button>
+    <button class="emotion-btn" onclick="startSite()">Boredom</button>
+    <button class="emotion-btn" onclick="startSite()">Confusion</button>
+    <button class="emotion-btn" onclick="startSite()">Calm</button>
+    <button class="emotion-btn" onclick="startSite()">Anxiety</button>
+    <button class="emotion-btn" onclick="startSite()">Awe</button>
+    <button class="emotion-btn" onclick="startSite()">Nostalgia</button>
+  </div>
+  <button id="schiz-btn-top" onclick="playSchizophrenia()" style="display:block; margin:22px auto 0 auto; padding:11px 32px; font-size:1.12em; font-weight:bold; border:2.5px solid #ff5252; border-radius:13px; background:#111; color:#ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s;">SCHIZOPHRENIA</button>
+  <div class="puzzle-grid" id="puzzle-grid"></div>
+  <button id="break-btn">BREAK THE SPIRAL</button>
+  <button id="random-btn">random</button>
+  <div id="content">
+    <div class="filename" id="file-name"></div>
+    <div id="content-area"></div>
+    <button class="close-btn" onclick="closeContent()">CLOSE</button>
+  </div>
+  <audio id="click-sound" src="click.mp3" preload="auto"></audio>
+  <script>
+  // --------- JS CODE STARTS HERE ---------
 
-<!-- --- ENTRY SCREEN (Visible until user clicks ENTER) --- -->
-<div id="entry-screen">
-  <button id="enter-btn">ENTER</button>
-  <audio id="entry-audio" src="entry.mp3" autoplay loop></audio>
-</div>
-
-<!-- --- WHEEL OVERLAY (Visible after ENTER is clicked) --- -->
-<div id="wheel-overlay" style="display:none;">
-  <button onclick="startSite()">Start Spiral</button>
-</div>
-
-<!-- --- MAIN GRID --- -->
-<div id="puzzle-grid"></div>
-
-<!-- --- BUTTONS FOR ACTIONS --- -->
-<button id="random-btn">random</button>
-<button id="break-btn">BREAK THE SPIRAL</button>
-
-<script>
-// --- MAIN FILES ARRAY ---
-// PLUG IN your files here to show in the main grid
 const files = [
-  "official_hellmouth_soundtrack.tile", "scene 5 meet the voices.script.txt", "scene 4 what hunter believes explained.script.txt",
+  "scene 5 meet the voices.script.txt", "scene 4 what hunter believes explained.script.txt",
   "scene 3 meet hunter hardon.script.txt", "scene 21 THE SPECTRAL ARCHIVE.script.txt",
   "scene 2 the therapy session.script.txt", "scene 1 schizophrenia disclaimer.script.txt",
   "scene 25 new beginnings.script.txt",
@@ -178,70 +210,6 @@ const happyFiles = [
 "one for one for one.happy.mp4", "locker room.happy.mp4", "bigboyalone.happy.mp4", “room for two.happy.mp4”
 ];
 
-const soundtrackTracks = [
-  { title: "Be By Myself", artist: "Asher Roth", filename: "01_be_by_myself.mp3" },
-  { title: "Bad Computer", artist: "B.o.B", filename: "02_bad_computer.mp3" },
-  { title: "Okay I Believe You But My Tommy Gun Don’t", artist: "Brand New", filename: "03_okay_i_believe_you_but_my_tommy_gun_dont.mp3" },
-  { title: "Shut Up", artist: "Ariana Grande", filename: "04_shut_up.mp3" },
-  { title: "Good News", artist: "Mac Miller", filename: "05_good_news.mp3" },
-  { title: "The Best", artist: "AWOLNATION", filename: "06_the_best.mp3" },
-  { title: "Beach Boy", artist: "Amine", filename: "07_beach_boy.mp3" },
-  { title: "When I’m Down", artist: "Oliver Tree", filename: "08_when_im_down.mp3" },
-  { title: "Right Now (Na Na Na)", artist: "Akon", filename: "09_right_now_na_na_na.mp3" },
-  { title: "Kangaroo Court", artist: "Capital Cities", filename: "10_kangaroo_court.mp3" },
-  { title: "SUGA’s Interlude", artist: "Halsey ft. SUGA", filename: "11_sugas_interlude.mp3" },
-  { title: "Overwhelmed", artist: "Royal & the Serpent", filename: "12_overwhelmed.mp3" },
-  { title: "NASA", artist: "Ariana Grande", filename: "13_nasa.mp3" },
-  { title: "420 Freestyle", artist: "Wiz Khalifa", filename: "14_420_freestyle.mp3" },
-  { title: "Dancing Queen", artist: "ABBA", filename: "15_dancing_queen.mp3" },
-  { title: "Solo", artist: "Frank Ocean", filename: "16_solo.mp3" },
-  { title: "Mood Ring", artist: "Lorde", filename: "17_mood_ring.mp3" },
-  { title: "It Ends Tonight", artist: "The All-American Rejects", filename: "18_it_ends_tonight.mp3" },
-  { title: "Phantom Redux", artist: "Shirt", filename: "19_phantom_redux.mp3" },
-  { title: "What's Your Fantasy", artist: "Ludacris", filename: "20_whats_your_fantasy.mp3" },
-  { title: "Yuck", artist: "charlie xcx", filename: "21_yuck.mp3" },
-  { title: "People You Know", artist: "Selena Gomez", filename: "22_people_you_know.mp3" },
-  { title: "New Person, Same Old Mistakes", artist: "Tame Impala", filename: "23_new_person_same_old_mistakes.mp3" },
-  { title: "Gyalchester", artist: "Drake", filename: "24_gyalchester.mp3" },
-  { title: "Sour Candy", artist: "Lady Gaga & BLACKPINK", filename: "25_sour_candy.mp3" },
-  { title: "I Am A God", artist: "YE", filename: "26_i_am_a_god.mp3" },
-  { title: "Let It Happen (Soulwax Remix)", artist: "Tame Impala", filename: "27_let_it_happen_soul_wax_remix.mp3" },
-  { title: "Palm of My Hands", artist: "Zhu", filename: "28_palm_of_my_hands.mp3" },
-  { title: "8", artist: "Billie Eilish", filename: "29_8.mp3" },
-  { title: "Body Bag", artist: "Hit The Lights", filename: "30_body_bag.mp3" },
-  { title: "Overheated", artist: "Billie Eilish", filename: "31_overheated.mp3" },
-  { title: "Freak on a Leash", artist: "Korn", filename: "32_freak_on_a_leash.mp3" },
-  { title: "Stayin' Alive", artist: "Bee Gees", filename: "33_stayin_alive.mp3" },
-  { title: "The Man", artist: "Ed Sheeran", filename: "34_the_man_ed_sheeran.mp3" },
-  { title: "The Man", artist: "The Killers", filename: "35_the_man_the_killers.mp3" },
-  { title: "That's Exactly How I Feel", artist: "Lizzo", filename: "36_thats_exactly_how_i_feel.mp3" },
-  { title: "Fighter", artist: "Christina Aguilera", filename: "37_fighter.mp3" },
-  { title: "Trapped in a Box", artist: "No Doubt", filename: "38_trapped_in_a_box.mp3" },
-  { title: "Drug Dealer’s Dream", artist: "Rick Ross", filename: "39_drug_dealers_dream.mp3" },
-  { title: "King of the Clouds", artist: "Panic! At the Disco", filename: "40_king_of_the_clouds.mp3" },
-  { title: "Save That Shit", artist: "Lil Peep", filename: "41_save_that_shit.mp3" },
-  { title: "Welcome to Your Fantasy", artist: "Unknown", filename: "42_welcome_to_your_fantasy.mp3" },
-  { title: "Closer", artist: "Kings Of Leon", filename: "43_closer.mp3" },
-  { title: "Alien", artist: "YE", filename: "44_alien.mp3" },
-  { title: "Escapism", artist: "RAYE", filename: "45_escapism.mp3" },
-  { title: "Bring Back My Girls", artist: "RuPaul", filename: "46_bring_back_my_girls.mp3" },
-  { title: "Goats in Trees", artist: "Foster The People", filename: "47_goats_in_trees.mp3" },
-  { title: "I’m the Wave, Yes", artist: "Unknown", filename: "48_im_the_wave_yes.mp3" },
-  { title: "Communicator 4 Do It", artist: "Unknown", filename: "49_communicator_4_do_it.mp3" },
-  { title: "Nightmare", artist: "Halsey", filename: "50_nightmare.mp3" }
-];
-
-const tracksContainer = document.getElementById("soundtrack-tracks");
-soundtrackTracks.forEach((track, index) => {
-  const div = document.createElement("div");
-  div.className = "track";
-  div.innerHTML = `
-    <strong>${index + 1}. ${track.title}</strong> <em>by ${track.artist}</em><br/>
-    <audio controls src="${track.filename}"></audio>
-  `;
-  tracksContainer.appendChild(div);
-});
-
     // --- COVER ART LOGIC ---
     const customChapterCovers = {
       "chapter 1.mp4": "chapter 1.gif", "chapter 2.mp4": "chapter 2.gif", "chapter 3.mp4": "chapter 3.gif",
@@ -250,25 +218,28 @@ soundtrackTracks.forEach((track, index) => {
       "chapter 13.mp4": "chapter 13.gif", "chapter 14.mp4": "chapter 14.gif", "chapter 15.mp4": "chapter 15.gif",
       "chapter 16.mp4": "chapter 16.gif", "chapter 17.mp4": "chapter 17.gif", "chapter 18.mp4": "chapter 18.gif",
       "chapter 19.mp4": "chapter 19.gif", "chapter 20.mp4": "chapter 20.gif", "chapter 21.mp4": "chapter 21.gif"
-    };
+    };  
 
-// --- DISPLAY FILES FUNCTION ---
-// This will loop through your file arrays and display them in the grid
-function displayFiles(arr, grid, label) {
-  arr.forEach(file => {
-    const tile = document.createElement("div");
-    tile.className = "tile";
-    tile.textContent = file;  // The file name is shown on the tile
-    tile.onclick = () => openFile(file);
-    grid.appendChild(tile);
-  });
+// --- AUDIO CONTEXT ---
+const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+let audioSources=[], videoEls=[], schizAudio=null, spiralAudio=null, ttsUtterance=null;
+let unlocked = false, unlocked2 = false;
+
+// --- CUSTOM COVER LOGIC ---
+function getTileCover(f) {
+  // Custom: all .script.txt = galaxy.gif
+  if (f.endsWith('.script.txt')) return 'galaxy.gif';
+  // Custom chapter covers:
+  if (customChapterCovers[f]) return customChapterCovers[f];
+  // do you understand.mp4
+  if (f === 'do you understand.mp4') return 'do you understand.gif';
+  // Default
+  return 'spiral.gif';
 }
 
-// --- DISPLAY TILES FUNCTION (CUSTOM VERSION) ---
-// This is used when you want fancier tiles with images and numbers
+// --- DISPLAY TILES ---
 function displayTiles() {
   const grid = document.getElementById('puzzle-grid');
-
   // Happy galleries always at the top when unlocked
   let happyTiles = '';
   if (unlocked) {
@@ -285,88 +256,342 @@ function displayTiles() {
       <div class="tile-filename">happy gallery 2</div>
     </div>`;
   }
-
   // The rest of the tiles
   let mainTiles = files.map((f, i) => `
     <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
-      <div class="tile-number">${i + 1}</div>
+      <div class="tile-number">${i+1}</div>
       <img src="${getTileCover(f)}" alt="tile" />
       <div class="tile-filename">${f}</div>
     </div>
   `).join('');
-
   grid.innerHTML = happyTiles + mainTiles;
 }
 
-// --- INSERT SOUNDTRACK TILE ---
-// This function inserts the soundtrack tile into the grid at the beginning
-function insertSoundtrackTile(grid) {
-  const img = document.createElement("img");
-  img.src = "soundtrack.gif";  // Make sure to upload and reference this GIF
-  img.alt = "Soundtrack";
-  img.className = "tile tile-image";
-  img.onclick = () => {
-  document.getElementById("soundtrack-overlay").style.display = "block";
-};
-  grid.appendChild(img);
+// --- CLOSE CONTENT ---
+function closeContent() {
+  document.getElementById('content').style.display = 'none';
+  document.getElementById('puzzle-grid').style.display = 'flex';
+  document.querySelectorAll('#content-area audio, #content-area video').forEach(m => { m.pause && m.pause(); m.currentTime = 0; });
+  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
+  if (ttsUtterance) { window.speechSynthesis.cancel(); ttsUtterance = null; }
 }
 
-// --- BUTTON LOGIC ---
-// Example buttons: "BREAK THE SPIRAL" and "RANDOM"
+// --- BREAK THE SPIRAL ---
 function breakSpiral() {
-  console.log("Breaking the spiral...");  // Add your desired behavior here
+  playClickOnce();
+  // If the spiral is already active, stop and clear everything.
+  if (spiralAudio || videoEls.length) {
+    if (spiralAudio) {
+      spiralAudio.pause();
+      spiralAudio = null;
+    }
+    videoEls.forEach(v => v.remove());
+    videoEls = [];
+    document.getElementById('break-btn').textContent = 'BREAK THE SPIRAL';
+    return;
+  }
+
+  // Flash effect for fun
+  const flash = document.createElement('div');
+  Object.assign(flash.style, {
+    position: 'fixed', inset: 0, background: '#fff', opacity: 1, zIndex: 10000, transition: 'opacity 0.6s'
+  });
+  document.body.appendChild(flash);
+  requestAnimationFrame(() => flash.style.opacity = '0');
+  flash.addEventListener('transitionend', () => flash.remove());
+
+  // --- Play break the spiral.mp3 ---
+  spiralAudio = new Audio('break the spiral.mp3');
+  spiralAudio.loop = true;
+  spiralAudio.volume = 1.0;
+  spiralAudio.play();
+
+  // --- Show floating videos from main video files ---
+  files.filter(f => /\.(mp4|mov)$/i.test(f)).forEach(file => {
+    const v = document.createElement('video');
+    v.src = file;
+    v.autoplay = v.loop = true;
+    v.muted = true;
+    const size = 100 + Math.random() * 200;
+    Object.assign(v.style, {
+      position: 'fixed',
+      width: size + 'px',
+      top: Math.random() * (window.innerHeight - size) + 'px',
+      left: Math.random() * (window.innerWidth - size) + 'px',
+      zIndex: 999,
+      pointerEvents: 'none',
+      borderRadius: '22px',
+      boxShadow: '0 0 18px #000c'
+    });
+    document.body.appendChild(v);
+    videoEls.push(v);
+  });
+
+  document.getElementById('break-btn').textContent = 'STOP SPIRAL';
 }
 
+// --- RANDOM BUTTON ---
 function openRandom() {
-  const idx = Math.floor(Math.random() * files.length);  // Randomly select a file from the array
-  alert("Random file: " + files[idx]);
+  const idx = Math.floor(Math.random() * files.length);
+  openFile(files[idx]);
 }
 
-// --- START SITE FUNCTION ---
-// This shows the main puzzle grid and hides the entry overlay
+// --- ENTRY LOGIC ---
+window.addEventListener('DOMContentLoaded', () => {
+  displayTiles();
+  document.getElementById('break-btn').onclick  = breakSpiral;
+  document.getElementById('random-btn').onclick = openRandom;
+
+  // ✅ ENTER button logic here
+  document.getElementById('enter-btn').onclick = function() {
+    document.getElementById('entry-screen').style.display = 'none';
+    document.getElementById('wheel-overlay').style.display = 'flex';
+    let entryAudio = document.getElementById('entry-audio');
+    if (entryAudio) { entryAudio.pause(); entryAudio.currentTime = 0; }
+  };
+});
+
+// --- EMOTIONAL WHEEL LOGIC ---
 function startSite() {
   document.getElementById('wheel-overlay').style.display = 'none';
   document.getElementById('puzzle-grid').style.display = 'flex';
   document.getElementById('break-btn').style.display = 'block';
+  document.getElementById('random-btn').style.display = 'block';
 }
 
-// --- ENTER BUTTON LOGIC ---
-// On ENTER button click, hide entry screen and show the overlay
-document.getElementById('enter-btn').onclick = function() {
-  document.getElementById('entry-screen').style.display = 'none';
-  document.getElementById('wheel-overlay').style.display = 'flex';
-  let entryAudio = document.getElementById('entry-audio');
-  if (entryAudio) {
-    entryAudio.pause();
-    entryAudio.currentTime = 0;
+// --- CLICK SOUND ---
+function playClickOnce() {
+  const a = document.getElementById('click-sound');
+  if (a) { a.currentTime = 0; a.play(); }
+}
+
+// --- SCHIZOPHRENIA BUTTON LOGIC ---
+function playSchizophrenia() {
+  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
+  schizAudio = new Audio('schizophrenia.mp3');
+  schizAudio.loop = true;
+  schizAudio.volume = 1.0;
+  schizAudio.addEventListener('loadedmetadata', () => {
+    if (schizAudio.duration > 3) {
+      schizAudio.currentTime = Math.random() * (schizAudio.duration - 2);
+    }
+    schizAudio.play();
+  });
+  schizAudio.play();
+}
+
+// --- TEXT-TO-SPEECH FOR SCRIPTS ---
+let ttsVoices = [];
+function loadVoices() {
+  ttsVoices = window.speechSynthesis.getVoices();
+  // Some browsers require this hack to load voices the first time:
+  if (!ttsVoices.length) setTimeout(loadVoices, 150);
+}
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+}
+function speakScript(text, voiceIdx) {
+  if (!window.speechSynthesis) return;
+  if (ttsUtterance) window.speechSynthesis.cancel();
+  ttsUtterance = new SpeechSynthesisUtterance(text);
+  if (ttsVoices[voiceIdx]) ttsUtterance.voice = ttsVoices[voiceIdx];
+  ttsUtterance.rate = 1.0;
+  window.speechSynthesis.speak(ttsUtterance);
+}
+function stopSpeakScript() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  ttsUtterance = null;
+}
+
+// --- OPEN / CLOSE CONTENT ---
+function openFile(file) {
+  playClickOnce();
+  // Happy gallery handling
+  if (file === "happy gallery") {
+    openHappyFileList(happyFiles, "happy gallery");
+    return;
   }
-};
+  if (file === "happy gallery 2") {
+    openHappyFileList(happyFiles2, "happy gallery 2");
+    return;
+  }
+  const grid    = document.getElementById('puzzle-grid');
+  const content = document.getElementById('content');
+  const area    = document.getElementById('content-area');
+  document.getElementById('file-name').innerText = file;
+  area.innerHTML = '';
+  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
+  if (ttsUtterance) { window.speechSynthesis.cancel(); ttsUtterance = null; }
+  const ext = file.split('.').pop().toLowerCase();
+  // Audio
+  if (['mp3','wav','m4a'].includes(ext)) {
+    area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
+  }
+  // Script
+  else if (file.endsWith('.script.txt')) {
+    area.innerHTML = `
+      <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
+      <select class="voice-select" id="voiceSelect"></select>
+      <button class="tts-btn" onclick="doSpeakScript()">Speak</button>
+      <button class="stop-btn" onclick="stopSpeakScript()">Stop</button>
+      <div style="color:#fff;">Loading script…</div>`;
+    fetch(file).then(r => r.text()).then(txt => {
+      area.innerHTML = `
+        <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
+        <select class="voice-select" id="voiceSelect"></select>
+        <button class="tts-btn" onclick="doSpeakScript()">Speak</button>
+        <button class="stop-btn" onclick="stopSpeakScript()">Stop</button>
+        <pre>${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
+        <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>`;
+      loadVoicesToSelect();
+    });
+  }
+  // Video
+  else {
+    area.innerHTML = `
+      <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+        <video id="main-video" controls autoplay src="${file}" style="max-width:92vw;max-height:74vh;border-radius:12px;"></video>
+        <div>
+          <label>Speed:
+            <select id="video-speed" onchange="setVideoSpeed()">
+              <option value="0.5">0.5x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+          </label>
+        </div>
+      </div>
+    `;
+    const vid = area.querySelector('#main-video');
+    if (file === 'do you understand.mp4') {
+      vid.loop = false;
+      vid.onended = () => {
+        if (!unlocked) {
+          unlocked = true;
+          displayTiles();
+          alert('🔓 Happy gallery 1 unlocked!');
+        } else if (!unlocked2) {
+          unlocked2 = true;
+          displayTiles();
+          alert('🔓 Happy gallery 2 unlocked!');
+        }
+      };
+    } else {
+      vid.loop = true;
+    }
+  }
+  grid.style.display    = 'none';
+  content.style.display = 'flex';
+}
 
-// --- INIT FUNCTION ---
-// This function initializes the grid and the tiles after the page has loaded
-window.addEventListener('DOMContentLoaded', () => {
-  const grid = document.getElementById("puzzle-grid");
+// --- TTS LOGIC: LOAD VOICES ---
+function loadVoicesToSelect() {
+  const select = document.getElementById('voiceSelect');
+  if (!select) return;
+  select.innerHTML = '';
+  ttsVoices.forEach((voice, idx) => {
+    select.innerHTML += `<option value="${idx}">${voice.name} (${voice.lang})</option>`;
+  });
+}
+function doSpeakScript() {
+  const pre = document.querySelector('#content-area pre');
+  const select = document.getElementById('voiceSelect');
+  if (pre && select) speakScript(pre.innerText, select.value);
+}
 
-  insertSoundtrackTile(grid);  // ⬅️ Insert the soundtrack tile FIRST in the grid
-  displayFiles(files, grid, "default");  // 📁 Main files array
+// --- SPEED BUTTON LOGIC ---
+function setVideoSpeed() {
+  const v = document.getElementById('main-video');
+  const s = document.getElementById('video-speed');
+  if (v && s) v.playbackRate = parseFloat(s.value);
+}
 
-  document.getElementById('break-btn').onclick = breakSpiral;  // ⬅️ Button functionality for breaking the spiral
-  document.getElementById('random-btn').onclick = openRandom;  // ⬅️ Button functionality for random file selection
-});
-</script>
-<!-- 🎵 SOUNDTRACK OVERLAY CONTAINER -->
-<div id="soundtrack-overlay" class="overlay" style="display:none;">
-  <div class="soundtrack-container">
-    <h2>🖤 Official HELL-MOUTH Soundtrack</h2>
+// --- HAPPY FILES LOGIC ---
+function openHappyFileList(fileArray, galleryTitle) {
+  const grid    = document.getElementById('puzzle-grid');
+  const content = document.getElementById('content');
+  const area    = document.getElementById('content-area');
+  document.getElementById('file-name').innerText = galleryTitle;
 
-    <button onclick="document.getElementById('soundtrack-overlay').style.display='none'">
-      Close
-    </button>
-
-    <div id="soundtrack-tracks">
-      <!-- JavaScript will populate this section -->
+  area.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;gap:14px;margin:30px 0;">
+      <h2 style="color:#FFD700;">${galleryTitle.replace(/gallery/i,'Happy Gallery')}</h2>
+      <div class="happy-file-list" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+        ${fileArray.map((f, i) => `
+          <button onclick="openSingleHappyVideo('${f.replace(/'/g,"\\'")}', '${galleryTitle}')" 
+                  style="background:#111;color:#FFD700;font-size:1.1em;border:2px solid #FFD700;border-radius:10px;padding:8px 24px;cursor:pointer;min-width:240px;">
+            ${i+1}. ${f}
+          </button>
+        `).join('')}
+      </div>
     </div>
-  </div>
-</div>
+    <div id="happy-video-modal" style="display:none;position:fixed;inset:0;z-index:5000;background:#000E;align-items:center;justify-content:center;">
+      <video id="happy-modal-video" controls autoplay loop style="max-width:92vw;max-height:78vh;border-radius:16px;"></video>
+      <div style="margin-top:12px;text-align:center;">
+        <label>Speed: 
+          <select id="happy-video-speed" onchange="setHappyVideoSpeed()">
+            <option value="0.5">0.5x</option>
+            <option value="1" selected>1x</option>
+            <option value="1.5">1.5x</option>
+            <option value="2">2x</option>
+          </select>
+        </label>
+      </div>
+      <button onclick="closeHappyModal()" style="position:absolute;top:30px;right:40px;font-size:2em;padding:8px 24px;background:#FFD700;color:#111;border:none;border-radius:10px;cursor:pointer;">CLOSE</button>
+    </div>
+  `;
+  grid.style.display    = 'none';
+  content.style.display = 'flex';
+}
+
+function openSingleHappyVideo(file, galleryTitle) {
+  const modal = document.getElementById('happy-video-modal');
+  const vid = document.getElementById('happy-modal-video');
+  vid.src = file;
+  vid.currentTime = 0;
+  vid.play();
+  modal.style.display = 'flex';
+}
+
+function closeHappyModal() {
+  const modal = document.getElementById('happy-video-modal');
+  const vid = document.getElementById('happy-modal-video');
+  vid.pause();
+  vid.src = '';
+  modal.style.display = 'none';
+}
+
+function setHappyVideoSpeed() {
+  const v = document.getElementById('happy-modal-video');
+  const s = document.getElementById('happy-video-speed');
+  if (v && s) v.playbackRate = parseFloat(s.value);
+}
+
+// --- COPY SCRIPT BUTTON ---
+function copyScript() {
+  const pre = document.querySelector('#content-area pre');
+  if (pre) {
+    navigator.clipboard.writeText(pre.innerText);
+    alert('Script copied!');
+  }
+}
+
+// --- INIT ---
+window.addEventListener('DOMContentLoaded', () => {
+  displayTiles();
+  document.getElementById('break-btn').onclick  = breakSpiral;
+  document.getElementById('random-btn').onclick = openRandom;
+});
+  
+document.getElementById('break-btn').addEventListener('click', () => {
+  document.getElementById('puzzle-grid').style.display = 'flex';
+  displayTiles();
+});
+
+</script>
 </body>
 </html>
+
+
