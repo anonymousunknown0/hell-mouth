@@ -254,8 +254,8 @@ function displayTiles() {
   const grid = document.getElementById('puzzle-grid');
   // Happy galleries always at the top when unlocked
   let happyTiles = '';
-  if (unlocked) {
-  html += `
+if (unlocked) {
+  happyTiles += `
     <div class="tile" onclick="checkPasswordAndOpen(1)">
       <div class="tile-number">💌</div>
       <img src="gallery.gif" class="tile-image" />
@@ -263,7 +263,7 @@ function displayTiles() {
     </div>`;
 }
 if (unlocked2) {
-  html += `
+  happyTiles += `
     <div class="tile" onclick="checkPasswordAndOpen(2)">
       <div class="tile-number">🎁</div>
       <img src="gallery.gif" class="tile-image" />
