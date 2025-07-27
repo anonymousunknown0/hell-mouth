@@ -126,6 +126,18 @@
   <script>
   // --------- JS CODE STARTS HERE ---------
 
+function checkPasswordAndOpen(galleryNum) {
+  const password = prompt("Enter password to access this gallery:");
+  const correctPassword = galleryNum === 1 ? "gallery1" : "gallery2";
+
+  if (password === correctPassword) {
+    openGallery(galleryNum);
+  } else if (password !== null) {
+    alert("Incorrect password.");
+  }
+}
+
+
 const files = [
   "scene 5 meet the voices.script.txt", "scene 4 what hunter believes explained.script.txt",
   "scene 3 meet hunter hardon.script.txt", "scene 21 THE SPECTRAL ARCHIVE.script.txt",
@@ -201,13 +213,7 @@ const happyFiles = [
   "only for you.happy.mp4",
 "bbc swinging.happy.mp4",
   "roommates.happy.mp4", "19 candles.happy.mp4",
-"even god needs a hand.happy.mp4", "gentlemen play pool.happy.mp4", "milkshake.happy.mp4", "its dark in here.happy.mp4",
-  "released.happy.mp4",
-  "video game break.happy.mp4",
-  "hand on your head.happy.mp4",
-"both of us.happy.mp4",
-  "signal.happy.mp4", "thin walls.happy.mp4",
-"one for one for one.happy.mp4", "locker room.happy.mp4", "bigboyalone.happy.mp4", “room for two.happy.mp4”
+"even god needs a hand.happy.mp4", "milkshake.happy.mp4"
 ];
 
     // --- COVER ART LOGIC ---
@@ -243,19 +249,21 @@ function displayTiles() {
   // Happy galleries always at the top when unlocked
   let happyTiles = '';
   if (unlocked) {
-    happyTiles += `<div class="tile" onclick="openFile('happy gallery')">
-      <div class="tile-number">🎉</div>
-      <img src="happy.gif" alt="happy" />
-      <div class="tile-filename">happy gallery</div>
+  html += `
+    <div class="tile" onclick="checkPasswordAndOpen(1)">
+      <div class="tile-number">💌</div>
+      <img src="gallery.gif" class="tile-image" />
+      <div class="tile-filename">HappyFiles 1</div>
     </div>`;
-  }
-  if (unlocked2) {
-    happyTiles += `<div class="tile" onclick="openFile('happy gallery 2')">
-      <div class="tile-number">🎈</div>
-      <img src="happy.gif" alt="happy" />
-      <div class="tile-filename">happy gallery 2</div>
+}
+if (unlocked2) {
+  html += `
+    <div class="tile" onclick="checkPasswordAndOpen(2)">
+      <div class="tile-number">🎁</div>
+      <img src="gallery.gif" class="tile-image" />
+      <div class="tile-filename">HappyFiles 2</div>
     </div>`;
-  }
+}
   // The rest of the tiles
   let mainTiles = files.map((f, i) => `
     <div class="tile" onclick="openFile('${f.replace(/'/g,"\\'")}')">
