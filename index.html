@@ -247,9 +247,7 @@
     <button class="emotion-btn" onclick="startSite()">Nostalgia</button>
   </div>
   <button id="schiz-btn-top" onclick="playSchizophrenia()" style="display:block; margin:22px auto 0 auto; padding:11px 32px; font-size:1.12em; font-weight:bold; border:2.5px solid #ff5252; border-radius:13px; background:#111; color:#ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s;">SCHIZOPHRENIA</button>
-  <div class="puzzle-grid" id="puzzle-grid">
-  <!-- 🔮 Injected glossary tile container -->
-</div>
+  
   <button id="break-btn">BREAK THE SPIRAL</button>
   <button id="random-btn">random</button>
   <div id="content">
@@ -258,6 +256,9 @@
     <button class="close-btn" onclick="closeContent()">CLOSE</button>
   </div>
   <audio id="click-sound" src="click.mp3" preload="auto"></audio>
+
+<div class="puzzle-grid" id="puzzle-grid">
+
   <script>
   // --------- JS CODE STARTS HERE ---------
 
@@ -354,6 +355,23 @@ const happyFiles = [
       "chapter 16.mp4": "chapter 16.gif", "chapter 17.mp4": "chapter 17.gif", "chapter 18.mp4": "chapter 18.gif",
       "chapter 19.mp4": "chapter 19.gif", "chapter 20.mp4": "chapter 20.gif", "chapter 21.mp4": "chapter 21.gif"
     };  
+
+files.forEach(file => {
+  const tile = document.createElement("div");
+  tile.className = "tile";
+  tile.textContent = file.replace(/\.(script\.txt|mp4)$/, ""); // cleaner names
+  tile.onclick = () => {
+    if (file.endsWith(".mp4")) {
+      playVideo(file);
+    } else {
+      openScript(file);
+    }
+  };
+  document.getElementById("puzzle-grid").appendChild(tile);
+});
+</script>
+
+</div>
 
 // --- AUDIO CONTEXT ---
 const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
