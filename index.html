@@ -835,40 +835,20 @@ document.getElementById('break-btn').addEventListener('click', () => {
 <div class="glossary-tile" onclick="openGlossaryPopup('THE CURSOR', 'A blinking artifact that chooses what gets said next. It may live in your mouth, your phone, your dreams. When it disappears, you panic. When it returns, you lie.')">THE CURSOR</div>
 
 <script>
-  let currentTTS = "";
+  window.onload = function () {
+    document.getElementById('enter-btn').onclick = function () {
+      document.getElementById('entry-screen').style.display = 'none';
+      document.getElementById('wheel-overlay').style.display = 'flex';
 
-  function openGlossaryPopup(term, definition) {
-    const popup = document.getElementById("glossary-popup");
-    const content = document.getElementById("glossary-content");
-    currentTTS = definition;
-    content.innerHTML = `<h2>${term}</h2><p>${definition}</p>`;
-    popup.style.display = "block";
-  }
-
-  function closePopup() {
-    document.getElementById("glossary-popup").style.display = "none";
-    document.getElementById("glossary-content").innerHTML = "";
-  }
-
-  function playTTS() {
-    const utterance = new SpeechSynthesisUtterance(currentTTS);
-    speechSynthesis.speak(utterance);
-  }
-
-document.getElementById('enter-btn').onclick = function () {
-  document.getElementById('entry-screen').style.display = 'none';
-  document.getElementById('wheel-overlay').style.display = 'flex';
-
-  // Fade out entry audio
-  let entryAudio = document.getElementById('entry-audio');
-  if (entryAudio) {
-    entryAudio.pause();
-    entryAudio.currentTime = 0;
-  }
-};
-
+      let entryAudio = document.getElementById('entry-audio');
+      if (entryAudio) {
+        entryAudio.pause();
+        entryAudio.currentTime = 0;
+      }
+    };
+  };
 </script>
-
+    
 <div id="glossary-popup" class="glossary-popup">
   <button class="tts-button" onclick="playTTS()">🔊 Read Aloud</button>
   <div class="close-btn" onclick="closePopup()">✕</div>
