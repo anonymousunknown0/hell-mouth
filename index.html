@@ -239,7 +239,7 @@
   </div>
   <button id="schiz-btn-top" onclick="playSchizophrenia()" style="display:block; margin:22px auto 0 auto; padding:11px 32px; font-size:1.12em; font-weight:bold; border:2.5px solid #ff5252; border-radius:13px; background:#111; color:#ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s;">SCHIZOPHRENIA</button>
   <div class="puzzle-grid" id="puzzle-grid">
-  <div id="glossary-grid"></div> <!-- 🔮 Injected glossary tile container -->
+  <!-- 🔮 Injected glossary tile container -->
 </div>
   <button id="break-btn">BREAK THE SPIRAL</button>
   <button id="random-btn">random</button>
@@ -402,7 +402,15 @@ function displayTiles() {
     <div class="tile-filename">Soundtrack</div>
   </div>`;
 
-grid.innerHTML = happyTiles + mainTiles;
+let glossaryTiles = Object.entries(glossaryTerms).map(([term, def]) => `
+  <div class="tile glossary-tile" onclick="openPopup('${term.replace(/'/g,"\\'")}', \`${def.replace(/`/g,"\\`")}\`)">
+    <div class="tile-number">📖</div>
+    <img src="spiral.gif" class="tile-image" />
+    <div class="tile-filename">${term}</div>
+  </div>
+`).join('');
+
+grid.innerHTML = happyTiles + glossaryTiles + mainTiles + soundtrackTile;
 }
 
 // --- CLOSE CONTENT ---
@@ -794,20 +802,6 @@ const glossaryTerms = {
   "THE COLLECTIVE PLAYER SELECT": "Character screen where voices select...",
   "DAY 6 / DAY 10": "Mirrored realms. One is breakdown..."
 };
-
-document.addEventListener('DOMContentLoaded', () => {
-  const glossaryGrid = document.getElementById('glossary-grid');
-  const popup = document.getElementById('glossary-popup');
-  const content = document.getElementById('glossary-content');
-
-  Object.entries(glossaryTerms).forEach(([term, def]) => {
-    const tile = document.createElement('div');
-    tile.className = 'glossary-tile';
-    tile.innerText = term;
-    tile.onclick = () => openPopup(term, def);
-    glossaryGrid.appendChild(tile);
-  });
-});
 
 function openPopup(term, def) {
   content.innerHTML = `<h2>${term}</h2><p>${def}</p>`;
