@@ -79,6 +79,18 @@
     .happy-file-list button { margin-bottom:4px;}
     @media(max-width:800px){ .tile { width:92vw; height:20vw; min-height:80px; } #break-btn,#random-btn { font-size:1.4em; padding:8px 24px; bottom:12px; } }
 
+.tile.glossary-tile {
+  border: 2px solid white;
+  animation: flicker 1.5s infinite;
+  background-color: rgba(255,255,255,0.05);
+  cursor: pointer;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
 .glossary-tile {
   background: black;
   color: white;
@@ -282,6 +294,50 @@ const files = [
   "door opened, door closed.mp4", "going back to the workroom.mp4", "74 kylie jenner.mp4", "right now im naughty naughty.mp4", "kim kardashian.mp4", "the cum spiral.mp4", "chapter 21.mp4", "do you understand.mp4"
 ];
 
+// Glossary tiles (these will be added at the end of the grid)
+const glossaryTiles = [
+  {
+    term: "THE SYSTEM",
+    definition: "The invisible web of institutions, algorithms, and social pressures that reinforce reality as consensus. Also a character. Often silent. Always listening."
+  },
+  {
+    term: "THE BLACK VOID",
+    definition: "A symbolic location of nothingness, ego-death, and waiting. Where Hunter’s thoughts echo back distorted. Where meaning breaks down and recomposes."
+  },
+  {
+    term: "THE SPIRAL",
+    definition: "The looping, often self-inflicted descent into obsession, mania, or disconnection. A visual and emotional motif across all episodes."
+  },
+  {
+    term: "THE DEMON",
+    definition: "Hunter’s inner critic, intrusive thoughts, and tempting offers, personified. Often disguised as opportunity. Also plays multiple roles across the story."
+  },
+  {
+    term: "THE PRODUCERS",
+    definition: "Voice-of-God-like influencers in Hunter’s head. Sometimes helpful, sometimes manipulative. A metaphor for cultural pressure and the gaze of celebrity media."
+  },
+  {
+    term: "THOUGHT BROADCASTING",
+    definition: "A symptom of schizophrenia where the person believes their thoughts are being projected aloud or shared with others. Here, it becomes a mythic and literal reality."
+  },
+  {
+    term: "THE WHEEL",
+    definition: "The emotional wheel that controls tone, mood, and fate in the story. Selecting an emotion influences what scene loads next. A gamified emotional landscape."
+  },
+  {
+    term: "PHANTOM COMMUNICATION SYSTEM",
+    definition: "The imagined (or real?) network that transmits Hunter’s thoughts to others—through phones, TVs, cameras, or unknown frequencies. The engine of paranoia and performance."
+  },
+  {
+    term: "DADDY COLLAPSE",
+    definition: "A seductive, chaotic demon (also known as Protocol) who tempts Hunter with destruction disguised as fame, or freedom, or both. Appears charismatic and calm."
+  },
+  {
+    term: "THE NARRATOR",
+    definition: "A mythic voice who comments on the story from outside. Part Greek chorus, part inner voice, part unreliable elder. Sarcastic. Occasionally kind. Possibly you."
+  }
+];
+
 const happyFiles = [
       "latino heat.happy.mp4","piss is hot.happy.mp4","the shower scene.happy.mp4",
       "no smoking.happy.mp4","meet jack.happy.mp4","drip.happy.mp4","talk the talk.happy.mp4","demon teen.happy.mp4",
@@ -386,14 +442,20 @@ function displayTiles() {
       </div>`;
   }
 
-  // The rest of the tiles
-  let mainTiles = files.map((f, i) => `
-    <div class="tile" onclick="openFile('${f.replace(/'/g, "\\'")}')">
-      <div class="tile-number">${i + 1}</div>
-      <img src="${getTileCover(f)}" alt="tile" />
-      <div class="tile-filename">${f}</div>
-    </div>
-  `).join('');
+let mainTiles = files.map((f, i) => `
+  <div class="tile" onclick="openFile('${f.replace(/'/g, "\\'")}')">
+    <div class="tile-number">${i + 1}</div>
+    <img src="${getTileCover(f)}" alt="tile" />
+    <div class="tile-filename">${f}</div>
+  </div>
+`).join('');
+
+// Add glossary tiles
+mainTiles += glossaryTiles.map(item => `
+  <div class="tile glossary-tile" onclick="openGlossaryPopup('${item.term}', \`${item.definition}\`)">
+    <div class="tile-label">${item.term}</div>
+  </div>
+`).join('');
 
   let soundtrackTile = `
   <div class="tile" onclick="openSoundtrack()">
@@ -402,7 +464,7 @@ function displayTiles() {
     <div class="tile-filename">Soundtrack</div>
   </div>`;
 
-grid.innerHTML = happyTiles + mainTiles;
+grid.innerHTML = happyTiles + mainTiles + soundtrackTile;
 }
 
 // --- CLOSE CONTENT ---
@@ -772,69 +834,35 @@ document.getElementById('break-btn').addEventListener('click', () => {
   displayTiles();
 });
 
-const glossaryTerms = {
-  "THE SYSTEM": "A phantom infrastructure layered over reality...",
-  "THE PHANTOM COMMUNICATION SYSTEM": "The central mythos...",
-  "THE MANY": "The amorphous crowd inside your head...",
-  "THE EXTERNALS": "High-profile, extra-dimensional users...",
-  "THE COLLECTIVE": "A corporate-demonic council...",
-  "THE PRODUCERS": "Your inner showrunners...",
-  "THE VOICES": "Not thoughts. Not sounds. A frequency...",
-  "THE PLAYER": "You. The gamified version of you...",
-  "REALITY XX07": "Base reality. Earth-standard physics...",
-  "REALITY XX09": "Your private multiverse...",
-  "THE GOLDEN BRAIN": "A trophy-like artifact...",
-  "THE VAPE OF TRUTH": "A sentient vape pen...",
-  "THE RECORDING DEVICE": "Captures voice memos, hallucinated thoughts...",
-  "THE KNIFE": "An object of punctuation...",
-  "THE SUICIDE MANSION": "Imagined Airbnb...",
-  "THE TAR PIT GATEWAY": "Wormhole entry point...",
-  "CUMMING, PART I & II": "Erotic spells and sacred notes...",
-  "THE EMOTIONAL WHEEL": "Mythical game show roulette...",
-  "THE COLLECTIVE PLAYER SELECT": "Character screen where voices select...",
-  "DAY 6 / DAY 10": "Mirrored realms. One is breakdown..."
-};
+// --- GLOSSARY POPUP LOGIC ---
+let currentTTS = "";
 
-document.addEventListener('DOMContentLoaded', () => {
-  const glossaryGrid = document.getElementById('glossary-grid');
-  const popup = document.getElementById('glossary-popup');
-  const content = document.getElementById('glossary-content');
-
-  Object.entries(glossaryTerms).forEach(([term, def]) => {
-    const tile = document.createElement('div');
-    tile.className = 'glossary-tile';
-    tile.innerText = term;
-    tile.onclick = () => openPopup(term, def);
-    glossaryGrid.appendChild(tile);
-  });
-});
-
-function openPopup(term, def) {
-  content.innerHTML = `<h2>${term}</h2><p>${def}</p>`;
-  popup.style.display = 'block';
-  currentTTS = def;
+function openGlossaryPopup(term, definition) {
+  const popup = document.getElementById("glossary-popup");
+  const content = document.getElementById("glossary-content");
+  currentTTS = definition;
+  content.innerHTML = `<h2>${term}</h2><p>${definition}</p>`;
+  popup.style.display = "block";
 }
 
 function closePopup() {
-  popup.style.display = 'none';
-  content.innerHTML = '';
+  document.getElementById("glossary-popup").style.display = "none";
+  document.getElementById("glossary-content").innerHTML = "";
 }
 
-let currentTTS = '';
 function playTTS() {
   const utterance = new SpeechSynthesisUtterance(currentTTS);
   speechSynthesis.speak(utterance);
 }
 
 </script>
-<div id="glossary-popup" class="glossary-popup">
-  <button class="tts-button" onclick="playTTS()">🔊 Read Aloud</button>
-  <div class="close-btn" onclick="closePopup()">✕</div>
-  <div id="glossary-content"></div>
-  <div class="cursor"></div>
+<div id="glossary-popup" style="display: none;" class="popup">
+  <div class="popup-content">
+    <span class="close-button" onclick="closePopup()">✖</span>
+    <div id="glossary-content"></div>
+    <button onclick="playTTS()">🔊 Read Aloud</button>
+  </div>
 </div>
 </body>
 </html>
-
-
 
