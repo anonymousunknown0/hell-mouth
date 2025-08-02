@@ -14,7 +14,28 @@
       overflow-x: hidden;
       min-height: 100vh;
     }
-    
+    #entry-screen {
+      position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+      background: #000; z-index: 9999; flex-direction: column; overflow: hidden;
+    }
+    #entry-screen video#entry-bg-video {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1;
+    }
+    #entry-screen audio { display: none; }
+    #entry-screen h1 {
+      color: #ff0000;
+      font-size: 6rem;
+      font-weight: 900;
+      letter-spacing: 2rem;
+      text-align: center;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+      filter: blur(1px) contrast(130%);
+      font-family: Impact, 'Arial Black', sans-serif;
+      text-shadow: 0 3px 0 #fff1, 0 10px 15px #e00c, 0 20px 30px #600b;
+      line-height: .9;
+      animation: melt 3s infinite alternate cubic-bezier(.8,0,.2,1);
+    }
     @keyframes melt {
       0%   { text-shadow: 0 0 0 #000, 0 0 0 #f00; }
       20%  { text-shadow: 0 2px 0 #c00, 0 6px 8px #e11; }
@@ -24,7 +45,11 @@
       85%  { text-shadow: 0 1px 0 #f00, 0 4px 8px #900; }
       100% { text-shadow: 0 0 0 #000, 0 0 0 #f00; }
     }
-    
+    #entry-screen button { padding: 14px 40px; font-size: 1.4rem; background: #000; color: #fff; border: 3px solid #fff; border-radius: 12px; cursor: pointer; }
+    #wheel-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; flex-wrap: wrap; align-items: center; justify-content: center; z-index: 9998; color: #ffd700; text-align: center; padding: 20px; text-transform: capitalize; }
+    #wheel-overlay h1 { flex-basis: 100%; font-size: 2rem; margin-bottom: 1rem; }
+    .emotion-btn { background: #222; color: #ffd700; border: 2px solid #ffd700; border-radius: 12px; padding: 12px 24px; margin: 6px; font-size: 1rem; cursor: pointer; flex: 1 0 120px; transition: background 0.2s, color 0.2s; }
+    .emotion-btn:hover { background: #ffd700; color: #111; }
     .puzzle-grid { display: none; flex-wrap: wrap; justify-content: center; gap: 14px; padding: 30px 10px 140px 10px; }
     .tile { position: relative; width: 190px; height: 106px; background: rgba(0,0,0,0.15); border: 2px solid #fff; border-radius: 20px; box-shadow: 0 0 16px #0008; cursor: pointer; overflow: hidden; transition: transform 0.18s, box-shadow 0.18s; }
     .tile img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
@@ -189,9 +214,42 @@
   </style>
 </head>
 <body>
-    
+  <div id="entry-screen">
+    <video id="entry-bg-video" autoplay loop muted playsinline>
+      <source src="5 hypnotize.mp4" type="video/mp4">
+    </video>
+    <audio id="entry-audio" src="let me in.mp3" autoplay loop></audio>
+    <h1>H E L L M O U T H</h1>
+    <button id="enter-btn">ENTER</button>
+  </div>
+  <div id="wheel-overlay">
+    <h1>Pick an Emotion to Enter</h1>
+    <!-- EMOTIONS LIST (customize if needed) -->
+    <button class="emotion-btn" onclick="startSite()">Joy</button>
+    <button class="emotion-btn" onclick="startSite()">Sadness</button>
+    <button class="emotion-btn" onclick="startSite()">Anger</button>
+    <button class="emotion-btn" onclick="startSite()">Fear</button>
+    <button class="emotion-btn" onclick="startSite()">Surprise</button>
+    <button class="emotion-btn" onclick="startSite()">Disgust</button>
+    <button class="emotion-btn" onclick="startSite()">Trust</button>
+    <button class="emotion-btn" onclick="startSite()">Anticipation</button>
+    <button class="emotion-btn" onclick="startSite()">Love</button>
+    <button class="emotion-btn" onclick="startSite()">Shame</button>
+    <button class="emotion-btn" onclick="startSite()">Pride</button>
+    <button class="emotion-btn" onclick="startSite()">Envy</button>
+    <button class="emotion-btn" onclick="startSite()">Guilt</button>
+    <button class="emotion-btn" onclick="startSite()">Hope</button>
+    <button class="emotion-btn" onclick="startSite()">Boredom</button>
+    <button class="emotion-btn" onclick="startSite()">Confusion</button>
+    <button class="emotion-btn" onclick="startSite()">Calm</button>
+    <button class="emotion-btn" onclick="startSite()">Anxiety</button>
+    <button class="emotion-btn" onclick="startSite()">Awe</button>
+    <button class="emotion-btn" onclick="startSite()">Nostalgia</button>
+  </div>
   <button id="schiz-btn-top" onclick="playSchizophrenia()" style="display:block; margin:22px auto 0 auto; padding:11px 32px; font-size:1.12em; font-weight:bold; border:2.5px solid #ff5252; border-radius:13px; background:#111; color:#ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s;">SCHIZOPHRENIA</button>
-  
+  <div class="puzzle-grid" id="puzzle-grid">
+  <!-- 🔮 Injected glossary tile container -->
+</div>
   <button id="break-btn">BREAK THE SPIRAL</button>
   <button id="random-btn">random</button>
   <div id="content">
@@ -200,9 +258,6 @@
     <button class="close-btn" onclick="closeContent()">CLOSE</button>
   </div>
   <audio id="click-sound" src="click.mp3" preload="auto"></audio>
-
-<div class="puzzle-grid" id="puzzle-grid"></div>
-
   <script>
   // --------- JS CODE STARTS HERE ---------
 
@@ -299,21 +354,6 @@ const happyFiles = [
       "chapter 16.mp4": "chapter 16.gif", "chapter 17.mp4": "chapter 17.gif", "chapter 18.mp4": "chapter 18.gif",
       "chapter 19.mp4": "chapter 19.gif", "chapter 20.mp4": "chapter 20.gif", "chapter 21.mp4": "chapter 21.gif"
     };  
-
-files.forEach(file => {
-  const tile = document.createElement("div");
-  tile.className = "tile";
-  tile.textContent = file.replace(/\.(script\.txt|mp4)$/, ""); // cleaner names
-  tile.onclick = () => {
-    if (file.endsWith(".mp4")) {
-      playVideo(file);
-    } else {
-      openScript(file);
-    }
-  };
-  document.getElementById("puzzle-grid").appendChild(tile);
-});
-</script>
 
 // --- AUDIO CONTEXT ---
 const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
@@ -449,6 +489,23 @@ function breakSpiral() {
 function openRandom() {
   const idx = Math.floor(Math.random() * files.length);
   openFile(files[idx]);
+}
+
+// --- ENTRY LOGIC ---
+document.getElementById('enter-btn').onclick = function() {
+  document.getElementById('entry-screen').style.display = 'none';
+  document.getElementById('wheel-overlay').style.display = 'flex';
+  // Fade out entry audio
+  let entryAudio = document.getElementById('entry-audio');
+  if (entryAudio) { entryAudio.pause(); entryAudio.currentTime = 0; }
+};
+
+// --- EMOTIONAL WHEEL LOGIC ---
+function startSite() {
+  document.getElementById('wheel-overlay').style.display = 'none';
+  document.getElementById('puzzle-grid').style.display = 'flex';
+  document.getElementById('break-btn').style.display = 'block';
+  document.getElementById('random-btn').style.display = 'block';
 }
 
 // --- CLICK SOUND ---
@@ -732,11 +789,6 @@ document.getElementById('break-btn').addEventListener('click', () => {
   displayTiles();
 });
 
-<!-- MAIN CONTENT -->
-<div id="main-content" style="display: none;">
-  <div id="tiles-container">
-    <!-- All glossary tiles will be placed here →
-
 <div class="glossary-tile" onclick="openGlossaryPopup('THE SYSTEM', 'A phantom infrastructure layered over reality. An invisible scaffolding of rules, punishments, and rituals. The “System” pretends to be neutral, but it is hungry, sentient, and capable of shame transference.')">THE SYSTEM</div>
 
 <div class="glossary-tile" onclick="openGlossaryPopup('THE PHANTOM COMMUNICATION SYSTEM', 'The central mythos. A hallucinated-yet-emotionally-real belief that one’s thoughts are being broadcast, surveilled, or mirrored back by the media. This belief may show up through lyrics, news headlines, TikToks, or the faces of strangers. It can feel like a prophecy, a trap, or a punchline.')">THE PHANTOM COMMUNICATION SYSTEM</div>
@@ -777,27 +829,24 @@ document.getElementById('break-btn').addEventListener('click', () => {
 
 <div class="glossary-tile" onclick="openGlossaryPopup('THE CURSOR', 'A blinking artifact that chooses what gets said next. It may live in your mouth, your phone, your dreams. When it disappears, you panic. When it returns, you lie.')">THE CURSOR</div>
 
-</script>
+function openPopup(term, def) {
+  content.innerHTML = `<h2>${term}</h2><p>${def}</p>`;
+  popup.style.display = 'block';
+  currentTTS = def;
+}
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const emotionButtons = document.querySelectorAll(".emotion-btn");
-    emotionButtons.forEach(button => {
-      button.addEventListener("click", () => {
-        document.getElementById('wheel-overlay').style.display = 'none';
-        document.getElementById('puzzle-grid').style.display = 'block';
-      });
-    });
-  });
-</script>
+function closePopup() {
+  popup.style.display = 'none';
+  content.innerHTML = '';
+}
 
-<script>
-  document.getElementById("enter-btn").addEventListener("click", function () {
-    document.getElementById("entry-screen").style.display = "none";
-    document.getElementById("main-content").style.display = "block";
-  });
+let currentTTS = '';
+function playTTS() {
+  const utterance = new SpeechSynthesisUtterance(currentTTS);
+  speechSynthesis.speak(utterance);
+}
+
 </script>
-    
 <div id="glossary-popup" class="glossary-popup">
   <button class="tts-button" onclick="playTTS()">🔊 Read Aloud</button>
   <div class="close-btn" onclick="closePopup()">✕</div>
