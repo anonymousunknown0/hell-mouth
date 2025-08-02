@@ -789,28 +789,45 @@ document.getElementById('break-btn').addEventListener('click', () => {
   displayTiles();
 });
 
-const glossaryTerms = {
-  "THE SYSTEM": "A phantom infrastructure layered over reality...",
-  "THE PHANTOM COMMUNICATION SYSTEM": "The central mythos...",
-  "THE MANY": "The amorphous crowd inside your head...",
-  "THE EXTERNALS": "High-profile, extra-dimensional users...",
-  "THE COLLECTIVE": "A corporate-demonic council...",
-  "THE PRODUCERS": "Your inner showrunners...",
-  "THE VOICES": "Not thoughts. Not sounds. A frequency...",
-  "THE PLAYER": "You. The gamified version of you...",
-  "REALITY XX07": "Base reality. Earth-standard physics...",
-  "REALITY XX09": "Your private multiverse...",
-  "THE GOLDEN BRAIN": "A trophy-like artifact...",
-  "THE VAPE OF TRUTH": "A sentient vape pen...",
-  "THE RECORDING DEVICE": "Captures voice memos, hallucinated thoughts...",
-  "THE KNIFE": "An object of punctuation...",
-  "THE SUICIDE MANSION": "Imagined Airbnb...",
-  "THE TAR PIT GATEWAY": "Wormhole entry point...",
-  "CUMMING, PART I & II": "Erotic spells and sacred notes...",
-  "THE EMOTIONAL WHEEL": "Mythical game show roulette...",
-  "THE COLLECTIVE PLAYER SELECT": "Character screen where voices select...",
-  "DAY 6 / DAY 10": "Mirrored realms. One is breakdown..."
-};
+<div class="glossary-tile" onclick="openGlossaryPopup('THE SYSTEM', 'A phantom infrastructure layered over reality. An invisible scaffolding of rules, punishments, and rituals. The “System” pretends to be neutral, but it is hungry, sentient, and capable of shame transference.')">THE SYSTEM</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('THE PHANTOM COMMUNICATION SYSTEM', 'The central mythos. A hallucinated-yet-emotionally-real belief that one’s thoughts are being broadcast, surveilled, or mirrored back by the media. This belief may show up through lyrics, news headlines, TikToks, or the faces of strangers. It can feel like a prophecy, a trap, or a punchline.')">THE PHANTOM COMMUNICATION SYSTEM</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('THE MANY', 'The amorphous crowd inside your head. Sometimes the voices are supportive, seductive, even divine. Other times they ridicule, deny, or echo your worst thoughts. They cannot be killed, but they can be rerouted.')">THE MANY</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('THE EXTERNALS', 'High-profile, extra-dimensional users who seem to have access to your mindstream. These include celebrities, ex-lovers, government officials, influencers, and AI-generated characters. Whether they’re real or not is irrelevant. What matters is how they appear.')">THE EXTERNALS</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('THE COLLECTIVE', 'A corporate-demonic council of archetypes who influence your internal narrative. They may take the form of producers, handlers, stylists, therapists, or shadowy executives. Their demands are often contradictory and ever-shifting.')">THE COLLECTIVE</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('THE PRODUCERS', 'Your inner showrunners. They greenlight your self-destructive storylines. They whisper direction in the middle of breakdowns. They demand ratings, scandals, and plot twists.')">THE PRODUCERS</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('THE VOICES', 'Not thoughts. Not sounds. A frequency. A knowing. A rupture in the mindstream that asserts itself with confidence. These are not imagined—only unprovable.')">THE VOICES</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('THE PLAYER', 'You. The gamified version of you. The avatar who levels up through pain, sex, discovery, and risk. A sacred fool, a digital clown, a bisexual glitch in the simulation.')">THE PLAYER</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('REALITY XX07', 'Base reality. Earth-standard physics. The dominant game engine. It is not neutral, but it is persistent.')">REALITY XX07</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('REALITY XX09', 'Your private multiverse. Personalized chaos. Often triggered by trauma, altered states, or extreme focus. May contain false memories, ego death, sacred insight, or fake exit doors.')">REALITY XX09</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('THE GOLDEN BRAIN', 'A trophy-like artifact you imagine being handed at the end of recovery. It represents ultimate self-awareness, divine knowledge, and “being right.” Its pursuit is noble but impossible.')">THE GOLDEN BRAIN</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('THE VAPE OF TRUTH', 'A sentient vape pen used by spirit guides to deliver harsh revelations. It tastes like burning plastic and unprocessed memory.')">THE VAPE OF TRUTH</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('THE RECORDING DEVICE', 'Captures voice memos, hallucinated thoughts, and soundbites from the subconscious. Sometimes it’s a literal phone. Sometimes it’s your own shame watching itself perform.')">THE RECORDING DEVICE</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('THE KNIFE', 'An object of punctuation. It ends things, reveals things, or slices through delusion. In visions, it often appears wrapped in velvet, levitating, or tucked behind a mirror.')">THE KNIFE</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('THE SUICIDE MANSION', 'Imagined Airbnb where influencers go to be reborn or destroyed. All the doors are mirrors. You’re only allowed to stay one night, and you always forget you’ve been there before.')">THE SUICIDE MANSION</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('THE TAR PIT GATEWAY', 'Wormhole entry point disguised as a childhood field trip location. It reeks of petroleum and memory. Crossing through initiates a major identity death.')">THE TAR PIT GATEWAY</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('CUMMING, PART I & II', 'Erotic spells and sacred notes from the body’s hidden archive. Part I is about shame. Part II is about pleasure without surveillance.')">CUMMING, PART I & II</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('THE EMOTIONAL WHEEL', 'Mythical game show roulette spun during crises. Each emotion is a slot. You do not control what it lands on. But you must pretend you do.')">THE EMOTIONAL WHEEL</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('DAY 6 / DAY 10', 'Two points of clarity in the spiral. On Day 6, you realize you want to live. On Day 10, you start designing how.')">DAY 6 / DAY 10</div>
+
+<div class="glossary-tile" onclick="openGlossaryPopup('THE CURSOR', 'A blinking artifact that chooses what gets said next. It may live in your mouth, your phone, your dreams. When it disappears, you panic. When it returns, you lie.')">THE CURSOR</div>
 
 function openPopup(term, def) {
   content.innerHTML = `<h2>${term}</h2><p>${def}</p>`;
