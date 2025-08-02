@@ -257,7 +257,7 @@
   </div>
   <audio id="click-sound" src="click.mp3" preload="auto"></audio>
 
-<div class="puzzle-grid" id="puzzle-grid">
+<div class="puzzle-grid" id="puzzle-grid"></div>
 
   <script>
   // --------- JS CODE STARTS HERE ---------
@@ -370,8 +370,6 @@ files.forEach(file => {
   document.getElementById("puzzle-grid").appendChild(tile);
 });
 </script>
-
-</div>
 
 // --- AUDIO CONTEXT ---
 const audioCtx = new (window.AudioContext||window.webkitAudioContext)();

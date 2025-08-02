@@ -1,0 +1,95 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Golden Brain – Lobe 1</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      color: white;
+      font-family: monospace;
+      overflow: hidden;
+    }
+    .brain-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.85);
+      animation: pulseBrain 3s ease-in-out forwards;
+    }
+    @keyframes pulseBrain {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+      100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+    .lobe-button {
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: transparent;
+      border: 2px solid white;
+      padding: 12px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      opacity: 0;
+      animation: fadeIn 1s ease 3s forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+    .codex {
+      display: none;
+      position: absolute;
+      top: 10%;
+      left: 10%;
+      width: 80%;
+      height: 80%;
+      background: rgba(0, 0, 0, 0.85);
+      border: 2px solid white;
+      padding: 20px;
+      overflow-y: scroll;
+      font-size: 16px;
+    }
+    .return-button {
+      margin-top: 20px;
+      background: none;
+      border: 1px solid white;
+      padding: 10px;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="brain-container">
+    <img src="bloody_brain.png" alt="Golden Brain" width="400" />
+  </div>
+  <button class="lobe-button" onclick="openCodex()">🧠 Lobe 1</button>  <div class="codex" id="codex">
+    <h2>1. The Easy Way Out</h2>
+    <p><i>Codex Entry:</i></p>
+    <blockquote>
+      “They told me there were only two choices: disappear quietly or ask for help. The easy way out always called louder.”
+    </blockquote><p><strong>Note:</strong> “The easy way out” = suicide. But this is NOT the path to choose.</p>
+
+<p>If you or anybody you know is struggling with thoughts of suicide, please contact the Suicide & Crisis Lifeline at <a href="tel:988">988</a>.</p>
+
+<p><strong>Definition:</strong> <i>Suicide</i> is the act of intentionally causing one’s own death. It is often linked to intense psychological pain, mental illness, trauma, or hopelessness. But help is available. Your story is not over.</p>
+
+<p><strong>Related Excerpt:</strong></p>
+<blockquote>
+  "i thought if i just disappeared, the people watching me would stop. if i just quietly removed myself, maybe the experiment would end.”
+</blockquote>
+
+<button class="return-button" onclick="closeCodex()">← Return to Brain</button>
+
+  </div>  <script>
+    function openCodex() {
+      document.getElementById('codex').style.display = 'block';
+    }
+    function closeCodex() {
+      document.getElementById('codex').style.display = 'none';
+    }
+  </script></body>
+</html>
