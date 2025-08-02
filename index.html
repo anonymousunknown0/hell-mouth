@@ -789,11 +789,6 @@ document.getElementById('break-btn').addEventListener('click', () => {
   displayTiles();
 });
 
-<!-- ENTRY SCREEN -->
-<div id="entry-screen">
-  <button onclick="enterSite()">ENTER</button>
-</div>
-
 <!-- MAIN CONTENT -->
 <div id="main-content" style="display: none;">
   <div id="tiles-container">
@@ -859,6 +854,19 @@ document.getElementById('break-btn').addEventListener('click', () => {
     const utterance = new SpeechSynthesisUtterance(currentTTS);
     speechSynthesis.speak(utterance);
   }
+
+document.getElementById('enter-btn').onclick = function () {
+  document.getElementById('entry-screen').style.display = 'none';
+  document.getElementById('wheel-overlay').style.display = 'flex';
+
+  // Fade out entry audio
+  let entryAudio = document.getElementById('entry-audio');
+  if (entryAudio) {
+    entryAudio.pause();
+    entryAudio.currentTime = 0;
+  }
+};
+
 </script>
 
 <div id="glossary-popup" class="glossary-popup">
