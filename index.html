@@ -214,7 +214,7 @@
   </style>
 </head>
 <body>
-  <div id="entry-screen">
+  <div id="entry-screen" style="display: flex;">
     <video id="entry-bg-video" autoplay loop muted playsinline>
       <source src="5 hypnotize.mp4" type="video/mp4">
     </video>
@@ -836,16 +836,19 @@ document.getElementById('break-btn').addEventListener('click', () => {
 
 <script>
   window.onload = function () {
-    document.getElementById('enter-btn').onclick = function () {
-      document.getElementById('entry-screen').style.display = 'none';
-      document.getElementById('wheel-overlay').style.display = 'flex';
+    const enterBtn = document.getElementById('enter-btn');
+    if (enterBtn) {
+      enterBtn.onclick = function () {
+        document.getElementById('entry-screen').style.display = 'none';
+        document.getElementById('wheel-overlay').style.display = 'flex';
 
-      let entryAudio = document.getElementById('entry-audio');
-      if (entryAudio) {
-        entryAudio.pause();
-        entryAudio.currentTime = 0;
-      }
-    };
+        let entryAudio = document.getElementById('entry-audio');
+        if (entryAudio) {
+          entryAudio.pause();
+          entryAudio.currentTime = 0;
+        }
+      };
+    }
   };
 </script>
     
