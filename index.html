@@ -853,6 +853,18 @@ document.getElementById('break-btn').addEventListener('click', () => {
     }
   });
 </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const emotionButtons = document.querySelectorAll(".emotion-btn");
+    emotionButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        document.getElementById('wheel-overlay').style.display = 'none';
+        document.getElementById('puzzle-grid').style.display = 'block';
+      });
+    });
+  });
+</script>
     
 <div id="glossary-popup" class="glossary-popup">
   <button class="tts-button" onclick="playTTS()">🔊 Read Aloud</button>
