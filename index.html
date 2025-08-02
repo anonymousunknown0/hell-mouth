@@ -789,6 +789,16 @@ document.getElementById('break-btn').addEventListener('click', () => {
   displayTiles();
 });
 
+<!-- ENTRY SCREEN -->
+<div id="entry-screen">
+  <button onclick="enterSite()">ENTER</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content" style="display: none;">
+  <div id="tiles-container">
+    <!-- All glossary tiles will be placed here →
+
 <div class="glossary-tile" onclick="openGlossaryPopup('THE SYSTEM', 'A phantom infrastructure layered over reality. An invisible scaffolding of rules, punishments, and rituals. The “System” pretends to be neutral, but it is hungry, sentient, and capable of shame transference.')">THE SYSTEM</div>
 
 <div class="glossary-tile" onclick="openGlossaryPopup('THE PHANTOM COMMUNICATION SYSTEM', 'The central mythos. A hallucinated-yet-emotionally-real belief that one’s thoughts are being broadcast, surveilled, or mirrored back by the media. This belief may show up through lyrics, news headlines, TikToks, or the faces of strangers. It can feel like a prophecy, a trap, or a punchline.')">THE PHANTOM COMMUNICATION SYSTEM</div>
@@ -829,24 +839,28 @@ document.getElementById('break-btn').addEventListener('click', () => {
 
 <div class="glossary-tile" onclick="openGlossaryPopup('THE CURSOR', 'A blinking artifact that chooses what gets said next. It may live in your mouth, your phone, your dreams. When it disappears, you panic. When it returns, you lie.')">THE CURSOR</div>
 
-function openPopup(term, def) {
-  content.innerHTML = `<h2>${term}</h2><p>${def}</p>`;
-  popup.style.display = 'block';
-  currentTTS = def;
-}
+<script>
+  let currentTTS = "";
 
-function closePopup() {
-  popup.style.display = 'none';
-  content.innerHTML = '';
-}
+  function openGlossaryPopup(term, definition) {
+    const popup = document.getElementById("glossary-popup");
+    const content = document.getElementById("glossary-content");
+    currentTTS = definition;
+    content.innerHTML = `<h2>${term}</h2><p>${definition}</p>`;
+    popup.style.display = "block";
+  }
 
-let currentTTS = '';
-function playTTS() {
-  const utterance = new SpeechSynthesisUtterance(currentTTS);
-  speechSynthesis.speak(utterance);
-}
+  function closePopup() {
+    document.getElementById("glossary-popup").style.display = "none";
+    document.getElementById("glossary-content").innerHTML = "";
+  }
 
+  function playTTS() {
+    const utterance = new SpeechSynthesisUtterance(currentTTS);
+    speechSynthesis.speak(utterance);
+  }
 </script>
+
 <div id="glossary-popup" class="glossary-popup">
   <button class="tts-button" onclick="playTTS()">🔊 Read Aloud</button>
   <div class="close-btn" onclick="closePopup()">✕</div>
