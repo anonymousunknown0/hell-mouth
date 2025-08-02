@@ -142,15 +142,24 @@
 }
 
 .glossary-tile {
-  background: black;
-  color: white;
-  border: 2px solid white;
-  padding: 20px;
-  margin: 10px;
+  background: black !important;
+  color: white !important;
+  border: 2px solid white !important;
+  box-shadow: 0 0 18px white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: monospace;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.3s ease-in-out;
+  font-size: 1em;
+  text-align: center;
+  overflow: hidden;
+  padding: 0;
+  width: 190px !important;
+  height: 106px !important;
+}
+
+.glossary-tile img {
+  display: none; /* hides the spiral background */
 }
 .glossary-tile:hover {
   border-color: #fff5;
@@ -403,14 +412,14 @@ function displayTiles() {
   </div>`;
 
 let glossaryTiles = Object.entries(glossaryTerms).map(([term, def]) => `
-  <div class="tile glossary-tile" onclick="openPopup('${term.replace(/'/g,"\\'")}', \`${def.replace(/`/g,"\\`")}\`)">
+  <div class="tile glossary-tile" onclick="openPopup(\`${term}\`, \`${def}\`)">
     <div class="tile-number">📖</div>
     <img src="spiral.gif" class="tile-image" />
     <div class="tile-filename">${term}</div>
   </div>
 `).join('');
 
-grid.innerHTML = happyTiles + glossaryTiles + mainTiles + soundtrackTile;
+grid.innerHTML = happyTiles + mainTiles + soundtrackTile + glossaryTiles;
 }
 
 // --- CLOSE CONTENT ---
