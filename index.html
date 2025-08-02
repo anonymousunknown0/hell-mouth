@@ -835,21 +835,21 @@ document.getElementById('break-btn').addEventListener('click', () => {
 <div class="glossary-tile" onclick="openGlossaryPopup('THE CURSOR', 'A blinking artifact that chooses what gets said next. It may live in your mouth, your phone, your dreams. When it disappears, you panic. When it returns, you lie.')">THE CURSOR</div>
 
 <script>
-  window.onload = function () {
+  document.addEventListener("DOMContentLoaded", function () {
     const enterBtn = document.getElementById('enter-btn');
     if (enterBtn) {
-      enterBtn.onclick = function () {
+      enterBtn.addEventListener('click', function () {
         document.getElementById('entry-screen').style.display = 'none';
         document.getElementById('wheel-overlay').style.display = 'flex';
 
-        let entryAudio = document.getElementById('entry-audio');
+        const entryAudio = document.getElementById('entry-audio');
         if (entryAudio) {
           entryAudio.pause();
           entryAudio.currentTime = 0;
         }
-      };
+      });
     }
-  };
+  });
 </script>
     
 <div id="glossary-popup" class="glossary-popup">
