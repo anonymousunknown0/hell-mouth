@@ -795,16 +795,18 @@ const glossaryTerms = {
   "DAY 6 / DAY 10": "Mirrored realms. One is breakdown..."
 };
 
-const glossaryGrid = document.getElementById('glossary-grid');
-const popup = document.getElementById('glossary-popup');
-const content = document.getElementById('glossary-content');
+document.addEventListener('DOMContentLoaded', () => {
+  const glossaryGrid = document.getElementById('glossary-grid');
+  const popup = document.getElementById('glossary-popup');
+  const content = document.getElementById('glossary-content');
 
-Object.entries(glossaryTerms).forEach(([term, def]) => {
-  const tile = document.createElement('div');
-  tile.className = 'glossary-tile';
-  tile.innerText = term;
-  tile.onclick = () => openPopup(term, def);
-  glossaryGrid.appendChild(tile);
+  Object.entries(glossaryTerms).forEach(([term, def]) => {
+    const tile = document.createElement('div');
+    tile.className = 'glossary-tile';
+    tile.innerText = term;
+    tile.onclick = () => openPopup(term, def);
+    glossaryGrid.appendChild(tile);
+  });
 });
 
 function openPopup(term, def) {
