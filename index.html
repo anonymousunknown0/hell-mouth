@@ -78,6 +78,130 @@
     .voice-select { padding:6px 14px;font-size:1em;border-radius:7px;border:1.5px solid #FFD700;background:#111;color:#FFD700;margin-bottom:8px;}
     .happy-file-list button { margin-bottom:4px;}
     @media(max-width:800px){ .tile { width:92vw; height:20vw; min-height:80px; } #break-btn,#random-btn { font-size:1.4em; padding:8px 24px; bottom:12px; } }
+
+.glossary-tile {
+  background: black;
+  color: white;
+  border: 2px solid white;
+  padding: 20px;
+  margin: 10px;
+  font-family: monospace;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+.glossary-tile:hover {
+  border-color: #fff5;
+  box-shadow: 0 0 20px white;
+}
+.glossary-popup {
+  background: black;
+  color: white;
+  border: 2px solid white;
+  padding: 20px;
+  max-height: 70vh;
+  overflow-y: scroll;
+  position: fixed;
+  top: 10vh;
+  left: 10vw;
+  width: 80vw;
+  z-index: 9999;
+  font-family: monospace;
+  display: none;
+}
+.glossary-popup .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 20px;
+  color: white;
+}
+.cursor {
+  display: inline-block;
+  width: 10px;
+  height: 18px;
+  background: white;
+  animation: blink 1s infinite;
+  margin-left: 5px;
+}
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+.tts-button {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  background: none;
+  border: 1px solid white;
+  color: white;
+  font-family: monospace;
+  cursor: pointer;
+}
+
+.glossary-tile {
+  background: black;
+  color: white;
+  border: 2px solid white;
+  padding: 20px;
+  margin: 10px;
+  font-family: monospace;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+.glossary-tile:hover {
+  border-color: #fff5;
+  box-shadow: 0 0 20px white;
+}
+.glossary-popup {
+  background: black;
+  color: white;
+  border: 2px solid white;
+  padding: 20px;
+  max-height: 70vh;
+  overflow-y: scroll;
+  position: fixed;
+  top: 10vh;
+  left: 10vw;
+  width: 80vw;
+  z-index: 9999;
+  font-family: monospace;
+  display: none;
+}
+.glossary-popup .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 20px;
+  color: white;
+}
+.cursor {
+  display: inline-block;
+  width: 10px;
+  height: 18px;
+  background: white;
+  animation: blink 1s infinite;
+  margin-left: 5px;
+}
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+.tts-button {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  background: none;
+  border: 1px solid white;
+  color: white;
+  font-family: monospace;
+  cursor: pointer;
+}
   </style>
 </head>
 <body>
@@ -114,7 +238,9 @@
     <button class="emotion-btn" onclick="startSite()">Nostalgia</button>
   </div>
   <button id="schiz-btn-top" onclick="playSchizophrenia()" style="display:block; margin:22px auto 0 auto; padding:11px 32px; font-size:1.12em; font-weight:bold; border:2.5px solid #ff5252; border-radius:13px; background:#111; color:#ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s;">SCHIZOPHRENIA</button>
-  <div class="puzzle-grid" id="puzzle-grid"></div>
+  <div class="puzzle-grid" id="puzzle-grid">
+  <div id="glossary-grid"></div> <!-- 🔮 Injected glossary tile container -->
+</div>
   <button id="break-btn">BREAK THE SPIRAL</button>
   <button id="random-btn">random</button>
   <div id="content">
@@ -646,8 +772,67 @@ document.getElementById('break-btn').addEventListener('click', () => {
   displayTiles();
 });
 
+const glossaryTerms = {
+  "THE SYSTEM": "A phantom infrastructure layered over reality...",
+  "THE PHANTOM COMMUNICATION SYSTEM": "The central mythos...",
+  "THE MANY": "The amorphous crowd inside your head...",
+  "THE EXTERNALS": "High-profile, extra-dimensional users...",
+  "THE COLLECTIVE": "A corporate-demonic council...",
+  "THE PRODUCERS": "Your inner showrunners...",
+  "THE VOICES": "Not thoughts. Not sounds. A frequency...",
+  "THE PLAYER": "You. The gamified version of you...",
+  "REALITY XX07": "Base reality. Earth-standard physics...",
+  "REALITY XX09": "Your private multiverse...",
+  "THE GOLDEN BRAIN": "A trophy-like artifact...",
+  "THE VAPE OF TRUTH": "A sentient vape pen...",
+  "THE RECORDING DEVICE": "Captures voice memos, hallucinated thoughts...",
+  "THE KNIFE": "An object of punctuation...",
+  "THE SUICIDE MANSION": "Imagined Airbnb...",
+  "THE TAR PIT GATEWAY": "Wormhole entry point...",
+  "CUMMING, PART I & II": "Erotic spells and sacred notes...",
+  "THE EMOTIONAL WHEEL": "Mythical game show roulette...",
+  "THE COLLECTIVE PLAYER SELECT": "Character screen where voices select...",
+  "DAY 6 / DAY 10": "Mirrored realms. One is breakdown..."
+};
+
+const glossaryGrid = document.getElementById('glossary-grid');
+const popup = document.getElementById('glossary-popup');
+const content = document.getElementById('glossary-content');
+
+Object.entries(glossaryTerms).forEach(([term, def]) => {
+  const tile = document.createElement('div');
+  tile.className = 'glossary-tile';
+  tile.innerText = term;
+  tile.onclick = () => openPopup(term, def);
+  glossaryGrid.appendChild(tile);
+});
+
+function openPopup(term, def) {
+  content.innerHTML = `<h2>${term}</h2><p>${def}</p>`;
+  popup.style.display = 'block';
+  currentTTS = def;
+}
+
+function closePopup() {
+  popup.style.display = 'none';
+  content.innerHTML = '';
+}
+
+let currentTTS = '';
+function playTTS() {
+  const utterance = new SpeechSynthesisUtterance(currentTTS);
+  speechSynthesis.speak(utterance);
+}
+
 </script>
+<div id="glossary-popup" class="glossary-popup">
+  <button class="tts-button" onclick="playTTS()">🔊 Read Aloud</button>
+  <div class="close-btn" onclick="closePopup()">✕</div>
+  <div id="glossary-content"></div>
+  <div class="cursor"></div>
+</div>
 </body>
 </html>
+
 
 
