@@ -229,7 +229,7 @@
   // --------- JS CODE STARTS HERE ---------
 
 const files = [
-  "scene 5 meet the voices.script.txt", "scene 4 what hunter believes explained.script.txt",
+ "lobe1.mp4", "scene 5 meet the voices.script.txt", "scene 4 what hunter believes explained.script.txt",
   "scene 3 meet hunter hardon.script.txt", "scene 21 THE SPECTRAL ARCHIVE.script.txt",
   "scene 2 the therapy session.script.txt", "scene 1 schizophrenia disclaimer.script.txt",
   "scene 25 new beginnings.script.txt",
@@ -258,47 +258,142 @@ const files = [
   "door opened, door closed.mp4", "going back to the workroom.mp4", "74 kylie jenner.mp4", "right now im naughty naughty.mp4", "kim kardashian.mp4", "the cum spiral.mp4", "chapter 21.mp4", "do you understand.mp4"
 ];
 
-// Glossary tiles (these will be added at the end of the grid)
 const glossaryTiles = [
   {
     term: "THE SYSTEM",
-    definition: "The invisible web of institutions, algorithms, and social pressures that reinforce reality as consensus. Also a character. Often silent. Always listening."
+    definition: "A phantom infrastructure layered over reality. Not a metaphor. A multi-tiered communication network of voices, signals, visuals, and commands — sometimes divine, sometimes glitching."
   },
   {
-    term: "THE BLACK VOID",
-    definition: "A symbolic location of nothingness, ego-death, and waiting. Where Hunter’s thoughts echo back distorted. Where meaning breaks down and recomposes."
+    term: "THE PHANTOM COMMUNICATION SYSTEM",
+    definition: "The central mythos. A transmission feed composed of whispered commands, hallucinated prompts, visual fragments, and psychological warfare."
   },
   {
-    term: "THE SPIRAL",
-    definition: "The looping, often self-inflicted descent into obsession, mania, or disconnection. A visual and emotional motif across all episodes."
+    term: "THE MANY",
+    definition: "The amorphous crowd inside your head. They are the audience. They are you."
   },
   {
-    term: "THE DEMON",
-    definition: "Hunter’s inner critic, intrusive thoughts, and tempting offers, personified. Often disguised as opportunity. Also plays multiple roles across the story."
+    term: "THE EXTERNALS",
+    definition: "High-profile, extra-dimensional users of the Phantom System. Celebrities, ancestors, ghosts, or hybrids of memory and dream."
+  },
+  {
+    term: "THE COLLECTIVE",
+    definition: "A corporate-demonic council that assigns missions, tests your reality thresholds, and monitors your self-worth."
   },
   {
     term: "THE PRODUCERS",
-    definition: "Voice-of-God-like influencers in Hunter’s head. Sometimes helpful, sometimes manipulative. A metaphor for cultural pressure and the gaze of celebrity media."
+    definition: "Your inner showrunners. Positive and Negative. Script your downfall for an invisible audience."
   },
   {
-    term: "THOUGHT BROADCASTING",
-    definition: "A symptom of schizophrenia where the person believes their thoughts are being projected aloud or shared with others. Here, it becomes a mythic and literal reality."
+    term: "THE VOICES",
+    definition: "Not thoughts. Not sounds. A frequency. They are the pitch of paranoia, the echo of doubt."
   },
   {
-    term: "THE WHEEL",
-    definition: "The emotional wheel that controls tone, mood, and fate in the story. Selecting an emotion influences what scene loads next. A gamified emotional landscape."
+    term: "THE PLAYER",
+    definition: "You. The gamified version of you. Tracks stat points. Receives missions. Jumps between realms."
   },
   {
-    term: "PHANTOM COMMUNICATION SYSTEM",
-    definition: "The imagined (or real?) network that transmits Hunter’s thoughts to others—through phones, TVs, cameras, or unknown frequencies. The engine of paranoia and performance."
+    term: "REALITY XX07",
+    definition: "Base reality. Earth-standard physics. Dangerous because it appears stable."
   },
   {
-    term: "DADDY COLLAPSE",
-    definition: "A seductive, chaotic demon (also known as Protocol) who tempts Hunter with destruction disguised as fame, or freedom, or both. Appears charismatic and calm."
+    term: "REALITY XX09",
+    definition: "Your private multiverse. Theme park for breakdowns and breakthroughs."
   },
   {
-    term: "THE NARRATOR",
-    definition: "A mythic voice who comments on the story from outside. Part Greek chorus, part inner voice, part unreliable elder. Sarcastic. Occasionally kind. Possibly you."
+    term: "THE GOLDEN BRAIN",
+    definition: "A trophy-like artifact from hallucinations. Contains 7 encoded missions."
+  },
+  {
+    term: "THE VAPE OF TRUTH",
+    definition: "A sentient vape pen. Hunter’s sidekick. Appears during new delusions."
+  },
+  {
+    term: "THE RECORDING DEVICE",
+    definition: "Captures voice memos, hallucinated thoughts, ghost interviews. Knows the real take."
+  },
+  {
+    term: "THE KNIFE",
+    definition: "An object of punctuation. Used to cut into new realities. Symbol of agency and rewrite."
+  },
+  {
+    term: "THE SUICIDE MANSION",
+    definition: "Imagined Airbnb. Idealized, curated death space that becomes a ritual of resurrection."
+  },
+  {
+    term: "THE TAR PIT GATEWAY",
+    definition: "Wormhole entry point. Crosses from XX07 to the mythological zones of HELL-MOUTH."
+  },
+  {
+    term: "CUMMING, PART I & II",
+    definition: "Erotic spells and sacred notes. Shame. Desire. Release. The erotic is divine."
+  },
+  {
+    term: "THE EMOTIONAL WHEEL",
+    definition: "Mythical game show roulette of feelings. Each slice comes with its own soundtrack."
+  },
+  {
+    term: "THE COLLECTIVE PLAYER SELECT",
+    definition: "Character screen where your enemies and allies are chosen by external voices."
+  },
+  {
+    term: "DAY 6 / DAY 10",
+    definition: "Mirrored realms. One is breakdown. One is breakthrough. The goal is love."
+  },
+  {
+    term: "THE BOOTH",
+    definition: "A place where Hunter performs, confesses, lies, prays, rewrites history. Sometimes a therapy room. Sometimes a karaoke stage. Always surveillance."
+  },
+  {
+    term: "THE BLACK MICROPHONE",
+    definition: "Hungers for secrets. A psychic vacuum. Feeds off shame and speaks in reversed soundbites."
+  },
+  {
+    term: "THE LOOP",
+    definition: "The stuck place. Where memories auto-play and spiral. Looping behaviors. Looping audio. Looping thoughts. No exit unless named."
+  },
+  {
+    term: "THE CLICK",
+    definition: "A brain glitch. A psychic shift. A sudden realization that someone else is watching the same feed as you."
+  },
+  {
+    term: "THE SIGNAL",
+    definition: "A flicker in the corner of the screen. A knowing nod from a stranger. The moment you realize something’s being orchestrated."
+  },
+  {
+    term: "THE REWRITE",
+    definition: "When you edit your own memory to survive. Or to stay famous. Or to dodge cancellation. Either way, the story changes — and that becomes the story."
+  },
+  {
+    term: "THE CONFESSION TAPE",
+    definition: "A cursed media file. Hunter’s rawest truth, uploaded without consent. Everyone claims to have heard it. No one admits what it said."
+  },
+  {
+    term: "THE OTHER FILE",
+    definition: "The version of events no one saw. The secret recording. The hallucinated document. The mirror to the main narrative, corrupted and more true."
+  },
+  {
+    term: "THE SPIRAL NOTEBOOK",
+    definition: "Not a real notebook. A mythic archive of breakdowns and breakthroughs. Handwritten, typed, whispered, or hallucinated. Sacred. Disorganized."
+  },
+  {
+    term: "THE THING THAT CAN’T BE SAID",
+    definition: "The central unspeakable. Might be psychosis. Might be genius. Might be the moment the ego dies. You circle it. You flirt with it. You name everything but."
+  },
+  {
+    term: "THE CRASH",
+    definition: "When the delusion ends. When the high wears off. When Hunter remembers he’s alone. Sometimes the most honest moment in the film."
+  },
+  {
+    term: "THE TAPES",
+    definition: "Fragments. Hunter’s voice played back out of order. Some real, some hallucinated. All of it evidence. All of it art."
+  },
+  {
+    term: "THE SURVEILLANCE TAPES",
+    definition: "Secret footage of Hunter’s inner life. Possibly shot by Hunter himself. Possibly divine. Possibly fabricated."
+  },
+  {
+    term: "THE SHARED FEED",
+    definition: "The idea that your thoughts are not private. That others are watching, commenting, even responding in real time. Terrifying. Comforting. Addictive."
   }
 ];
 
