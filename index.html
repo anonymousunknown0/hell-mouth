@@ -158,27 +158,23 @@
 
 .tile.golden-brain-tile {
   background: linear-gradient(135deg, #FFD700, #FFA500);
-  background-size: 400% 400%;
   animation: shimmer 2s infinite;
+  background-size: 300% 300%;
   border: 2px solid #FFD700;
   border-radius: 14px;
   box-shadow: 0 0 18px 4px rgba(255, 215, 0, 0.6);
   cursor: pointer;
   width: 180px;
   height: 180px;
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 2em;
 }
+
 @keyframes shimmer {
   0% { background-position: -100px; }
   100% { background-position: 200px; }
-}
-.tile.golden-brain-tile::before {
-  content: "🧠";
-  font-size: 2em;
-  animation: pulse 1.5s infinite;
 }
 </style>
 <style>
@@ -946,28 +942,104 @@ function playSoundtrackTrack(file) {
 // --- INIT ---
 window.addEventListener('DOMContentLoaded', () => {
   displayTiles();
-
-  // Inject Golden Brain Test Tile
-  const brainTile = document.createElement('div');
-  brainTile.style.width = '180px';
-  brainTile.style.height = '180px';
-  brainTile.style.background = 'red';
-  brainTile.style.color = 'white';
-  brainTile.style.display = 'flex';
-  brainTile.style.alignItems = 'center';
-  brainTile.style.justifyContent = 'center';
-  brainTile.style.fontWeight = 'bold';
-  brainTile.style.cursor = 'pointer';
-  brainTile.style.zIndex = '99999';
-  brainTile.textContent = 'TEST TILE';
-  brainTile.onclick = openGoldenBrainTile;
-
-  const grid = document.getElementById('puzzle-grid');
-  if (grid) grid.appendChild(brainTile);
-
   document.getElementById('break-btn').onclick = breakSpiral;
   document.getElementById('random-btn').onclick = openRandom;
 });
+
+<script>
+// ========== STEP 1: Inject the Golden Brain Tile ==========
+
+window.addEventListener('DOMContentLoaded', () => {
+  const goldenTile = document.createElement("div");
+  goldenTile.className = "tile golden-brain-tile";
+  goldenTile.innerHTML = "🧠";
+  goldenTile.onclick = openGoldenBrainTile;
+
+  const puzzleGrid = document.getElementById("puzzle-grid");
+  if (puzzleGrid) puzzleGrid.appendChild(goldenTile);
+});
+
+// ========== STEP 2: Golden Brain Experience Logic ==========
+
+function openGoldenBrainTile() {
+  // Black screen with quote
+  const quoteOverlay = document.createElement("div");
+  quoteOverlay.className = "golden-brain-quote-screen";
+  quoteOverlay.innerHTML = `
+    <h2>"You were never meant to stay silent forever."</h2>
+    <button onclick="showGoldenBrain()">Enter</button>
+  `;
+  document.body.appendChild(quoteOverlay);
+  quoteOverlay.style.display = "flex";
+}
+
+function showGoldenBrain() {
+  document.querySelector('.golden-brain-quote-screen')?.remove();
+
+  const brainOverlay = document.createElement("div");
+  brainOverlay.id = "golden-brain-overlay";
+  brainOverlay.style.cssText = `
+    position: fixed;
+    inset: 0;
+    background: black;
+    z-index: 10000;
+  `;
+  brainOverlay.innerHTML = `
+    <img src="bloody_brain.png" alt="Golden Brain" style="width:100%;height:auto;max-width:800px;display:block;margin:60px auto;position:relative;z-index:2;">
+    ${Array.from({ length: 7 }, (_, i) => `
+      <div onclick="openCodex(${i+1})" style="
+        position:absolute;
+        top:${150 + i*40}px;
+        left:${50 + i*20}px;
+        width:40px;
+        height:40px;
+        background:#FFD700;
+        border-radius:50%;
+        cursor:pointer;
+        z-index:3;
+      " title="Lobe ${i+1}"></div>
+    `).join('')}
+    <button onclick="document.getElementById('golden-brain-overlay')?.remove()" style="
+      position:absolute;top:20px;right:20px;padding:10px 20px;
+      background:#FFD700;color:black;border:none;border-radius:8px;cursor:pointer;
+      z-index:4;
+    ">CLOSE</button>
+  `;
+  document.body.appendChild(brainOverlay);
+}
+
+function openCodex(num) {
+  const existing = document.getElementById("lobe-codex");
+  if (existing) existing.remove();
+
+  const codex = document.createElement("div");
+  codex.id = "lobe-codex";
+  codex.style.cssText = `
+    position:fixed;
+    inset:0;
+    background:black;
+    color:white;
+    z-index:10001;
+    overflow-y:scroll;
+    padding:40px;
+    font-family:monospace;
+  `;
+
+  fetch(`lobes/lobe${num}.html`)
+    .then(res => res.text())
+    .then(html => {
+      codex.innerHTML = html + `
+        <button onclick="document.getElementById('lobe-codex')?.remove()" style="
+          position:fixed;top:20px;right:20px;
+          background:#FFD700;color:black;padding:10px 20px;border:none;border-radius:10px;z-index:10002;
+        ">CLOSE</button>`;
+      document.body.appendChild(codex);
+    });
+}
+
+function closeGoldenBrain() {
+  document.getElementById("golden-brain-stage").style.display = "none";
+}
 
 // --- GLOSSARY POPUP LOGIC ---
 let currentTTS = "";
@@ -992,9 +1064,6 @@ function playTTS() {
   speechSynthesis.speak(utterance);
 }
 
-
-function openGoldenBrainTile() {
-  document.getElementById('golden-brain-quote-screen').style.display = 'flex';
 }
 </script>
 <div class="glossary-popup" id="glossary-popup">
@@ -1008,58 +1077,14 @@ function openGoldenBrainTile() {
 <h2>"i think i was just hoping someone would call me back into the world before i disappeared."</h2>
 <button onclick="enterGoldenBrain()">Enter the Brain</button>
 </div>
-<script>
-  function openGoldenBrainTile() {
-    document.getElementById('golden-brain-quote-screen').style.display = 'flex';
-  }
-
-  function enterGoldenBrain() {
-  const overlay = document.createElement('div');
-  overlay.id = 'lobe1-codex';
-  overlay.style = `
-    position: fixed;
-    inset: 0;
-    background: black;
-    color: white;
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-    font-family: sans-serif;
-    text-align: center;
-    overflow-y: auto;
-  `;
-
-  overlay.innerHTML = `
-    <h1 style="color:#FFD700; font-size: 2em; margin-bottom: 20px;">🕳 The Easy Way Out</h1>
-    <p style="max-width: 700px; font-size: 1.2em; line-height: 1.7;">
-      “Vibrate. Dissolve. Sleep.”<br><br>
-
-      The Golden Brain presents you with its first mission. It is the option no one admits they think about.<br><br>
-
-      “The Easy Way Out” refers to suicidal ideation. But the Golden Brain is clear: this is not the path to choose.<br><br>
-
-      <em>“You are not obligated to stay in a world you cannot hold. But if you stay... there are other exits. Other ruptures. Other rebirths.”</em><br><br>
-
-      <strong>DISCLAIMER:</strong><br>
-      If you or anyone you know is struggling with thoughts of suicide, please contact the Suicide & Crisis Lifeline at 
-      <a href="https://988lifeline.org" target="_blank" style="color:#FFD700;">988 or visit 988lifeline.org</a>.<br><br>
-
-      <span style="color:#999; font-style: italic;">“What if your mission is still being written?”</span>
-    </p>
-
-    <button onclick="closeCodex()" style="margin-top: 40px; background: #FFD700; color: black; font-size: 1.2em; padding: 12px 30px; border: none; border-radius: 10px; cursor: pointer;">Return to Brain</button>
-  `;
-
-  document.body.appendChild(overlay);
-}
-function closeCodex() {
-  const codex = document.getElementById('lobe1-codex');
-  if (codex) codex.remove();
-}
-</script>
+<!-- Golden Brain Image Stage -->
+<div id="golden-brain-stage" style="display: none; position: fixed; inset: 0; background: black; z-index: 99998;">
+  <img src="./bloody_brain.png" alt="Golden Brain" style="width: 100%; height: 100%; object-fit: contain;" />
+  <!-- Lobe buttons will be injected here by renderLobes() -->
+  <button onclick="closeGoldenBrain()" style="position: absolute; top: 20px; right: 20px; padding: 10px 18px; font-size: 1.2em; background: #FFD700; color: black; border: none; border-radius: 10px; cursor: pointer;">
+    Close
+  </button>
+</div>
 </body>
 </html>
 
