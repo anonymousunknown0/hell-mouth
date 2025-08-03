@@ -784,7 +784,9 @@ document.getElementById('break-btn').addEventListener('click', () => {
   displayTiles();
 });
 
-// --- GLOSSARY POPUP LOGIC ---
+
+<!-- GLOSSARY POPUP LOGIC + TTS + BUTTONS -->
+<script>
 let currentTTS = "";
 
 function openGlossaryPopup(term, definition) {
@@ -806,8 +808,8 @@ function playTTS() {
   const utterance = new SpeechSynthesisUtterance(currentTTS);
   speechSynthesis.speak(utterance);
 }
-
 </script>
+
 <div id="glossary-popup" class="glossary-popup">
   <div class="popup-content">
     <span class="close-btn" onclick="closePopup()">✖</span>
@@ -817,4 +819,5 @@ function playTTS() {
 </div>
 </body>
 </html>
+
 
