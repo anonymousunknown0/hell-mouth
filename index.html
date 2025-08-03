@@ -1,11 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🌀 Virtual Spiral Notebook</title>
-
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>🌀 Virtual Spiral Notebook</title>
+<style>
     body {
       margin: 0;
       background: #111 url('spiral.gif') center center fixed;
@@ -155,6 +155,31 @@
   font-family: monospace;
   cursor: pointer;
 }
+
+.tile.golden-brain-tile {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  background-size: 400% 400%;
+  animation: shimmer 2s infinite;
+  border: 2px solid #FFD700;
+  border-radius: 14px;
+  box-shadow: 0 0 18px 4px rgba(255, 215, 0, 0.6);
+  cursor: pointer;
+  width: 180px;
+  height: 180px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@keyframes shimmer {
+  0% { background-position: -100px; }
+  100% { background-position: 200px; }
+}
+.tile.golden-brain-tile::before {
+  content: "🧠";
+  font-size: 2em;
+  animation: pulse 1.5s infinite;
+}
 </style>
 <style>
   .tile.golden-brain-tile {
@@ -207,62 +232,51 @@
     cursor: pointer;
   }
 </style>
-
 </head>
 <body>
-  <div id="entry-screen">
-    <video id="entry-bg-video" autoplay loop muted playsinline>
-      <source src="5 hypnotize.mp4" type="video/mp4">
-    </video>
-    <audio id="entry-audio" src="let me in.mp3" autoplay loop></audio>
-    <h1>H E L L M O U T H</h1>
-    <button id="enter-btn">ENTER</button>
-  </div>
-  <div id="wheel-overlay">
-    <h1>Pick an Emotion to Enter</h1>
-    <!-- EMOTIONS LIST (customize if needed) -->
-    <button class="emotion-btn" onclick="startSite()">Joy</button>
-    <button class="emotion-btn" onclick="startSite()">Sadness</button>
-    <button class="emotion-btn" onclick="startSite()">Anger</button>
-    <button class="emotion-btn" onclick="startSite()">Fear</button>
-    <button class="emotion-btn" onclick="startSite()">Surprise</button>
-    <button class="emotion-btn" onclick="startSite()">Disgust</button>
-    <button class="emotion-btn" onclick="startSite()">Trust</button>
-    <button class="emotion-btn" onclick="startSite()">Anticipation</button>
-    <button class="emotion-btn" onclick="startSite()">Love</button>
-    <button class="emotion-btn" onclick="startSite()">Shame</button>
-    <button class="emotion-btn" onclick="startSite()">Pride</button>
-    <button class="emotion-btn" onclick="startSite()">Envy</button>
-    <button class="emotion-btn" onclick="startSite()">Guilt</button>
-    <button class="emotion-btn" onclick="startSite()">Hope</button>
-    <button class="emotion-btn" onclick="startSite()">Boredom</button>
-    <button class="emotion-btn" onclick="startSite()">Confusion</button>
-    <button class="emotion-btn" onclick="startSite()">Calm</button>
-    <button class="emotion-btn" onclick="startSite()">Anxiety</button>
-    <button class="emotion-btn" onclick="startSite()">Awe</button>
-    <button class="emotion-btn" onclick="startSite()">Nostalgia</button>
-  </div>
-  <button id="schiz-btn-top" onclick="playSchizophrenia()" style="display:block; margin:22px auto 0 auto; padding:11px 32px; font-size:1.12em; font-weight:bold; border:2.5px solid #ff5252; border-radius:13px; background:#111; color:#ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s;">SCHIZOPHRENIA</button>
-
-  <div class="puzzle-grid" id="puzzle-grid" style="display:flex;">
-
-  <!-- 🧠 Golden Brain Tile -->
-  <div class="tile golden-brain-tile" onclick="openGoldenBrainTile()">🧠 TEST TILE</div>
-
-  <!-- 🔮 Injected glossary tile container -->
-  <div id="glossary-grid"></div>
-
+<div id="entry-screen">
+<video autoplay="" id="entry-bg-video" loop="" muted="" playsinline="">
+<source src="5 hypnotize.mp4" type="video/mp4"/>
+</video>
+<audio autoplay="" id="entry-audio" loop="" src="let me in.mp3"></audio>
+<h1>H E L L M O U T H</h1>
+<button id="enter-btn">ENTER</button>
 </div>
-
-  <button id="break-btn">BREAK THE SPIRAL</button>
-  <button id="random-btn">random</button>
-  <div id="content">
-    <div class="filename" id="file-name"></div>
-    <div id="content-area"></div>
-    <button class="close-btn" onclick="closeContent()">CLOSE</button>
-  </div>
-  <audio id="click-sound" src="click.mp3" preload="auto"></audio>
-  <script>
+<div id="wheel-overlay">
+<h1>Pick an Emotion to Enter</h1>
+<!-- EMOTIONS LIST (customize if needed) -->
+<button class="emotion-btn" onclick="startSite()">Joy</button>
+<button class="emotion-btn" onclick="startSite()">Sadness</button>
+<button class="emotion-btn" onclick="startSite()">Anger</button>
+<button class="emotion-btn" onclick="startSite()">Fear</button>
+<button class="emotion-btn" onclick="startSite()">Surprise</button>
+<button class="emotion-btn" onclick="startSite()">Disgust</button>
+<button class="emotion-btn" onclick="startSite()">Trust</button>
+<button class="emotion-btn" onclick="startSite()">Anticipation</button>
+<button class="emotion-btn" onclick="startSite()">Love</button>
+<button class="emotion-btn" onclick="startSite()">Shame</button>
+<button class="emotion-btn" onclick="startSite()">Pride</button>
+<button class="emotion-btn" onclick="startSite()">Envy</button>
+<button class="emotion-btn" onclick="startSite()">Guilt</button>
+<button class="emotion-btn" onclick="startSite()">Hope</button>
+<button class="emotion-btn" onclick="startSite()">Boredom</button>
+<button class="emotion-btn" onclick="startSite()">Confusion</button>
+<button class="emotion-btn" onclick="startSite()">Calm</button>
+<button class="emotion-btn" onclick="startSite()">Anxiety</button>
+<button class="emotion-btn" onclick="startSite()">Awe</button>
+<button class="emotion-btn" onclick="startSite()">Nostalgia</button>
+</div>
+<button id="schiz-btn-top" onclick="playSchizophrenia()" style="display:block; margin:22px auto 0 auto; padding:11px 32px; font-size:1.12em; font-weight:bold; border:2.5px solid #ff5252; border-radius:13px; background:#111; color:#ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s;">SCHIZOPHRENIA</button>
+<div class="puzzle-grid" id="puzzle-grid" style="display:flex;"><div class="tile golden-brain-tile" onclick="openGoldenBrainTile()">🧠 TEST TILE</div><div id="glossary-grid"></div></div>
+<button id="break-btn">BREAK THE SPIRAL</button>
+<button id="random-btn">random</button>
+<div id="content">
+<div class="filename" id="file-name"></div>
+<div id="content-area"></div>
+<button class="close-btn" onclick="closeContent()">CLOSE</button>
+</div>
+<audio id="click-sound" preload="auto" src="click.mp3"></audio>
+<script>
   // --------- JS CODE STARTS HERE ---------
 
 const files = [
@@ -961,19 +975,22 @@ function playTTS() {
   speechSynthesis.speak(utterance);
 }
 
-</script>
-<div id="glossary-popup" class="glossary-popup">
-  <div class="popup-content">
-    <span class="close-btn" onclick="closePopup()">✖</span>
-    <div id="glossary-content"></div>
-    <button class="tts-button" onclick="playTTS()">🔊 Read Aloud</button>
-  </div>
-</div>
-<div id="golden-brain-quote-screen" class="golden-brain-quote-screen">
-  <h2>"i think i was just hoping someone would call me back into the world before i disappeared."</h2>
-  <button onclick="enterGoldenBrain()">Enter the Brain</button>
-</div>
 
+function openGoldenBrainTile() {
+  document.getElementById('golden-brain-quote-screen').style.display = 'flex';
+}
+</script>
+<div class="glossary-popup" id="glossary-popup">
+<div class="popup-content">
+<span class="close-btn" onclick="closePopup()">✖</span>
+<div id="glossary-content"></div>
+<button class="tts-button" onclick="playTTS()">🔊 Read Aloud</button>
+</div>
+</div>
+<div class="golden-brain-quote-screen" id="golden-brain-quote-screen">
+<h2>"i think i was just hoping someone would call me back into the world before i disappeared."</h2>
+<button onclick="enterGoldenBrain()">Enter the Brain</button>
+</div>
 <script>
   function openGoldenBrainTile() {
     document.getElementById('golden-brain-quote-screen').style.display = 'flex';
@@ -1028,5 +1045,3 @@ function closeCodex() {
 </script>
 </body>
 </html>
-
-
