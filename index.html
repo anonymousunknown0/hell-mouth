@@ -79,6 +79,22 @@
     .happy-file-list button { margin-bottom:4px;}
     @media(max-width:800px){ .tile { width:92vw; height:20vw; min-height:80px; } #break-btn,#random-btn { font-size:1.4em; padding:8px 24px; bottom:12px; } }
 
+/* Golden Brain Tile Style */
+.tile.golden-brain {
+  background: linear-gradient(135deg, #ffd700, #ffcc00, #f5c518);
+  box-shadow: 0 0 12px 3px rgba(255, 215, 0, 0.8);
+  border: 2px solid white;
+  animation: shimmer 4s infinite;
+  cursor: pointer;
+}
+
+/* Optional shimmering animation */
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 .tile.glossary-tile {
   border: 2px solid white;
   animation: flicker 1.5s infinite;
@@ -193,7 +209,13 @@
   </div>
   <button id="schiz-btn-top" onclick="playSchizophrenia()" style="display:block; margin:22px auto 0 auto; padding:11px 32px; font-size:1.12em; font-weight:bold; border:2.5px solid #ff5252; border-radius:13px; background:#111; color:#ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s;">SCHIZOPHRENIA</button>
   <div class="puzzle-grid" id="puzzle-grid">
-  <div id="glossary-grid"></div> <!-- 🔮 Injected glossary tile container -->
+
+  <!-- 🧠 Golden Brain Tile -->
+  <div class="tile golden-brain" onclick="window.location.href='golden_brain_lobe1.html'"></div>
+
+  <!-- 🔮 Injected glossary tile container -->
+  <div id="glossary-grid"></div>
+
 </div>
   <button id="break-btn">BREAK THE SPIRAL</button>
   <button id="random-btn">random</button>
@@ -784,9 +806,7 @@ document.getElementById('break-btn').addEventListener('click', () => {
   displayTiles();
 });
 
-
-<!-- GLOSSARY POPUP LOGIC + TTS + BUTTONS -->
-<script>
+// --- GLOSSARY POPUP LOGIC ---
 let currentTTS = "";
 
 function openGlossaryPopup(term, definition) {
@@ -808,8 +828,8 @@ function playTTS() {
   const utterance = new SpeechSynthesisUtterance(currentTTS);
   speechSynthesis.speak(utterance);
 }
-</script>
 
+</script>
 <div id="glossary-popup" class="glossary-popup">
   <div class="popup-content">
     <span class="close-btn" onclick="closePopup()">✖</span>
