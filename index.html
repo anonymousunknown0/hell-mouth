@@ -230,13 +230,13 @@
 </style>
 </head>
 <body>
-<div id="entry-screen">
+<div id="entry-screen" style="position: fixed; inset: 0; background: black; z-index: 999999; display: flex; flex-direction: column; align-items: center; justify-content: center;">
 <video autoplay="" id="entry-bg-video" loop="" muted="" playsinline="">
 <source src="5 hypnotize.mp4" type="video/mp4"/>
 </video>
 <audio autoplay="" id="entry-audio" loop="" src="let me in.mp3"></audio>
-<h1>H E L L M O U T H</h1>
-<button id="enter-btn">ENTER</button>
+<h1 style="color: white; z-index: 2;">H E L L M O U T H</h1>
+<button id="enter-btn" style="padding: 12px 24px; font-size: 1.2em; border: none; background: white; color: black; border-radius: 8px; cursor: pointer; z-index: 2;">ENTER</button>
 </div>
 <div id="wheel-overlay">
 <h1>Pick an Emotion to Enter</h1>
@@ -654,8 +654,9 @@ function openRandom() {
 }
 
 // --- ENTRY LOGIC ---
-document.getElementById('enter-btn').onclick = function() {
-  document.getElementById('entry-screen').style.display = 'none';
+document.getElementById("enter-btn").addEventListener("click", () => {
+  document.getElementById("entry-screen").style.display = "none";
+});
   document.getElementById('wheel-overlay').style.display = 'flex';
   // Fade out entry audio
   let entryAudio = document.getElementById('entry-audio');
