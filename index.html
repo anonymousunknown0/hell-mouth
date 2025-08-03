@@ -653,14 +653,6 @@ function openRandom() {
   openFile(files[idx]);
 }
 
-// --- EMOTIONAL WHEEL LOGIC ---
-function startSite() {
-  document.getElementById('wheel-overlay').style.display = 'none';
-  document.getElementById('puzzle-grid').style.display = 'flex';
-  document.getElementById('break-btn').style.display = 'block';
-  document.getElementById('random-btn').style.display = 'block';
-}
-
 // --- CLICK SOUND ---
 function playClickOnce() {
   const a = document.getElementById('click-sound');
@@ -1089,6 +1081,16 @@ document.getElementById("enter-btn").addEventListener("click", () => {
     entryAudio.currentTime = 0;
   }
 });
+
+// --- EMOTIONAL WHEEL LOGIC ---
+function startSite() {
+  document.getElementById('wheel-overlay').style.display = 'none';
+  document.getElementById('puzzle-grid').style.display = 'flex';
+  document.getElementById('break-btn').style.display = 'block';
+  document.getElementById('random-btn').style.display = 'block';
+}
+
 </script>
 </body>
 </html>
+
