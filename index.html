@@ -24,19 +24,22 @@
     }
     #entry-screen audio { display: none; }
     #entry-screen h1 {
-      color: #ff0000;
-      font-size: 6rem;
-      font-weight: 900;
-      letter-spacing: 2rem;
-      text-align: center;
-      text-transform: uppercase;
-      margin-bottom: 40px;
-      filter: blur(1px) contrast(130%);
-      font-family: Impact, 'Arial Black', sans-serif;
-      text-shadow: 0 3px 0 #fff1, 0 10px 15px #e00c, 0 20px 30px #600b;
-      line-height: .9;
-      animation: melt 3s infinite alternate cubic-bezier(.8,0,.2,1);
-    }
+  color: #ff0000;
+  font-size: 6rem;
+  font-weight: 900;
+  letter-spacing: 2rem;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  filter: blur(1px) contrast(130%);
+  font-family: Impact, 'Arial Black', sans-serif;
+  line-height: 0.9;
+  text-shadow:
+    0 3px 0 #ff0000,
+    0 10px 15px #ff0000,
+    0 20px 30px #cc0000;
+  animation: melt 3s infinite alternate cubic-bezier(0.8, 0, 0.2, 1);
+}
     @keyframes melt {
       0%   { text-shadow: 0 0 0 #000, 0 0 0 #f00; }
       20%  { text-shadow: 0 2px 0 #c00, 0 6px 8px #e11; }
@@ -653,20 +656,6 @@ function openRandom() {
   openFile(files[idx]);
 }
 
-// --- EMOTIONAL WHEEL LOGIC ---
-function startSite() {
-  document.getElementById('wheel-overlay').style.display = 'none';
-  document.getElementById('puzzle-grid').style.display = 'flex';
-  document.getElementById('break-btn').style.display = 'block';
-  document.getElementById('random-btn').style.display = 'block';
-}
-
-// --- CLICK SOUND ---
-function playClickOnce() {
-  const a = document.getElementById('click-sound');
-  if (a) { a.currentTime = 0; a.play(); }
-}
-
 // --- SCHIZOPHRENIA BUTTON LOGIC ---
 function playSchizophrenia() {
   if (schizAudio) { schizAudio.pause(); schizAudio = null; }
@@ -1089,6 +1078,20 @@ document.getElementById("enter-btn").addEventListener("click", () => {
     entryAudio.currentTime = 0;
   }
 });
+// --- EMOTIONAL WHEEL LOGIC ---
+function startSite() {
+  document.getElementById('wheel-overlay').style.display = 'none';
+  document.getElementById('puzzle-grid').style.display = 'flex';
+  document.getElementById('break-btn').style.display = 'block';
+  document.getElementById('random-btn').style.display = 'block';
+}
+
+// --- CLICK SOUND ---
+function playClickOnce() {
+  const a = document.getElementById('click-sound');
+  if (a) { a.currentTime = 0; a.play(); }
+}
 </script>
 </body>
 </html>
+
