@@ -4,59 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🌀 Virtual Spiral Notebook</title>
-<style>
-  .golden-brain-tile {
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    animation: shimmer 2s infinite;
-    border: 2px solid #FFD700;
-    border-radius: 14px;
-    box-shadow: 0 0 18px 4px rgba(255, 215, 0, 0.6);
-    cursor: pointer;
-    width: 180px;
-    height: 180px;
-    position: relative;
-  }
 
-.tile.golden-brain-tile {
-  background-image: none !important;
-}
-
-  @keyframes shimmer {
-    0% { background-position: -100px; }
-    100% { background-position: 200px; }
-  }
-
-  .golden-brain-quote-screen {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: black;
-    color: white;
-    z-index: 9999;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 40px;
-  }
-
-  .golden-brain-quote-screen h2 {
-    font-size: 1.4em;
-    max-width: 600px;
-    line-height: 1.6;
-  }
-
-  .golden-brain-quote-screen button {
-    margin-top: 30px;
-    font-size: 1.2em;
-    background: #FFD700;
-    color: black;
-    padding: 12px 26px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-  }
-</style>
   <style>
     body {
       margin: 0;
@@ -223,9 +171,58 @@
   font-family: monospace;
   cursor: pointer;
 }
+</style>
+<style>
+  .tile.golden-brain-tile {
+  background-image: none !important;
+  background: linear-gradient(135deg, #FFD700, #FFA500) !important;
+  background-size: 400% 400%;
+  animation: shimmer 2s infinite !important;
+  border: 2px solid #FFD700;
+  border-radius: 14px;
+  box-shadow: 0 0 18px 4px rgba(255, 215, 0, 0.6);
+  cursor: pointer;
+  width: 180px;
+  height: 180px;
+  position: relative;
+}
+@keyframes shimmer {
+  0% { background-position: -100px; }
+  100% { background-position: 200px; }
+}
 
+  .golden-brain-quote-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: black;
+    color: white;
+    z-index: 9999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+  }
 
-  </style>
+  .golden-brain-quote-screen h2 {
+    font-size: 1.4em;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  .golden-brain-quote-screen button {
+    margin-top: 30px;
+    font-size: 1.2em;
+    background: #FFD700;
+    color: black;
+    padding: 12px 26px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+</style>
+
 </head>
 <body>
   <div id="entry-screen">
