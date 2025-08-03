@@ -1078,12 +1078,28 @@ document.getElementById("enter-btn").addEventListener("click", () => {
     entryAudio.currentTime = 0;
   }
 });
+
 // --- EMOTIONAL WHEEL LOGIC ---
 function startSite() {
   document.getElementById('wheel-overlay').style.display = 'none';
   document.getElementById('puzzle-grid').style.display = 'flex';
   document.getElementById('break-btn').style.display = 'block';
   document.getElementById('random-btn').style.display = 'block';
+
+  // ✅ Ensure tiles actually get loaded
+  generateGrid();
+}
+
+// --- TILE GENERATION ---
+function generateGrid() {
+  const grid = document.getElementById("puzzle-grid");
+  files.forEach((file) => {
+    const tile = document.createElement("div");
+    tile.className = "tile";
+    tile.textContent = file;
+    tile.onclick = () => openFile(file);
+    grid.appendChild(tile);
+  });
 }
 
 // --- CLICK SOUND ---
