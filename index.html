@@ -270,11 +270,6 @@
 
 <div class="puzzle-grid" id="puzzle-grid" style="display:flex;">
 
-  <!-- 🧠 Golden Brain Tile -->
-  <div style="width: 180px; height: 180px; background: red; color: white; font-weight: bold; display: flex; align-items: center; justify-content: center; z-index: 99999;" onclick="openGoldenBrainTile()">
-    TEST TILE
-  </div>
-
 <div id="glossary-grid"></div></div>
 <button id="break-btn">BREAK THE SPIRAL</button>
 <button id="random-btn">random</button>
@@ -951,13 +946,27 @@ function playSoundtrackTrack(file) {
 // --- INIT ---
 window.addEventListener('DOMContentLoaded', () => {
   displayTiles();
-  document.getElementById('break-btn').onclick  = breakSpiral;
+
+  // Inject Golden Brain Test Tile
+  const brainTile = document.createElement('div');
+  brainTile.style.width = '180px';
+  brainTile.style.height = '180px';
+  brainTile.style.background = 'red';
+  brainTile.style.color = 'white';
+  brainTile.style.display = 'flex';
+  brainTile.style.alignItems = 'center';
+  brainTile.style.justifyContent = 'center';
+  brainTile.style.fontWeight = 'bold';
+  brainTile.style.cursor = 'pointer';
+  brainTile.style.zIndex = '99999';
+  brainTile.textContent = 'TEST TILE';
+  brainTile.onclick = openGoldenBrainTile;
+
+  const grid = document.getElementById('puzzle-grid');
+  if (grid) grid.appendChild(brainTile);
+
+  document.getElementById('break-btn').onclick = breakSpiral;
   document.getElementById('random-btn').onclick = openRandom;
-});
-  
-document.getElementById('break-btn').addEventListener('click', () => {
-  document.getElementById('puzzle-grid').style.display = 'flex';
-  displayTiles();
 });
 
 // --- GLOSSARY POPUP LOGIC ---
