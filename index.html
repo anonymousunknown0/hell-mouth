@@ -260,7 +260,7 @@
   <div class="puzzle-grid" id="puzzle-grid">
 
   <!-- 🧠 Golden Brain Tile -->
-  <div class="tile golden-brain" onclick="window.location.href='golden_brain_lobe1.html'"></div>
+  <div class="tile golden-brain-tile" onclick="openGoldenBrainTile()"></div>
 
   <!-- 🔮 Injected glossary tile container -->
   <div id="glossary-grid"></div>
@@ -992,9 +992,51 @@ function playTTS() {
   }
 
   function enterGoldenBrain() {
-    // Replace this with actual codex logic later
-    alert("Loading Lobe 1 Codex...");
-  }
+  const overlay = document.createElement('div');
+  overlay.id = 'lobe1-codex';
+  overlay.style = `
+    position: fixed;
+    inset: 0;
+    background: black;
+    color: white;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    font-family: sans-serif;
+    text-align: center;
+    overflow-y: auto;
+  `;
+
+  overlay.innerHTML = `
+    <h1 style="color:#FFD700; font-size: 2em; margin-bottom: 20px;">🕳 The Easy Way Out</h1>
+    <p style="max-width: 700px; font-size: 1.2em; line-height: 1.7;">
+      “Vibrate. Dissolve. Sleep.”<br><br>
+
+      The Golden Brain presents you with its first mission. It is the option no one admits they think about.<br><br>
+
+      “The Easy Way Out” refers to suicidal ideation. But the Golden Brain is clear: this is not the path to choose.<br><br>
+
+      <em>“You are not obligated to stay in a world you cannot hold. But if you stay... there are other exits. Other ruptures. Other rebirths.”</em><br><br>
+
+      <strong>DISCLAIMER:</strong><br>
+      If you or anyone you know is struggling with thoughts of suicide, please contact the Suicide & Crisis Lifeline at 
+      <a href="https://988lifeline.org" target="_blank" style="color:#FFD700;">988 or visit 988lifeline.org</a>.<br><br>
+
+      <span style="color:#999; font-style: italic;">“What if your mission is still being written?”</span>
+    </p>
+
+    <button onclick="closeCodex()" style="margin-top: 40px; background: #FFD700; color: black; font-size: 1.2em; padding: 12px 30px; border: none; border-radius: 10px; cursor: pointer;">Return to Brain</button>
+  `;
+
+  document.body.appendChild(overlay);
+}
+function closeCodex() {
+  const codex = document.getElementById('lobe1-codex');
+  if (codex) codex.remove();
+}
 </script>
 </body>
 </html>
