@@ -159,7 +159,8 @@
 <style>
   .tile.golden-brain-tile {
   background-image: none !important;
-  background: linear-gradient(135deg, #FFD700, #FFA500) !important;
+  /* background: linear-gradient(135deg, #FFD700, #FFA500) !important; */
+  background: red !important; /* TEMP DEBUG */
   background-size: 400% 400%;
   animation: shimmer 2s infinite !important;
   border: 2px solid #FFD700;
@@ -243,7 +244,7 @@
   </div>
   <button id="schiz-btn-top" onclick="playSchizophrenia()" style="display:block; margin:22px auto 0 auto; padding:11px 32px; font-size:1.12em; font-weight:bold; border:2.5px solid #ff5252; border-radius:13px; background:#111; color:#ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s;">SCHIZOPHRENIA</button>
 
-  <div class="puzzle-grid" id="puzzle-grid">
+  <div class="puzzle-grid" id="puzzle-grid" style="display:flex;">
 
   <!-- 🧠 Golden Brain Tile -->
   <div class="tile golden-brain-tile" onclick="openGoldenBrainTile()">🧠 TEST TILE</div>
