@@ -91,16 +91,21 @@
   50% { opacity: 0.7; }
 }
 
-.glossary-tile {
-  background: black;
-  color: white;
+.tile.glossary-tile {
+  width: 20vw;
+  height: 20vw;
+  min-height: 80px;
   border: 2px solid white;
-  padding: 20px;
-  margin: 10px;
+  background-color: black;
+  color: white;
+  font-size: 1.2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   font-family: monospace;
+  animation: flicker 1.5s infinite;
   cursor: pointer;
-  position: relative;
-  transition: all 0.3s ease-in-out;
 }
 .glossary-tile:hover {
   border-color: #fff5;
@@ -138,10 +143,7 @@
   animation: blink 1s infinite;
   margin-left: 5px;
 }
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
+
 .tts-button {
   position: absolute;
   top: 10px;
@@ -153,67 +155,7 @@
   cursor: pointer;
 }
 
-.glossary-tile {
-  background: black;
-  color: white;
-  border: 2px solid white;
-  padding: 20px;
-  margin: 10px;
-  font-family: monospace;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.3s ease-in-out;
-}
-.glossary-tile:hover {
-  border-color: #fff5;
-  box-shadow: 0 0 20px white;
-}
-.glossary-popup {
-  background: black;
-  color: white;
-  border: 2px solid white;
-  padding: 20px;
-  max-height: 70vh;
-  overflow-y: scroll;
-  position: fixed;
-  top: 10vh;
-  left: 10vw;
-  width: 80vw;
-  z-index: 9999;
-  font-family: monospace;
-  display: none;
-}
-.glossary-popup .close-btn {
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 20px;
-  color: white;
-}
-.cursor {
-  display: inline-block;
-  width: 10px;
-  height: 18px;
-  background: white;
-  animation: blink 1s infinite;
-  margin-left: 5px;
-}
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
-.tts-button {
-  position: absolute;
-  top: 10px;
-  left: 20px;
-  background: none;
-  border: 1px solid white;
-  color: white;
-  font-family: monospace;
-  cursor: pointer;
-}
+
   </style>
 </head>
 <body>
@@ -466,6 +408,14 @@ mainTiles += glossaryTiles.map(item => `
 
 grid.innerHTML = happyTiles + mainTiles + soundtrackTile;
 }
+
+glossaryTiles.forEach(item => {
+  const tile = document.createElement("div");
+  tile.className = "tile glossary-tile";
+  tile.textContent = item.term;
+  tile.onclick = () => openGlossaryPopup(item.term, item.definition);
+  document.getElementById("puzzle-grid").appendChild(tile);
+});
 
 // --- CLOSE CONTENT ---
 function closeContent() {
@@ -841,13 +791,15 @@ function openGlossaryPopup(term, definition) {
   const popup = document.getElementById("glossary-popup");
   const content = document.getElementById("glossary-content");
   currentTTS = definition;
-  content.innerHTML = `<h2>${term}</h2><p>${definition}</p>`;
+  content.innerHTML = `<h2>${term}</h2><p>${definition}</p><span class="cursor"></span>`;
   popup.style.display = "block";
 }
 
 function closePopup() {
-  document.getElementById("glossary-popup").style.display = "none";
-  document.getElementById("glossary-content").innerHTML = "";
+  const popup = document.getElementById("glossary-popup");
+  const content = document.getElementById("glossary-content");
+  popup.style.display = "none";
+  content.innerHTML = "";
 }
 
 function playTTS() {
@@ -856,11 +808,11 @@ function playTTS() {
 }
 
 </script>
-<div id="glossary-popup" style="display: none;" class="popup">
+<div id="glossary-popup" class="glossary-popup">
   <div class="popup-content">
-    <span class="close-button" onclick="closePopup()">✖</span>
+    <span class="close-btn" onclick="closePopup()">✖</span>
     <div id="glossary-content"></div>
-    <button onclick="playTTS()">🔊 Read Aloud</button>
+    <button class="tts-button" onclick="playTTS()">🔊 Read Aloud</button>
   </div>
 </div>
 </body>
