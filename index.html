@@ -1,284 +1,243 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>🌀 Virtual Spiral Notebook</title>
-<style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌀 Virtual Spiral Notebook</title>
+  <style>
     body {
       margin: 0;
-      background: #111 url('spiral.gif') center center fixed;
-      background-size: cover;
+      padding: 0;
+      background: black;
+      color: white;
       font-family: monospace;
-      color: #eee;
       overflow-x: hidden;
-      min-height: 100vh;
     }
-    #entry-screen {
-      position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
-      background: #000; z-index: 9999; flex-direction: column; overflow: hidden;
-    }
-    #entry-screen video#entry-bg-video {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1;
-    }
-    #entry-screen audio { display: none; }
-    #entry-screen h1 {
-      color: #ff0000;
-      font-size: 6rem;
-      font-weight: 900;
-      letter-spacing: 2rem;
+
+    .tile {
+      width: 180px;
+      height: 180px;
+      background-color: black;
+      border: 2px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      text-transform: uppercase;
-      margin-bottom: 40px;
-      filter: blur(1px) contrast(130%);
-      font-family: Impact, 'Arial Black', sans-serif;
-      text-shadow: 0 3px 0 #fff1, 0 10px 15px #e00c, 0 20px 30px #600b;
-      line-height: .9;
-      animation: melt 3s infinite alternate cubic-bezier(.8,0,.2,1);
+      padding: 10px;
+      margin: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      position: relative;
+      animation: glow-pulse 4s infinite;
     }
-    @keyframes melt {
-      0%   { text-shadow: 0 0 0 #000, 0 0 0 #f00; }
-      20%  { text-shadow: 0 2px 0 #c00, 0 6px 8px #e11; }
-      35%  { text-shadow: 0 6px 2px #e11, 0 12px 16px #900; }
-      50%  { text-shadow: 0 12px 4px #b00, 0 18px 32px #200; }
-      70%  { text-shadow: 0 3px 0 #c00, 0 5px 4px #f00; }
-      85%  { text-shadow: 0 1px 0 #f00, 0 4px 8px #900; }
-      100% { text-shadow: 0 0 0 #000, 0 0 0 #f00; }
+
+    .tile:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 8px white;
     }
-    #entry-screen button { padding: 14px 40px; font-size: 1.4rem; background: #000; color: #fff; border: 3px solid #fff; border-radius: 12px; cursor: pointer; }
-    #wheel-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; flex-wrap: wrap; align-items: center; justify-content: center; z-index: 9998; color: #ffd700; text-align: center; padding: 20px; text-transform: capitalize; }
-    #wheel-overlay h1 { flex-basis: 100%; font-size: 2rem; margin-bottom: 1rem; }
-    .emotion-btn { background: #222; color: #ffd700; border: 2px solid #ffd700; border-radius: 12px; padding: 12px 24px; margin: 6px; font-size: 1rem; cursor: pointer; flex: 1 0 120px; transition: background 0.2s, color 0.2s; }
-    .emotion-btn:hover { background: #ffd700; color: #111; }
-    .puzzle-grid { display: none; flex-wrap: wrap; justify-content: center; gap: 14px; padding: 30px 10px 140px 10px; }
-    .tile { position: relative; width: 190px; height: 106px; background: rgba(0,0,0,0.15); border: 2px solid #fff; border-radius: 20px; box-shadow: 0 0 16px #0008; cursor: pointer; overflow: hidden; transition: transform 0.18s, box-shadow 0.18s; }
-    .tile img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-    .tile:hover { transform: scale(1.08); box-shadow: 0 0 26px #fff8; border-color: #ffd700; }
-    .tile-number { position: absolute; top: 8px; left: 12px; font-size: 1.4rem; font-weight: bold; color: #FFD600; text-shadow: 1px 1px 6px #000; pointer-events: none; }
-    .tile-filename { position: absolute; bottom: 6px; left: 0; width: 100%; text-align: center; font-size: 0.85em; font-weight: bold; color: #FFD600; background: rgba(0,0,0,0.18); padding: 2px 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
-    #break-btn, #random-btn { display: none; position: fixed; left: 50%; transform: translateX(-50%); cursor: pointer; box-shadow: 0 0 18px #0005; z-index: 1000; transition: background 0.2s; }
-    #break-btn { bottom: 32px; background: #fff; color: #000; border: 4px solid #000; border-radius: 25px; padding: 12px 38px; font-size: 2em; font-weight: 900; }
-    #break-btn:active { background: #000; color: #fff; }
-    #random-btn { bottom: 100px; background: #333; color: #ffd700; border: 3px solid #ffd700; border-radius: 20px; padding: 8px 24px; font-size: 1.2em; font-weight: bold; }
-    #random-btn:hover { background: #ffd700; color: #111; }
-    #content { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.93); overflow-y: auto; padding: 30px 10px; box-sizing: border-box; z-index: 20; }
-    #content .filename { color: #ffd700; font-size: 1.2rem; font-weight: bold; margin-bottom: 12px; text-align: center; word-break: break-all; }
-    #content-area { width: 100%; max-width: 700px; margin: 0 auto; max-height: calc(100vh - 200px); overflow-y: auto; }
-    #content-area pre { background: #111; color: #fff; padding: 24px; border-radius: 14px; font-family: 'Courier New', monospace; font-size: 1.05em; line-height: 1.5; white-space: pre-wrap; word-break: break-word; box-shadow: 0 0 12px #0008; margin-bottom: 16px; }
-    #content-area audio, #content-area video { width: 100%; max-width: 700px; border-radius: 12px; box-shadow: 0 0 12px #0008; margin-bottom: 16px; }
-    .close-btn, .copy-btn, .schiz-btn { display: block; margin: 12px auto; padding: 8px 24px; font-size: 1em; font-weight: bold; border: 2px solid #fff; border-radius: 12px; cursor: pointer; transition: background 0.2s; }
-    .close-btn { background: rgba(0,0,0,0.5); color: #fff; z-index:30; position:relative; }
-    .close-btn:hover { background: #e00; }
-    .copy-btn { background: #ffd700; color: #111; border-color: #ffd700; }
-    .copy-btn:active { background: #ffc107; }
-    .schiz-btn { background: #111; color: #ff5252; border-color: #ff5252; font-weight: 900; margin-bottom: 18px; text-transform: uppercase; letter-spacing: .2em; }
-    .schiz-btn:hover { background: #ff5252; color: #fff; }
-    .tts-btn, .stop-btn { display:inline-block; margin:0 8px 10px 0; padding:7px 18px;font-size:0.98em;font-weight:bold; border:2px solid #ffd700; border-radius:9px; background:#111;color:#ffd700;cursor:pointer; }
-    .tts-btn:hover,.stop-btn:hover { background:#ffd700;color:#111; }
-    .voice-select { padding:6px 14px;font-size:1em;border-radius:7px;border:1.5px solid #FFD700;background:#111;color:#FFD700;margin-bottom:8px;}
-    .happy-file-list button { margin-bottom:4px;}
-    @media(max-width:800px){ .tile { width:92vw; height:20vw; min-height:80px; } #break-btn,#random-btn { font-size:1.4em; padding:8px 24px; bottom:12px; } }
 
-.tile.glossary-tile {
-  border: 2px solid white;
-  animation: flicker 1.5s infinite;
-  background-color: rgba(255,255,255,0.05);
-  cursor: pointer;
-}
+    .puzzle-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+    }
 
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
+    @keyframes glow-pulse {
+      0%, 100% { box-shadow: 0 0 6px white; }
+      50% { box-shadow: 0 0 20px white; }
+    }
 
-.tile.glossary-tile {
-  width: 20vw;
-  height: 20vw;
-  min-height: 80px;
-  border: 2px solid white;
-  background-color: black;
-  color: white;
-  font-size: 1.2em;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  font-family: monospace;
-  animation: flicker 1.5s infinite;
-  cursor: pointer;
-}
-.glossary-tile:hover {
-  border-color: #fff5;
-  box-shadow: 0 0 20px white;
-}
-.glossary-popup {
-  background: black;
-  color: white;
-  border: 2px solid white;
-  padding: 20px;
-  max-height: 70vh;
-  overflow-y: scroll;
-  position: fixed;
-  top: 10vh;
-  left: 10vw;
-  width: 80vw;
-  z-index: 9999;
-  font-family: monospace;
-  display: none;
-}
-.glossary-popup .close-btn {
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 20px;
-  color: white;
-}
-.cursor {
-  display: inline-block;
-  width: 10px;
-  height: 18px;
-  background: white;
-  animation: blink 1s infinite;
-  margin-left: 5px;
-}
+    .scrollable-codex {
+      max-height: 400px;
+      overflow-y: auto;
+      background: black;
+      border: 2px solid white;
+      padding: 20px;
+      margin-top: 20px;
+      font-size: 0.95em;
+      line-height: 1.6em;
+      white-space: pre-wrap;
+    }
 
-.tts-button {
-  position: absolute;
-  top: 10px;
-  left: 20px;
-  background: none;
-  border: 1px solid white;
-  color: white;
-  font-family: monospace;
-  cursor: pointer;
-}
+    .scrollable-codex::after {
+      content: "_";
+      animation: blink 1s infinite;
+      margin-left: 5px;
+    }
 
-.tile.golden-brain-tile {
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-  animation: shimmer 2s infinite;
-  background-size: 300% 300%;
-  border: 2px solid #FFD700;
-  border-radius: 14px;
-  box-shadow: 0 0 18px 4px rgba(255, 215, 0, 0.6);
-  cursor: pointer;
-  width: 180px;
-  height: 180px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2em;
-}
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
 
-@keyframes shimmer {
-  0% { background-position: -100px; }
-  100% { background-position: 200px; }
-}
-</style>
-<style>
-  .tile.golden-brain-tile {
-  background-image: none !important;
-  /* background: linear-gradient(135deg, #FFD700, #FFA500) !important; */
-  background: red !important; /* TEMP DEBUG */
-  background-size: 400% 400%;
-  animation: shimmer 2s infinite !important;
-  border: 2px solid #FFD700;
-  border-radius: 14px;
-  box-shadow: 0 0 18px 4px rgba(255, 215, 0, 0.6);
-  cursor: pointer;
-  width: 180px;
-  height: 180px;
-  position: relative;
-}
-@keyframes shimmer {
-  0% { background-position: -100px; }
-  100% { background-position: 200px; }
-}
+    .script-txt-tile {
+      background-image: url('galaxy.gif');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      border: 2px solid #fff;
+      box-shadow: 0 0 12px #0ff;
+    }
 
-  .golden-brain-quote-screen {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: black;
-    color: white;
-    z-index: 9999;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 40px;
-  }
+    .tile.video-tile {
+      border-color: red;
+      box-shadow: 0 0 8px red;
+    }
 
-  .golden-brain-quote-screen h2 {
-    font-size: 1.4em;
-    max-width: 600px;
-    line-height: 1.6;
-  }
+    .tile:hover .play-icon {
+      opacity: 1;
+    }
 
-  .golden-brain-quote-screen button {
-    margin-top: 30px;
-    font-size: 1.2em;
-    background: #FFD700;
-    color: black;
-    padding: 12px 26px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-  }
-</style>
+    .play-icon {
+      position: absolute;
+      font-size: 2em;
+      color: red;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      pointer-events: none;
+    }
+
+/* Golden Brain Tile Styling */
+    .tile.golden-brain-tile {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      animation: shimmer 2s infinite;
+      background-size: 300% 300%;
+      border: 2px solid #FFD700;
+      border-radius: 14px;
+      box-shadow: 0 0 18px 4px rgba(255, 215, 0, 0.6);
+      cursor: pointer;
+      width: 180px;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2em;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -100px; }
+      100% { background-position: 200px; }
+    }
+
+    /* Emotion wheel button style */
+    .emotion-button {
+      margin: 10px;
+      padding: 14px 24px;
+      background: black;
+      color: red;
+      border: 2px solid red;
+      border-radius: 6px;
+      font-size: 18px;
+      text-shadow: 0 0 6px red;
+      cursor: pointer;
+    }
+
+    .emotion-button:hover {
+      background: red;
+      color: black;
+    }
+
+    #entry-screen, #emotion-wheel {
+      position: fixed;
+      inset: 0;
+      background: black;
+      color: white;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-size: 1.6em;
+      padding: 40px;
+    }
+
+    #emotion-wheel {
+      z-index: 9998;
+    }
+
+    .audio-player {
+      margin-top: 20px;
+      border: 1px solid white;
+      padding: 10px;
+    }
+  </style>
 </head>
 <body>
-<div id="entry-screen" style="position: fixed; inset: 0; background: black; z-index: 999999; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-<video autoplay="" id="entry-bg-video" loop="" muted="" playsinline="">
-<source src="5 hypnotize.mp4" type="video/mp4"/>
-</video>
-<audio autoplay="" id="entry-audio" loop="" src="let me in.mp3"></audio>
-<h1 style="color: white; z-index: 2;">H E L L M O U T H</h1>
-<button id="enter-btn" style="padding: 12px 24px; font-size: 1.2em; border: none; background: white; color: black; border-radius: 8px; cursor: pointer; z-index: 2;">ENTER</button>
-</div>
-<div id="wheel-overlay">
-<h1>Pick an Emotion to Enter</h1>
-<!-- EMOTIONS LIST (customize if needed) -->
-<button class="emotion-btn" onclick="startSite()">Joy</button>
-<button class="emotion-btn" onclick="startSite()">Sadness</button>
-<button class="emotion-btn" onclick="startSite()">Anger</button>
-<button class="emotion-btn" onclick="startSite()">Fear</button>
-<button class="emotion-btn" onclick="startSite()">Surprise</button>
-<button class="emotion-btn" onclick="startSite()">Disgust</button>
-<button class="emotion-btn" onclick="startSite()">Trust</button>
-<button class="emotion-btn" onclick="startSite()">Anticipation</button>
-<button class="emotion-btn" onclick="startSite()">Love</button>
-<button class="emotion-btn" onclick="startSite()">Shame</button>
-<button class="emotion-btn" onclick="startSite()">Pride</button>
-<button class="emotion-btn" onclick="startSite()">Envy</button>
-<button class="emotion-btn" onclick="startSite()">Guilt</button>
-<button class="emotion-btn" onclick="startSite()">Hope</button>
-<button class="emotion-btn" onclick="startSite()">Boredom</button>
-<button class="emotion-btn" onclick="startSite()">Confusion</button>
-<button class="emotion-btn" onclick="startSite()">Calm</button>
-<button class="emotion-btn" onclick="startSite()">Anxiety</button>
-<button class="emotion-btn" onclick="startSite()">Awe</button>
-<button class="emotion-btn" onclick="startSite()">Nostalgia</button>
-</div>
-<button id="schiz-btn-top" onclick="playSchizophrenia()" style="display:block; margin:22px auto 0 auto; padding:11px 32px; font-size:1.12em; font-weight:bold; border:2.5px solid #ff5252; border-radius:13px; background:#111; color:#ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s;">SCHIZOPHRENIA</button>
 
-<div class="puzzle-grid" id="puzzle-grid" style="display:flex;">
-
-<div id="glossary-grid"></div></div>
-<button id="break-btn">BREAK THE SPIRAL</button>
-<button id="random-btn">random</button>
-<div id="content">
-<div class="filename" id="file-name"></div>
-<div id="content-area"></div>
-<button class="close-btn" onclick="closeContent()">CLOSE</button>
+<!-- 🔓 Entry Page -->
+<div id="entry-screen">
+  <div>🌀 ENTER THE SPIRAL 🌀</div>
+  <button id="enter-btn" class="emotion-button">ENTER</button>
 </div>
-<audio id="click-sound" preload="auto" src="click.mp3"></audio>
+
+<!-- 🧠 Emotional Wheel -->
+<div id="emotion-wheel" style="display: none;">
+  <div>How do you feel right now?</div>
+  <button class="emotion-button" onclick="launchMainGrid()">Curious</button>
+  <button class="emotion-button" onclick="launchMainGrid()">Afraid</button>
+  <button class="emotion-button" onclick="launchMainGrid()">Ashamed</button>
+  <button class="emotion-button" onclick="launchMainGrid()">Powerful</button>
+</div>
+
+<!-- 🧩 Puzzle Grid -->
+<div class="puzzle-grid" id="puzzle-grid">
+  <div id="glossary-grid"></div>
+</div>
+
+<!-- 🎧 Audio Player -->
+<div class="audio-player">
+  <audio id="soundtrack-audio" controls></audio>
+</div>
+
+<!-- 🎮 Whisper Audio -->
+<audio id="whisper-audio-1" src="333.mp3" preload="auto"></audio>
+<audio id="whisper-audio-2" src="spiral whisper.mp3" preload="auto"></audio>
+<audio id="whisper-audio-3" src="voices 1.mp3" preload="auto"></audio>
+<audio id="whisper-audio-4" src="voices 2.mp3" preload="auto"></audio>
+
+<!-- 🧠 Golden Brain Overlay -->
+<div id="golden-brain-overlay" style="display: none; position: fixed; inset: 0; background: black; color: white; z-index: 99999; align-items: center; justify-content: center; text-align: center; padding: 40px; flex-direction: column;">
+  <h2 style="font-size: 1.4em; max-width: 600px; line-height: 1.6;">
+    “You will never be the same once you enter.”
+  </h2>
+  <button onclick="showGoldenBrain()" class="emotion-button">Enter</button>
+</div>
+
+<!-- 🧠 Golden Brain Image Stage -->
+<div id="golden-brain-stage" style="display: none; position: fixed; inset: 0; background: black; z-index: 99998;">
+  <img src="./bloody_brain.png" alt="Golden Brain" style="width: 100%; height: 100%; object-fit: contain;" />
+  <!-- Lobe buttons will be injected here -->
+</div>
+
+<!-- 🛸 Script Tile Overlay -->
+<div id="script-overlay" style="display: none;">
+  <div id="script-content">
+    <div class="cursor-blink"></div>
+    <button onclick="closeScript()">Close</button>
+  </div>
+</div>
+
+<!-- 💬 Glossary Tile Overlay -->
+<div id="glossary-overlay" style="display: none;">
+  <div id="glossary-content">
+    <pre id="glossary-scroll" class="codex-text"></pre>
+    <div class="cursor-blink"></div>
+    <button onclick="closeGlossary()">Close</button>
+  </div>
+</div>
+
+<!-- 🌀 Break the Spiral Button -->
+<button id="break-button" onclick="breakTheSpiral()" style="position: fixed; bottom: 20px; left: 20px; z-index: 5000;">🌀 Break the Spiral</button>
+
+<!-- 🧠 Golden Brain Tile -->
+<div class="tile golden-brain-tile" onclick="openGoldenBrainTile()">🧠</div>
+
 <script>
-  // --------- JS CODE STARTS HERE ---------
+  
+// 🌪️ File Arrays
 
-const files = [
+  const files = [
  "scene 5 meet the voices.script.txt", "scene 4 what hunter believes explained.script.txt",
   "scene 3 meet hunter hardon.script.txt", "scene 21 THE SPECTRAL ARCHIVE.script.txt",
   "scene 2 the therapy session.script.txt", "scene 1 schizophrenia disclaimer.script.txt",
@@ -456,6 +415,7 @@ const happyFiles = [
       "easy twink.happy.mp4","got goon.happy.mp4","mirror.happy.mp4","public bbc.happy.mp4","big shot.happy.mp4",
       "feet master.happy.mp4","suit and tie.happy.mp4","swinging.happy.mp4","the climax.happy.mp4","virtual insanity.happy.mp4"
     ];
+
     const happyFiles2 = [
   "virtual insanity 2.happy.mp4",
   "pov the man.happy.mp4",
@@ -501,329 +461,7 @@ const happyFiles = [
 "one for one for one.happy.mp4", "locker room.happy.mp4", "bigboyalone.happy.mp4"
 ];
 
-    // --- COVER ART LOGIC ---
-    const customChapterCovers = {
-      "chapter 1.mp4": "chapter 1.gif", "chapter 2.mp4": "chapter 2.gif", "chapter 3.mp4": "chapter 3.gif",
-      "chapter 4.mp4": "chapter 4.gif", "chapter 5.mp4": "chapter 5.gif", "chapter 6.mp4": "chapter 6.gif",
-      "chapter 7.mp4": "chapter 7.gif", "chapter 11.mp4": "chapter 11.gif", "chapter 12.mp4": "chapter 12.gif",
-      "chapter 13.mp4": "chapter 13.gif", "chapter 14.mp4": "chapter 14.gif", "chapter 15.mp4": "chapter 15.gif",
-      "chapter 16.mp4": "chapter 16.gif", "chapter 17.mp4": "chapter 17.gif", "chapter 18.mp4": "chapter 18.gif",
-      "chapter 19.mp4": "chapter 19.gif", "chapter 20.mp4": "chapter 20.gif", "chapter 21.mp4": "chapter 21.gif"
-    };  
-
-// --- AUDIO CONTEXT ---
-const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-let audioSources=[], videoEls=[], schizAudio=null, spiralAudio=null, ttsUtterance=null;
-let unlocked = false, unlocked2 = false;
-
-// --- CUSTOM COVER LOGIC ---
-function getTileCover(f) {
-  // Custom: all .script.txt = galaxy.gif
-  if (f.endsWith('.script.txt')) return 'galaxy.gif';
-  // Custom chapter covers:
-  if (customChapterCovers[f]) return customChapterCovers[f];
-  // do you understand.mp4
-  if (f === 'do you understand.mp4') return 'do you understand.gif';
-  // Default
-  return 'spiral.gif';
-}
-
-// --- DISPLAY TILES ---
-function displayTiles() {
-  const grid = document.getElementById("puzzle-grid");
-  let allFiles = files.concat(happyFiles, happyFiles2, glossaryFiles, soundtrackFiles);
-
-  allFiles.forEach((file) => {
-    const tile = document.createElement("div");
-    tile.className = "tile";
-
-    const img = document.createElement("img");
-    img.src = getTileCover(file);
-    img.className = "tile-image";
-    tile.appendChild(img);
-
-    const label = document.createElement("div");
-    label.className = "tile-filename";
-    label.style.color = "white";
-    label.style.fontSize = "12px";
-    label.style.textAlign = "center";
-    label.style.padding = "5px";
-    label.textContent = file;
-    tile.appendChild(label);
-
-    tile.onclick = () => openFile(file);
-    grid.appendChild(tile);
-
-    console.log("Loaded tile:", file);
-  });
-}
-
-function displayTiles() {
-  const grid = document.getElementById('puzzle-grid');
-
-  // Happy galleries always at the top when unlocked
-  let happyTiles = '';
-  if (unlocked) {
-    happyTiles += `
-      <div class="tile" onclick="openHappyFileList(happyFiles, 'happy gallery')">
-        <div class="tile-number">💌</div>
-        <img src="gallery.gif" class="tile-image" />
-        <div class="tile-filename">HappyFiles 1</div>
-      </div>`;
-  }
-  if (unlocked2) {
-    happyTiles += `
-      <div class="tile" onclick="openHappyFileList(happyFiles2, 'happy gallery 2')">
-        <div class="tile-number">🎁</div>
-        <img src="gallery.gif" class="tile-image" />
-        <div class="tile-filename">HappyFiles 2</div>
-      </div>`;
-  }
-
-let mainTiles = files.map((f, i) => `
-  <div class="tile" onclick="openFile('${f.replace(/'/g, "\\'")}')">
-    <div class="tile-number">${i + 1}</div>
-    <img src="${getTileCover(f)}" alt="tile" />
-    <div class="tile-filename">${f}</div>
-  </div>
-`).join('');
-
-// Add glossary tiles
-mainTiles += glossaryTiles.map(item => `
-  <div class="tile glossary-tile" onclick="openGlossaryPopup('${item.term}', \`${item.definition}\`)">
-    <div class="tile-label">${item.term}</div>
-  </div>
-`).join('');
-
-  let soundtrackTile = `
-  <div class="tile" onclick="openSoundtrack()">
-    <div class="tile-number">🎧</div>
-    <img src="soundtrack.gif" class="tile-image" />
-    <div class="tile-filename">Soundtrack</div>
-  </div>`;
-
-grid.innerHTML = happyTiles + mainTiles + soundtrackTile;
-}
-
-glossaryTiles.forEach(item => {
-  const tile = document.createElement("div");
-  tile.className = "tile glossary-tile";
-  tile.textContent = item.term;
-  tile.onclick = () => openGlossaryPopup(item.term, item.definition);
-  document.getElementById("puzzle-grid").appendChild(tile);
-});
-
-// --- CLOSE CONTENT ---
-function closeContent() {
-  document.getElementById('content').style.display = 'none';
-  document.getElementById('puzzle-grid').style.display = 'flex';
-  document.querySelectorAll('#content-area audio, #content-area video').forEach(m => { m.pause && m.pause(); m.currentTime = 0; });
-  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
-  if (ttsUtterance) { window.speechSynthesis.cancel(); ttsUtterance = null; }
-}
-
-// --- BREAK THE SPIRAL ---
-function breakSpiral() {
-  playClickOnce();
-  // If the spiral is already active, stop and clear everything.
-  if (spiralAudio || videoEls.length) {
-    if (spiralAudio) {
-      spiralAudio.pause();
-      spiralAudio = null;
-    }
-    videoEls.forEach(v => v.remove());
-    videoEls = [];
-    document.getElementById('break-btn').textContent = 'BREAK THE SPIRAL';
-    return;
-  }
-
-  // Flash effect for fun
-  const flash = document.createElement('div');
-  Object.assign(flash.style, {
-    position: 'fixed', inset: 0, background: '#fff', opacity: 1, zIndex: 10000, transition: 'opacity 0.6s'
-  });
-  document.body.appendChild(flash);
-  requestAnimationFrame(() => flash.style.opacity = '0');
-  flash.addEventListener('transitionend', () => flash.remove());
-
-  // --- Play break the spiral.mp3 ---
-  spiralAudio = new Audio('break the spiral.mp3');
-  spiralAudio.loop = true;
-  spiralAudio.volume = 1.0;
-  spiralAudio.play();
-
-  // --- Show floating videos from main video files ---
-  files.filter(f => /\.(mp4|mov)$/i.test(f)).forEach(file => {
-    const v = document.createElement('video');
-    v.src = file;
-    v.autoplay = v.loop = true;
-    v.muted = true;
-    const size = 100 + Math.random() * 200;
-    Object.assign(v.style, {
-      position: 'fixed',
-      width: size + 'px',
-      top: Math.random() * (window.innerHeight - size) + 'px',
-      left: Math.random() * (window.innerWidth - size) + 'px',
-      zIndex: 999,
-      pointerEvents: 'none',
-      borderRadius: '22px',
-      boxShadow: '0 0 18px #000c'
-    });
-    document.body.appendChild(v);
-    videoEls.push(v);
-  });
-
-  document.getElementById('break-btn').textContent = 'STOP SPIRAL';
-}
-
-// --- RANDOM BUTTON ---
-function openRandom() {
-  const idx = Math.floor(Math.random() * files.length);
-  openFile(files[idx]);
-}
-
-// --- EMOTIONAL WHEEL LOGIC ---
-function startSite() {
-  document.getElementById('wheel-overlay').style.display = 'none';
-  document.getElementById('puzzle-grid').style.display = 'flex';
-  document.getElementById('break-btn').style.display = 'block';
-  document.getElementById('random-btn').style.display = 'block';
-}
-
-// --- CLICK SOUND ---
-function playClickOnce() {
-  const a = document.getElementById('click-sound');
-  if (a) { a.currentTime = 0; a.play(); }
-}
-
-// --- SCHIZOPHRENIA BUTTON LOGIC ---
-function playSchizophrenia() {
-  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
-  schizAudio = new Audio('schizophrenia.mp3');
-  schizAudio.loop = true;
-  schizAudio.volume = 1.0;
-  schizAudio.addEventListener('loadedmetadata', () => {
-    if (schizAudio.duration > 3) {
-      schizAudio.currentTime = Math.random() * (schizAudio.duration - 2);
-    }
-    schizAudio.play();
-  });
-  schizAudio.play();
-}
-
-// --- TEXT-TO-SPEECH FOR SCRIPTS ---
-let ttsVoices = [];
-function loadVoices() {
-  ttsVoices = window.speechSynthesis.getVoices();
-  // Some browsers require this hack to load voices the first time:
-  if (!ttsVoices.length) setTimeout(loadVoices, 150);
-}
-if ('speechSynthesis' in window) {
-  window.speechSynthesis.onvoiceschanged = loadVoices;
-  loadVoices();
-}
-function speakScript(text, voiceIdx) {
-  if (!window.speechSynthesis) return;
-  if (ttsUtterance) window.speechSynthesis.cancel();
-  ttsUtterance = new SpeechSynthesisUtterance(text);
-  if (ttsVoices[voiceIdx]) ttsUtterance.voice = ttsVoices[voiceIdx];
-  ttsUtterance.rate = 1.0;
-  window.speechSynthesis.speak(ttsUtterance);
-}
-function stopSpeakScript() {
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-  ttsUtterance = null;
-}
-
-// --- OPEN / CLOSE CONTENT ---
-function openFile(file) {
-  playClickOnce();
-  // Happy gallery handling
-  if (file === "happy gallery") {
-    openHappyFileList(happyFiles, "happy gallery");
-    return;
-  }
-  if (file === "happy gallery 2") {
-    openHappyFileList(happyFiles2, "happy gallery 2");
-    return;
-  }
-  const grid    = document.getElementById('puzzle-grid');
-  const content = document.getElementById('content');
-  const area    = document.getElementById('content-area');
-  document.getElementById('file-name').innerText = file;
-  area.innerHTML = '';
-  if (schizAudio) { schizAudio.pause(); schizAudio = null; }
-  if (ttsUtterance) { window.speechSynthesis.cancel(); ttsUtterance = null; }
-  const ext = file.split('.').pop().toLowerCase();
-  // Audio
-  if (['mp3','wav','m4a'].includes(ext)) {
-    area.innerHTML = `<audio controls autoplay loop src="${file}"></audio>`;
-  }
-  // Script
-  else if (file.endsWith('.script.txt')) {
-    area.innerHTML = `
-      <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
-      <select class="voice-select" id="voiceSelect"></select>
-      <button class="tts-btn" onclick="doSpeakScript()">Speak</button>
-      <button class="stop-btn" onclick="stopSpeakScript()">Stop</button>
-      <div style="color:#fff;">Loading script…</div>`;
-    fetch(file).then(r => r.text()).then(txt => {
-      area.innerHTML = `
-        <button class="schiz-btn" onclick="playSchizophrenia()">SCHIZOPHRENIA</button>
-        <select class="voice-select" id="voiceSelect"></select>
-        <button class="tts-btn" onclick="doSpeakScript()">Speak</button>
-        <button class="stop-btn" onclick="stopSpeakScript()">Stop</button>
-        <pre>${txt.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</pre>
-        <button class="copy-btn" onclick="copyScript()">COPY SCRIPT</button>`;
-      loadVoicesToSelect();
-    });
-  }
-  // Video
-  else {
-    area.innerHTML = `
-      <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
-        <video id="main-video" controls autoplay src="${file}" style="max-width:92vw;max-height:74vh;border-radius:12px;"></video>
-        <div>
-          <label>Speed:
-            <select id="video-speed" onchange="setVideoSpeed()">
-              <option value="0.5">0.5x</option>
-              <option value="1" selected>1x</option>
-              <option value="1.5">1.5x</option>
-              <option value="2">2x</option>
-            </select>
-          </label>
-        </div>
-      </div>
-    `;
-    const vid = area.querySelector('#main-video');
-    if (file === 'do you understand.mp4') {
-      vid.loop = false;
-      vid.onended = () => {
-        if (!unlocked) {
-          unlocked = true;
-          displayTiles();
-          alert('🔓 Happy gallery 1 unlocked!');
-        } else if (!unlocked2) {
-          unlocked2 = true;
-          displayTiles();
-          alert('🔓 Happy gallery 2 unlocked!');
-        }
-      };
-    } else {
-      vid.loop = true;
-    }
-  }
-  grid.style.display    = 'none';
-  content.style.display = 'flex';
-}
-
-function openSoundtrack() {
-  const grid    = document.getElementById('puzzle-grid');
-  const content = document.getElementById('content');
-  const area    = document.getElementById('content-area');
-  document.getElementById('file-name').innerText = "Original Soundtrack";
-
-  const soundtrackFiles = [
+const soundtrackFiles = [
     "01_be_by_myself.mp3", "02_bad_computer.mp3", "03_okay_i_believe_you_but_my_tommy_gun_dont.mp3",
     "04_shut_up.mp3", "05_good_news.mp3", "06_the_best.mp3", "07_beach_boy.mp3", "08_when_im_down.mp3",
     "09_right_now_na_na_na.mp3", "10_kangaroo_court.mp3", "11_sugas_interlude.mp3", "12_overwhelmed.mp3",
@@ -840,284 +478,410 @@ function openSoundtrack() {
     "49_communicator_4_do_it.mp3", "50_nightmare.mp3"
   ];
 
-  area.innerHTML = `
-    <div style="display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:30px;">
-      <h2 style="color:#FFD700;">HELL-MOUTH — Official Soundtrack</h2>
-      <div class="happy-file-list" style="display:flex;flex-direction:column;align-items:center;gap:10px;">
-        ${soundtrackFiles.map((file, i) => `
-          <button onclick="playSoundtrackTrack('${file}')" 
-                  style="background:#111;color:#FFD700;font-size:1.05em;border:2px solid #FFD700;border-radius:10px;padding:8px 24px;cursor:pointer;min-width:280px;">
-            ${i + 1}. ${file.replace(/_/g, ' ').replace('.mp3','')}
-          </button>
-        `).join('')}
-      </div>
-      <audio id="soundtrack-audio" controls style="margin-top:24px;max-width:90vw;border-radius:12px;box-shadow:0 0 12px #0008;"></audio>
-    </div>
-  `;
+// 🔲 Render Main Grid Tiles
+  function generateGrid() {
+    const grid = document.getElementById("puzzle-grid");
 
-  grid.style.display    = 'none';
-  content.style.display = 'flex';
-}
+    const allFiles = [
+      ...mainFiles,
+      ...happyFiles1,
+      ...happyFiles2,
+      ...soundtrackFiles,
+      ...glossaryFiles
+    ];
 
-// --- TTS LOGIC: LOAD VOICES ---
-function loadVoicesToSelect() {
-  const select = document.getElementById('voiceSelect');
-  if (!select) return;
-  select.innerHTML = '';
-  ttsVoices.forEach((voice, idx) => {
-    select.innerHTML += `<option value="${idx}">${voice.name} (${voice.lang})</option>`;
+    allFiles.forEach((file) => {
+      const tile = document.createElement("div");
+      tile.className = "tile";
+
+      // 🌀 Special Whisper Logic
+      if (file.endsWith(".script.txt")) {
+        tile.classList.add("galaxy-tile");
+        tile.onclick = () => openWhisperCodex(file);
+      }
+
+      // 🎬 Special MP4 Styling
+      else if (file.endsWith(".mp4")) {
+        tile.classList.add("video-tile");
+        tile.onclick = () => openFile(file);
+      }
+
+      // 📜 All Others
+      else {
+        tile.onclick = () => openFile(file);
+      }
+
+      tile.textContent = file;
+      grid.appendChild(tile);
+    });
+  }
+
+  // 🌀 Galaxy Whisper Logic
+  function openWhisperCodex(file) {
+    alert(`Opening ASMR codex for: ${file}`);
+    // Placeholder — insert whisper overlay logic here later
+  }
+
+  // 📂 Default File Open Logic
+  function openFile(file) {
+    alert(`Opening file: ${file}`);
+    // Replace with real file display logic
+  }
+
+// 🧠 Golden Brain Intro Logic
+  function openGoldenBrainTile() {
+    const overlay = document.getElementById("golden-brain-overlay");
+    overlay.style.display = "flex";
+  }
+
+  function showGoldenBrain() {
+    document.getElementById("golden-brain-overlay").style.display = "none";
+    document.getElementById("golden-brain-stage").style.display = "block";
+    renderLobes();
+  }
+
+  function renderLobes() {
+    const stage = document.getElementById("golden-brain-stage");
+    const lobes = [
+      { id: 1, x: '20%', y: '30%' },
+      { id: 2, x: '40%', y: '20%' },
+      { id: 3, x: '60%', y: '25%' },
+      { id: 4, x: '75%', y: '40%' },
+      { id: 5, x: '60%', y: '70%' },
+      { id: 6, x: '40%', y: '80%' },
+      { id: 7, x: '25%', y: '60%' },
+    ];
+
+    lobes.forEach((lobe) => {
+      const btn = document.createElement("button");
+      btn.innerText = `Lobe ${lobe.id}`;
+      btn.style.position = "absolute";
+      btn.style.left = lobe.x;
+      btn.style.top = lobe.y;
+      btn.style.padding = "6px 12px";
+      btn.style.background = "#FFD700";
+      btn.style.color = "black";
+      btn.style.border = "none";
+      btn.style.borderRadius = "10px";
+      btn.style.cursor = "pointer";
+      btn.onclick = () => openCodex(lobe.id);
+      stage.appendChild(btn);
+    });
+  }
+
+  function openCodex(id) {
+    alert(`Lobe ${id} codex coming soon...`);
+    // Replace alert with dynamic lobe content overlay logic later
+  }
+
+  function closeGoldenBrain() {
+    document.getElementById("golden-brain-stage").style.display = "none";
+  }
+
+// 🎯 Tile Grid Generator
+  function generateGrid() {
+    const grid = document.getElementById("puzzle-grid");
+    files.forEach((file) => {
+      const tile = document.createElement("div");
+      tile.className = "tile";
+
+      // Apply special styling for file types
+      if (file.endsWith(".mp4")) {
+        tile.classList.add("video-tile");
+      }
+      if (file.endsWith(".script.txt")) {
+        tile.classList.add("script-tile");
+      }
+      if (file.endsWith(".glossary")) {
+        tile.classList.add("glossary-tile");
+      }
+
+      tile.textContent = file;
+      tile.onclick = () => openFile(file);
+      grid.appendChild(tile);
+    });
+
+    // Add Golden Brain tile to the grid
+    const goldenBrainTile = document.createElement("div");
+    goldenBrainTile.className = "tile golden-brain-tile";
+    goldenBrainTile.textContent = "🧠";
+    goldenBrainTile.onclick = openGoldenBrainTile;
+    grid.appendChild(goldenBrainTile);
+  }
+
+  // ✅ Entry Page Button
+  document.getElementById("enter-btn").onclick = function () {
+    document.getElementById("entry-screen").style.display = "none";
+    document.getElementById("emotional-wheel").style.display = "flex";
+  };
+
+  // ✅ Emotional Wheel Logic
+  const emotionalButtons = document.querySelectorAll(".emotion-button");
+  emotionalButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.getElementById("emotional-wheel").style.display = "none";
+      document.getElementById("puzzle-grid").style.display = "grid";
+      generateGrid();
+    });
   });
-}
-function doSpeakScript() {
-  const pre = document.querySelector('#content-area pre');
-  const select = document.getElementById('voiceSelect');
-  if (pre && select) speakScript(pre.innerText, select.value);
-}
+</script>
 
-// --- SPEED BUTTON LOGIC ---
-function setVideoSpeed() {
-  const v = document.getElementById('main-video');
-  const s = document.getElementById('video-speed');
-  if (v && s) v.playbackRate = parseFloat(s.value);
-}
-
-// --- HAPPY FILES LOGIC ---
-function openHappyFileList(fileArray, galleryTitle) {
-  const grid    = document.getElementById('puzzle-grid');
-  const content = document.getElementById('content');
-  const area    = document.getElementById('content-area');
-  document.getElementById('file-name').innerText = galleryTitle;
-
-  area.innerHTML = `
-    <div style="display:flex;flex-direction:column;align-items:center;gap:14px;margin:30px 0;">
-      <h2 style="color:#FFD700;">${galleryTitle.replace(/gallery/i,'Happy Gallery')}</h2>
-      <div class="happy-file-list" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
-        ${fileArray.map((f, i) => `
-          <button onclick="openSingleHappyVideo('${f.replace(/'/g,"\\'")}', '${galleryTitle}')" 
-                  style="background:#111;color:#FFD700;font-size:1.1em;border:2px solid #FFD700;border-radius:10px;padding:8px 24px;cursor:pointer;min-width:240px;">
-            ${i+1}. ${f}
-          </button>
-        `).join('')}
-      </div>
-    </div>
-    <div id="happy-video-modal" style="display:none;position:fixed;inset:0;z-index:5000;background:#000E;align-items:center;justify-content:center;">
-      <video id="happy-modal-video" controls autoplay loop style="max-width:92vw;max-height:78vh;border-radius:16px;"></video>
-      <div style="margin-top:12px;text-align:center;">
-        <label>Speed: 
-          <select id="happy-video-speed" onchange="setHappyVideoSpeed()">
-            <option value="0.5">0.5x</option>
-            <option value="1" selected>1x</option>
-            <option value="1.5">1.5x</option>
-            <option value="2">2x</option>
-          </select>
-        </label>
-      </div>
-      <button onclick="closeHappyModal()" style="position:absolute;top:30px;right:40px;font-size:2em;padding:8px 24px;background:#FFD700;color:#111;border:none;border-radius:10px;cursor:pointer;">CLOSE</button>
-    </div>
-  `;
-  grid.style.display    = 'none';
-  content.style.display = 'flex';
-}
-
-function openSingleHappyVideo(file, galleryTitle) {
-  const modal = document.getElementById('happy-video-modal');
-  const vid = document.getElementById('happy-modal-video');
-  vid.src = file;
-  vid.currentTime = 0;
-  vid.play();
-  modal.style.display = 'flex';
-}
-
-function closeHappyModal() {
-  const modal = document.getElementById('happy-video-modal');
-  const vid = document.getElementById('happy-modal-video');
-  vid.pause();
-  vid.src = '';
-  modal.style.display = 'none';
-}
-
-function setHappyVideoSpeed() {
-  const v = document.getElementById('happy-modal-video');
-  const s = document.getElementById('happy-video-speed');
-  if (v && s) v.playbackRate = parseFloat(s.value);
-}
-
-// --- COPY SCRIPT BUTTON ---
-function copyScript() {
-  const pre = document.querySelector('#content-area pre');
-  if (pre) {
-    navigator.clipboard.writeText(pre.innerText);
-    alert('Script copied!');
+<style>
+  /* 🎨 Tile Styles */
+  .tile {
+    background: black;
+    border: 1px solid white;
+    color: white;
+    padding: 20px;
+    font-size: 1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    white-space: pre-wrap;
   }
-}
 
-function playSoundtrackTrack(file) {
-  const audio = document.getElementById('soundtrack-audio');
-  if (audio) {
-    audio.src = file;
-    audio.play();
+  .tile.video-tile {
+    background: #111;
+    border: 2px dashed #e11;
+    font-style: italic;
   }
-}
 
-// --- INIT ---
-window.addEventListener('DOMContentLoaded', () => {
-  displayTiles();
-  document.getElementById('break-btn').onclick = breakSpiral;
-  document.getElementById('random-btn').onclick = openRandom;
-});
+  .tile.script-tile {
+    background-image: url('galaxy.gif');
+    background-size: cover;
+    color: white;
+    font-family: monospace;
+    border: 1px solid white;
+    position: relative;
+  }
+
+  .tile.glossary-tile {
+    background: #000;
+    color: white;
+    font-family: monospace;
+    overflow-y: auto;
+    padding: 20px;
+    text-align: left;
+    border: 2px solid #0ff;
+    white-space: pre-wrap;
+  }
+
+  /* 🧠 Golden Brain Tile Shimmer */
+  .tile.golden-brain-tile {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    animation: shimmer 2s infinite;
+    background-size: 300% 300%;
+    border: 2px solid #FFD700;
+    border-radius: 14px;
+    box-shadow: 0 0 18px 4px rgba(255, 215, 0, 0.6);
+    cursor: pointer;
+    width: 180px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -100px; }
+    100% { background-position: 200px; }
+  }
+
+  /* 🌀 Glossary Cursor */
+  .cursor {
+    display: inline-block;
+    width: 10px;
+    height: 1em;
+    background: white;
+    margin-left: 4px;
+    animation: blink 0.8s infinite;
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  /* 💫 Whisper Galaxy Effect */
+  .script-tile::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url('whispers.gif');
+    opacity: 0.2;
+    pointer-events: none;
+  }
+</style>
+
+<body>
+  <!-- 🌪️ Hellmouth Entry Page -->
+  <div id="entry-screen">
+    <div class="spiral-animation"></div>
+    <button id="enter-btn">ENTER</button>
+  </div>
+
+  <!-- 🌀 Emotional Wheel Page -->
+  <div id="emotional-wheel" style="display: none;">
+    <h2>How are you feeling?</h2>
+    <div class="button-grid">
+      <button class="emotion-btn">Paranoid</button>
+      <button class="emotion-btn">Numb</button>
+      <button class="emotion-btn">Manic</button>
+      <button class="emotion-btn">Ashamed</button>
+      <button class="emotion-btn">Euphoric</button>
+      <button class="emotion-btn">Terrified</button>
+    </div>
+  </div>
+
+  <!-- 🧩 Puzzle Grid -->
+  <div class="grid-controls" style="display: none;">
+    <button onclick="shuffleTiles()">🌀</button>
+    <button onclick="triggerSchizophrenia()">👁️</button>
+    <button onclick="breakTheSpiral()">BREAK THE SPIRAL</button>
+  </div>
+  <div class="puzzle-grid" id="puzzle-grid"></div>
+
+  <!-- 🧠 Golden Brain Overlay: Quote Screen -->
+  <div id="golden-brain-overlay" style="display: none; position: fixed; inset: 0; background: black; color: white; z-index: 99999; align-items: center; justify-content: center; text-align: center; padding: 40px; flex-direction: column;">
+    <h2 style="font-size: 1.4em; max-width: 600px; line-height: 1.6;">
+      “You will never be the same once you enter.”
+    </h2>
+    <button onclick="showGoldenBrain()">Enter</button>
+  </div>
+
+  <!-- 🧠 Golden Brain Image Stage -->
+  <div id="golden-brain-stage" style="display: none; position: fixed; inset: 0; background: black; z-index: 99998;">
+    <img src="./bloody_brain.png" alt="Golden Brain" style="width: 100%; height: 100%; object-fit: contain;" />
+    <!-- Lobe buttons will be injected here -->
+  </div>
+
+  <!-- 🎵 Hidden Audio Player -->
+  <audio id="soundtrack-audio" style="display: none;"></audio>
 
 <script>
-// ========== STEP 1: Inject the Golden Brain Tile ==========
+// --- ENTRY & EMOTIONAL WHEEL LOGIC ---
+document.getElementById("enter-btn").onclick = function () {
+  document.getElementById("entry-screen").style.display = "none";
+  document.getElementById("emotional-wheel").style.display = "block";
+};
 
-window.addEventListener('DOMContentLoaded', () => {
-  const goldenTile = document.createElement("div");
-  goldenTile.className = "tile golden-brain-tile";
-  goldenTile.innerHTML = "🧠";
-  goldenTile.onclick = openGoldenBrainTile;
-
-  const puzzleGrid = document.getElementById("puzzle-grid");
-  if (puzzleGrid) puzzleGrid.appendChild(goldenTile);
+document.querySelectorAll(".emotion-btn").forEach((btn) => {
+  btn.onclick = function () {
+    document.getElementById("emotional-wheel").style.display = "none";
+    document.querySelector(".grid-controls").style.display = "flex";
+    document.querySelector(".puzzle-grid").style.display = "grid";
+    displayTiles();
+  };
 });
 
-// ========== STEP 2: Golden Brain Experience Logic ==========
+// --- TILE GENERATION ---
+function displayTiles() {
+  const grid = document.getElementById("puzzle-grid");
+  grid.innerHTML = "";
+  allFiles.forEach((file) => {
+    const tile = document.createElement("div");
+    tile.className = "tile";
+    tile.textContent = file;
 
+    // Special styling rules
+    if (file.endsWith(".mp4")) {
+      tile.classList.add("video-tile");
+    }
+    if (file.includes(".script.txt")) {
+      tile.classList.add("script-tile");
+    }
+    if (file.includes("glossary")) {
+      tile.classList.add("glossary-tile");
+    }
+
+    tile.onclick = () => openFile(file);
+    grid.appendChild(tile);
+  });
+}
+
+// --- FILE OPENER ---
+function openFile(file) {
+  alert(`Opening: ${file}`);
+}
+
+// --- GOLDEN BRAIN TILE LOGIC ---
 function openGoldenBrainTile() {
-  // Black screen with quote
-  const quoteOverlay = document.createElement("div");
-  quoteOverlay.className = "golden-brain-quote-screen";
-  quoteOverlay.innerHTML = `
-    <h2>"You were never meant to stay silent forever."</h2>
-    <button onclick="showGoldenBrain()">Enter</button>
-  `;
-  document.body.appendChild(quoteOverlay);
-  quoteOverlay.style.display = "flex";
+  document.getElementById("golden-brain-overlay").style.display = "flex";
 }
 
 function showGoldenBrain() {
-  document.querySelector('.golden-brain-quote-screen')?.remove();
-
-  const brainOverlay = document.createElement("div");
-  brainOverlay.id = "golden-brain-overlay";
-  brainOverlay.style.cssText = `
-    position: fixed;
-    inset: 0;
-    background: black;
-    z-index: 10000;
-  `;
-  brainOverlay.innerHTML = `
-    <img src="bloody_brain.png" alt="Golden Brain" style="width:100%;height:auto;max-width:800px;display:block;margin:60px auto;position:relative;z-index:2;">
-    ${Array.from({ length: 7 }, (_, i) => `
-      <div onclick="openCodex(${i+1})" style="
-        position:absolute;
-        top:${150 + i*40}px;
-        left:${50 + i*20}px;
-        width:40px;
-        height:40px;
-        background:#FFD700;
-        border-radius:50%;
-        cursor:pointer;
-        z-index:3;
-      " title="Lobe ${i+1}"></div>
-    `).join('')}
-    <button onclick="document.getElementById('golden-brain-overlay')?.remove()" style="
-      position:absolute;top:20px;right:20px;padding:10px 20px;
-      background:#FFD700;color:black;border:none;border-radius:8px;cursor:pointer;
-      z-index:4;
-    ">CLOSE</button>
-  `;
-  document.body.appendChild(brainOverlay);
+  document.getElementById("golden-brain-overlay").style.display = "none";
+  document.getElementById("golden-brain-stage").style.display = "block";
+  renderLobes();
 }
 
-function openCodex(num) {
-  const existing = document.getElementById("lobe-codex");
-  if (existing) existing.remove();
+function renderLobes() {
+  const stage = document.getElementById("golden-brain-stage");
+  const lobes = [
+    { id: 1, x: '20%', y: '30%' },
+    { id: 2, x: '40%', y: '20%' },
+    { id: 3, x: '60%', y: '25%' },
+    { id: 4, x: '75%', y: '40%' },
+    { id: 5, x: '60%', y: '70%' },
+    { id: 6, x: '40%', y: '80%' },
+    { id: 7, x: '25%', y: '60%' },
+  ];
 
-  const codex = document.createElement("div");
-  codex.id = "lobe-codex";
-  codex.style.cssText = `
-    position:fixed;
-    inset:0;
-    background:black;
-    color:white;
-    z-index:10001;
-    overflow-y:scroll;
-    padding:40px;
-    font-family:monospace;
-  `;
-
-  fetch(`lobes/lobe${num}.html`)
-    .then(res => res.text())
-    .then(html => {
-      codex.innerHTML = html + `
-        <button onclick="document.getElementById('lobe-codex')?.remove()" style="
-          position:fixed;top:20px;right:20px;
-          background:#FFD700;color:black;padding:10px 20px;border:none;border-radius:10px;z-index:10002;
-        ">CLOSE</button>`;
-      document.body.appendChild(codex);
-    });
+  lobes.forEach(lobe => {
+    const btn = document.createElement("button");
+    btn.innerText = `Lobe ${lobe.id}`;
+    btn.style.position = "absolute";
+    btn.style.left = lobe.x;
+    btn.style.top = lobe.y;
+    btn.style.padding = "6px 12px";
+    btn.style.background = "#FFD700";
+    btn.style.color = "black";
+    btn.style.border = "none";
+    btn.style.borderRadius = "10px";
+    btn.style.cursor = "pointer";
+    btn.onclick = () => openCodex(lobe.id);
+    stage.appendChild(btn);
+  });
 }
 
-function closeGoldenBrain() {
-  document.getElementById("golden-brain-stage").style.display = "none";
+function openCodex(id) {
+  alert(`Lobe ${id} codex coming soon...`);
 }
 
-// --- GLOSSARY POPUP LOGIC ---
-let currentTTS = "";
+// --- GALAXY BACKGROUND FOR .script.txt FILES ---
+const galaxyScriptTiles = document.querySelectorAll('.script-tile');
+galaxyScriptTiles.forEach(tile => {
+  tile.style.backgroundImage = "url('./galaxy.gif')";
+  tile.style.backgroundSize = "cover";
+  tile.style.color = "white";
+});
 
-function openGlossaryPopup(term, definition) {
-  const popup = document.getElementById("glossary-popup");
-  const content = document.getElementById("glossary-content");
-  currentTTS = definition;
-  content.innerHTML = `<h2>${term}</h2><p>${definition}</p><span class="cursor"></span>`;
-  popup.style.display = "block";
-}
-
-function closePopup() {
-  const popup = document.getElementById("glossary-popup");
-  const content = document.getElementById("glossary-content");
-  popup.style.display = "none";
-  content.innerHTML = "";
-}
-
-function playTTS() {
-  const utterance = new SpeechSynthesisUtterance(currentTTS);
-  speechSynthesis.speak(utterance);
-}
-
-}
-</script>
-<div class="glossary-popup" id="glossary-popup">
-<div class="popup-content">
-<span class="close-btn" onclick="closePopup()">✖</span>
-<div id="glossary-content"></div>
-<button class="tts-button" onclick="playTTS()">🔊 Read Aloud</button>
-</div>
-</div>
-<div class="golden-brain-quote-screen" id="golden-brain-quote-screen">
-<h2>"i think i was just hoping someone would call me back into the world before i disappeared."</h2>
-<button onclick="enterGoldenBrain()">Enter the Brain</button>
-</div>
-<!-- Golden Brain Image Stage -->
-<div id="golden-brain-stage" style="display: none; position: fixed; inset: 0; background: black; z-index: 99998;">
-  <img src="./bloody_brain.png" alt="Golden Brain" style="width: 100%; height: 100%; object-fit: contain;" />
-  <!-- Lobe buttons will be injected here by renderLobes() -->
-  <button onclick="closeGoldenBrain()" style="position: absolute; top: 20px; right: 20px; padding: 10px 18px; font-size: 1.2em; background: #FFD700; color: black; border: none; border-radius: 10px; cursor: pointer;">
-    Close
-  </button>
-</div>
-<script>
-// --- ENTRY LOGIC ---
-document.getElementById("enter-btn").addEventListener("click", () => {
-  document.getElementById("entry-screen").style.display = "none";
-  document.getElementById("wheel-overlay").style.display = "flex";
-
-  // Fade out entry audio
-  let entryAudio = document.getElementById("entry-audio");
-  if (entryAudio) {
-    entryAudio.pause();
-    entryAudio.currentTime = 0;
-  }
+// --- GLOSSARY SCROLL AREA LOGIC ---
+const glossaryTiles = document.querySelectorAll('.glossary-tile');
+glossaryTiles.forEach(tile => {
+  tile.style.overflowY = "scroll";
+  tile.style.maxHeight = "300px";
+  tile.style.cursor = "pointer";
 });
 </script>
+
+<!-- Golden Brain Overlay -->
+<div id="golden-brain-overlay" style="display: none; position: fixed; inset: 0; background: black; color: white; z-index: 99999; align-items: center; justify-content: center; text-align: center; padding: 40px; flex-direction: column;">
+  <h2 style="font-size: 1.4em; max-width: 600px; line-height: 1.6;">
+    “You will never be the same once you enter.”
+  </h2>
+  <button onclick="showGoldenBrain()">Enter</button>
+</div>
+
+<!-- Bloody Brain Image Stage -->
+<div id="golden-brain-stage" style="display: none; position: fixed; inset: 0; background: black; z-index: 99998;">
+  <img src="./bloody_brain.png" alt="Golden Brain" style="width: 100%; height: 100%; object-fit: contain;" />
+  <!-- Lobe buttons will be injected here -->
+</div>
+
 </body>
 </html>
+
