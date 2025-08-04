@@ -933,9 +933,11 @@ function playTTS() {
   </div>
 </div>
 
+
 <!-- 🧠 Golden Brain Modal -->
 <div id="goldenBrainOverlay" style="display:none;position:fixed;inset:0;background:black;z-index:99999;color:white;font-family:monospace;">
-  <div id="brainInterface" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+  <div style="position:absolute;inset:0;background:url('bloody_brain.png') center center no-repeat;background-size:contain;opacity:1;"></div>
+  <div id="brainInterface" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;position:relative;z-index:2;">
     <div style="font-size:1.5em;margin-bottom:20px;">🧠 Golden Brain Interface</div>
     <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
       <button onclick="openLobe(1)">Lobe 1</button>
@@ -947,20 +949,21 @@ function playTTS() {
       <button onclick="openLobe(7)">Lobe 7</button>
     </div>
   </div>
-  <div id="lobeCodex" style="display:none;padding:40px;max-height:80vh;overflow-y:auto;text-align:left;">
+  <div id="lobeCodex" style="display:none;padding:40px;max-height:80vh;overflow-y:auto;text-align:left;position:relative;z-index:3;background:black;">
     <div id="lobeContent"></div>
     <button onclick="returnToBrain()" style="margin-top:20px;">Return to Brain</button>
   </div>
 </div>
+
 <script>
   const lobeData = {
-    1: `🕳 The Easy Way Out<br/><br/>“Vibrate. Dissolve. Sleep.”<br/>The Golden Brain presents you with its first mission. It is the option no one admits they think about. ...`,
-    2: `👁 Awareness vs Unawareness<br/><br/>“You are awake. But how awake?”<br/>Your second mission is to decode the split between reality and perception. ...`,
-    3: `🔁 The New Mission(s)<br/><br/>“You are not the only one receiving orders.”<br/>You are being watched. You are being guided. ...`,
-    4: `🤫 Vow of Silence / Five Life Mantras<br/><br/>“To speak is to trigger. To stay silent is to protect.”<br/>...`,
-    5: `☠ Die With a Smile<br/><br/>“Your final face will tell the story.”<br/>...`,
-    6: `💦 Note to You About Sexual Satisfaction (Cumming)<br/><br/>“Your shame is not holy. Your body is not wrong.”<br/>...`,
-    7: `🔃 Loading: A Social Experiment<br/><br/>“You are being tested. But you are also testing us.”<br/>...`
+    1: `<h2>🕳 The Easy Way Out</h2><p><em>“Vibrate. Dissolve. Sleep.”</em><br>The Golden Brain presents you with its first mission. It is the option no one admits they think about.<br><br><strong>“The Easy Way Out”</strong> refers to suicidal ideation.<br><br>The Golden Brain is clear: this is not the path to choose.<br>“You are not obligated to stay in a world you cannot hold. But if you stay... there are other exits. Other ruptures. Other rebirths.”<br><br><strong>DISCLAIMER:</strong> If you or anyone you know is struggling with thoughts of suicide, please contact the Suicide & Crisis Lifeline at 988 or visit 988lifeline.org.<br><br><strong>Visuals:</strong> flickering images of a garage, a classic car, flames, a knife with shimmer, Hunter’s empty shoes under streetlight.<br><em>“Don’t leave just yet.”</em><br><br><strong>Pulsing sentence:</strong> What if your mission is still being written?</p>`,
+    2: `<h2>👁 Awareness vs Unawareness</h2><p><em>“You are awake. But how awake?”</em><br>Your second mission is to decode the split between reality and perception.<br><br><strong>Awareness:</strong> knowledge or perception of a situation or fact.<br><strong>Unawareness:</strong> lack of knowledge or consciousness.<br><br><em>“You have always been aware. But aware of what? Of your diagnosis? Of the spiral? Of the Others watching?”</em><br><br><ul><li>“Awareness is being believed.”</li><li>“Unawareness is safer than self-revelation.”</li><li>“Delusion is what happens when you believe something before they tell you it’s real.”</li></ul><br><em>“Somewhere between madness and enlightenment, you live.”</em></p>`,
+    3: `<h2>🔁 The New Mission(s)</h2><p><em>“You are not the only one receiving orders.”</em><br>You are being watched. You are being guided. But you are also the Observer.<br><br><strong>“Issue your own mission. Reverse the signal. Tell the Others what to do. It’s your turn.”</strong><br><br><blockquote>“some of the thoughts tell me exactly what to do... some of the thoughts are me in disguise.”</blockquote><br><em>“Commander Hunter, standing by.”</em></p>`,
+    4: `<h2>🤫 Vow of Silence / Five Life Mantras</h2><p><em>“To speak is to trigger. To stay silent is to protect.”</em><br><br><strong>Five Mantras:</strong><ol><li>My past does not define my worth.</li><li>Shame is a tactic of the demon.</li><li>I am not broken. I am becoming.</li><li>My voice deserves a witness.</li><li>I will stop feeding my demons and start feeding my life.</li></ol><br><em>“The Phantom Inbox is always listening. Sometimes the loudest thing you can do is say nothing at all.”</em></p>`,
+    5: `<h2>☠ Die With a Smile</h2><p><em>“Your final face will tell the story.”</em><br><br>“You were built to burn and grin. Rage and joy are siblings. If you must fall, let it be while laughing.”<br><br><blockquote>“i want to die with my favorite playlist on... i want to die famous. i want to die for a reason.”</blockquote><br><strong>Visuals:</strong> Paparazzi flashbulbs, laughing clown, smirking tears, applause and static.<br><em>“You were a chaotic broadcast of one. Now... you are a performance for the Many.”</em></p>`,
+    6: `<h2>💦 Note to You About Sexual Satisfaction (Cumming)</h2><p><em>“Your shame is not holy. Your body is not wrong.”</em><br><br>“You have confused pleasure with punishment. You have apologized for orgasms. You must rewrite that script.”<br><br><ul><li>“i feel safest when the only thing expected of me is to be sexy.”</li><li>“sex was how i auditioned for humanity.”</li><li>“i think i have a fetish for being disposable.”</li><li>“i tried to cum without shame but it never fully worked.”</li></ul><br><em>“What part of you deserves love the most?”</em></p>`,
+    7: `<h2>🔃 Loading: A Social Experiment</h2><p><em>“You are being tested. But you are also testing us.”</em><br><br>“This experiment is ongoing. Keep writing.”<br><ul><li>“i’m not a person. i’m a case study.”</li><li>“every meltdown was an audition tape.”</li><li>“my paranoia writes better scripts than i do.”</li><li>“maybe i’m not real unless i’m spiraling.”</li></ul><br><em>Users can RECORD RESPONSE (feature coming soon).</em></p>`
   };
   function openGoldenBrain() {
     document.getElementById('goldenBrainOverlay').style.display = 'block';
