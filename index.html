@@ -984,6 +984,62 @@ function playTTS() {
   }
 </script>
 
+
+<!-- Golden Brain Experience -->
+<div id="golden-brain-screen" style="display:none;position:fixed;inset:0;background:black;z-index:99999;color:white;font-family:monospace;">
+  <div id="brain-fade-text" style="position:absolute;top:40%;width:100%;text-align:center;font-size:2em;">“You found it. You were always going to.”</div>
+  <div id="brain-ui" style="display:none;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+    <img src="bloody_brain.png" style="max-width:80%;height:auto;margin-bottom:20px;" alt="Golden Brain"/>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+      <button onclick="openLobe(1)">Lobe 1</button>
+      <button onclick="openLobe(2)">Lobe 2</button>
+      <button onclick="openLobe(3)">Lobe 3</button>
+      <button onclick="openLobe(4)">Lobe 4</button>
+      <button onclick="openLobe(5)">Lobe 5</button>
+      <button onclick="openLobe(6)">Lobe 6</button>
+      <button onclick="openLobe(7)">Lobe 7</button>
+    </div>
+  </div>
+  <div id="lobeCodex" style="display:none;padding:40px;max-height:80vh;overflow-y:auto;text-align:left;background:black;">
+    <div id="lobeContent"></div>
+    <button onclick="returnToBrain()" style="margin-top:20px;">Return to Brain</button>
+  </div>
+</div>
+<script>
+  const lobeData = {
+    1: `<h2>🕳 The Easy Way Out</h2><p><em>“Vibrate. Dissolve. Sleep.”</em> The Golden Brain presents you with its first mission...`,
+    2: `<h2>👁 Awareness vs Unawareness</h2><p><em>“You are awake. But how awake?”</em> Decode the split between reality and perception...`,
+    3: `<h2>🔁 The New Mission(s)</h2><p><em>“You are not the only one receiving orders.”</em> You are being watched. But you are also the Observer...`,
+    4: `<h2>🤫 Vow of Silence / Five Life Mantras</h2><p><em>“To speak is to trigger. To stay silent is to protect.”</em> Mantras: ...`,
+    5: `<h2>☠ Die With a Smile</h2><p><em>“Your final face will tell the story.”</em> Rage and joy are siblings. Die laughing...</p>`,
+    6: `<h2>💦 Note to You About Sexual Satisfaction (Cumming)</h2><p><em>“Your shame is not holy. Your body is not wrong.”</em> Rewrite that script...</p>`,
+    7: `<h2>🔃 Loading: A Social Experiment</h2><p><em>“You are being tested. But you are also testing us.”</em> Ongoing experiment... RECORD RESPONSE coming soon.</p>`
+  };
+
+  function startGoldenBrain() {
+    const overlay = document.getElementById('golden-brain-screen');
+    const fadeText = document.getElementById('brain-fade-text');
+    const ui = document.getElementById('brain-ui');
+    overlay.style.display = 'block';
+    fadeText.style.opacity = 1;
+    setTimeout(() => {
+      fadeText.style.opacity = 0;
+      ui.style.display = 'flex';
+    }, 2500);
+  }
+
+  function openLobe(n) {
+    document.getElementById('brain-ui').style.display = 'none';
+    document.getElementById('lobeCodex').style.display = 'block';
+    document.getElementById('lobeContent').innerHTML = lobeData[n];
+  }
+
+  function returnToBrain() {
+    document.getElementById('lobeCodex').style.display = 'none';
+    document.getElementById('brain-ui').style.display = 'flex';
+  }
+</script>
+
 </body>
 </html>
 
