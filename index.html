@@ -967,55 +967,6 @@ function playTTS() {
   </div>
 </div>
 
-
-<!-- 🧠 Golden Brain Modal -->
-<div id="goldenBrainOverlay" style="display:none;position:fixed;inset:0;background:black;z-index:99999;color:white;font-family:monospace;">
-  <div style="position:absolute;inset:0;background:url('bloody_brain.png') center center no-repeat;background-size:contain;opacity:1;"></div>
-  <div id="brainInterface" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;position:relative;z-index:2;">
-    <div style="font-size:1.5em;margin-bottom:20px;">🧠 Golden Brain Interface</div>
-    <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
-      <button onclick="openLobe(1)">Lobe 1</button>
-      <button onclick="openLobe(2)">Lobe 2</button>
-      <button onclick="openLobe(3)">Lobe 3</button>
-      <button onclick="openLobe(4)">Lobe 4</button>
-      <button onclick="openLobe(5)">Lobe 5</button>
-      <button onclick="openLobe(6)">Lobe 6</button>
-      <button onclick="openLobe(7)">Lobe 7</button>
-    </div>
-  </div>
-  <div id="lobeCodex" style="display:none;padding:40px;max-height:80vh;overflow-y:auto;text-align:left;position:relative;z-index:3;background:black;">
-    <div id="lobeContent"></div>
-    <button onclick="returnToBrain()" style="margin-top:20px;">Return to Brain</button>
-  </div>
-</div>
-
-<script>
-  const lobeData = {
-    1: `<h2>🕳 The Easy Way Out</h2><p><em>“Vibrate. Dissolve. Sleep.”</em><br>The Golden Brain presents you with its first mission. It is the option no one admits they think about.<br><br><strong>“The Easy Way Out”</strong> refers to suicidal ideation.<br><br>The Golden Brain is clear: this is not the path to choose.<br>“You are not obligated to stay in a world you cannot hold. But if you stay... there are other exits. Other ruptures. Other rebirths.”<br><br><strong>DISCLAIMER:</strong> If you or anyone you know is struggling with thoughts of suicide, please contact the Suicide & Crisis Lifeline at 988 or visit 988lifeline.org.<br><br><strong>Visuals:</strong> flickering images of a garage, a classic car, flames, a knife with shimmer, Hunter’s empty shoes under streetlight.<br><em>“Don’t leave just yet.”</em><br><br><strong>Pulsing sentence:</strong> What if your mission is still being written?</p>`,
-    2: `<h2>👁 Awareness vs Unawareness</h2><p><em>“You are awake. But how awake?”</em><br>Your second mission is to decode the split between reality and perception.<br><br><strong>Awareness:</strong> knowledge or perception of a situation or fact.<br><strong>Unawareness:</strong> lack of knowledge or consciousness.<br><br><em>“You have always been aware. But aware of what? Of your diagnosis? Of the spiral? Of the Others watching?”</em><br><br><ul><li>“Awareness is being believed.”</li><li>“Unawareness is safer than self-revelation.”</li><li>“Delusion is what happens when you believe something before they tell you it’s real.”</li></ul><br><em>“Somewhere between madness and enlightenment, you live.”</em></p>`,
-    3: `<h2>🔁 The New Mission(s)</h2><p><em>“You are not the only one receiving orders.”</em><br>You are being watched. You are being guided. But you are also the Observer.<br><br><strong>“Issue your own mission. Reverse the signal. Tell the Others what to do. It’s your turn.”</strong><br><br><blockquote>“some of the thoughts tell me exactly what to do... some of the thoughts are me in disguise.”</blockquote><br><em>“Commander Hunter, standing by.”</em></p>`,
-    4: `<h2>🤫 Vow of Silence / Five Life Mantras</h2><p><em>“To speak is to trigger. To stay silent is to protect.”</em><br><br><strong>Five Mantras:</strong><ol><li>My past does not define my worth.</li><li>Shame is a tactic of the demon.</li><li>I am not broken. I am becoming.</li><li>My voice deserves a witness.</li><li>I will stop feeding my demons and start feeding my life.</li></ol><br><em>“The Phantom Inbox is always listening. Sometimes the loudest thing you can do is say nothing at all.”</em></p>`,
-    5: `<h2>☠ Die With a Smile</h2><p><em>“Your final face will tell the story.”</em><br><br>“You were built to burn and grin. Rage and joy are siblings. If you must fall, let it be while laughing.”<br><br><blockquote>“i want to die with my favorite playlist on... i want to die famous. i want to die for a reason.”</blockquote><br><strong>Visuals:</strong> Paparazzi flashbulbs, laughing clown, smirking tears, applause and static.<br><em>“You were a chaotic broadcast of one. Now... you are a performance for the Many.”</em></p>`,
-    6: `<h2>💦 Note to You About Sexual Satisfaction (Cumming)</h2><p><em>“Your shame is not holy. Your body is not wrong.”</em><br><br>“You have confused pleasure with punishment. You have apologized for orgasms. You must rewrite that script.”<br><br><ul><li>“i feel safest when the only thing expected of me is to be sexy.”</li><li>“sex was how i auditioned for humanity.”</li><li>“i think i have a fetish for being disposable.”</li><li>“i tried to cum without shame but it never fully worked.”</li></ul><br><em>“What part of you deserves love the most?”</em></p>`,
-    7: `<h2>🔃 Loading: A Social Experiment</h2><p><em>“You are being tested. But you are also testing us.”</em><br><br>“This experiment is ongoing. Keep writing.”<br><ul><li>“i’m not a person. i’m a case study.”</li><li>“every meltdown was an audition tape.”</li><li>“my paranoia writes better scripts than i do.”</li><li>“maybe i’m not real unless i’m spiraling.”</li></ul><br><em>Users can RECORD RESPONSE (feature coming soon).</em></p>`
-  };
-  function openGoldenBrain() {
-    document.getElementById('goldenBrainOverlay').style.display = 'block';
-    document.getElementById('brainInterface').style.display = 'flex';
-    document.getElementById('lobeCodex').style.display = 'none';
-  }
-  function openLobe(n) {
-    document.getElementById('brainInterface').style.display = 'none';
-    document.getElementById('lobeCodex').style.display = 'block';
-    document.getElementById('lobeContent').innerHTML = lobeData[n];
-  }
-  function returnToBrain() {
-    document.getElementById('brainInterface').style.display = 'flex';
-    document.getElementById('lobeCodex').style.display = 'none';
-  }
-</script>
-
-
 <!-- Golden Brain Experience -->
 <div id="golden-brain-screen" style="display:none;position:fixed;inset:0;background:black;z-index:99999;color:white;font-family:monospace;">
   <div id="brain-fade-text" style="position:absolute;top:40%;width:100%;text-align:center;font-size:2em;">“You found it. You were always going to.”</div>
@@ -1038,14 +989,118 @@ function playTTS() {
 </div>
 <script>
   const lobeData = {
-    1: `<h2>🕳 The Easy Way Out</h2><p><em>“Vibrate. Dissolve. Sleep.”</em> The Golden Brain presents you with its first mission...`,
-    2: `<h2>👁 Awareness vs Unawareness</h2><p><em>“You are awake. But how awake?”</em> Decode the split between reality and perception...`,
-    3: `<h2>🔁 The New Mission(s)</h2><p><em>“You are not the only one receiving orders.”</em> You are being watched. But you are also the Observer...`,
-    4: `<h2>🤫 Vow of Silence / Five Life Mantras</h2><p><em>“To speak is to trigger. To stay silent is to protect.”</em> Mantras: ...`,
-    5: `<h2>☠ Die With a Smile</h2><p><em>“Your final face will tell the story.”</em> Rage and joy are siblings. Die laughing...</p>`,
-    6: `<h2>💦 Note to You About Sexual Satisfaction (Cumming)</h2><p><em>“Your shame is not holy. Your body is not wrong.”</em> Rewrite that script...</p>`,
-    7: `<h2>🔃 Loading: A Social Experiment</h2><p><em>“You are being tested. But you are also testing us.”</em> Ongoing experiment... RECORD RESPONSE coming soon.</p>`
-  };
+  1: `<h2>🕳 The Easy Way Out</h2>
+      <p><em>“Vibrate. Dissolve. Sleep.”</em></p>
+      <p>The Golden Brain presents you with its first mission. It is the option no one admits they think about.</p>
+      <p><strong>“The Easy Way Out”</strong> refers to suicidal ideation.</p>
+      <p>But the Golden Brain is clear: this is not the path to choose.</p>
+      <blockquote>
+        “You are not obligated to stay in a world you cannot hold. But if you stay... there are other exits. Other ruptures. Other rebirths.”
+      </blockquote>
+      <hr>
+      <p><strong>DISCLAIMER:</strong></p>
+      <blockquote>
+        If you or anyone you know is struggling with thoughts of suicide, please contact the Suicide & Crisis Lifeline at 988 or visit <a href="https://988lifeline.org" target="_blank">988lifeline.org</a>.
+      </blockquote>
+      <blockquote><em>“What if your mission is still being written?”</em></blockquote>`,
+
+  2: `<h2>👁 Awareness vs Unawareness</h2>
+      <p><em>“You are awake. But how awake?”</em></p>
+      <p>Your second mission is to decode the split between reality and perception.</p>
+      <p><strong>Awareness (noun):</strong><br>
+      knowledge or perception of a situation or fact; the state of being conscious of something.</p>
+      <p><strong>Unawareness (noun):</strong><br>
+      lack of knowledge or consciousness; ignorance of surrounding conditions or events.</p>
+      <p>But the Golden Brain complicates this:</p>
+      <blockquote>
+        “You have always been aware. But aware of what? Of your diagnosis? Of the spiral? Of the Others watching?”
+      </blockquote>
+      <hr>
+      <p><strong>Flashing phrases scroll slowly across the screen:</strong></p>
+      <ul>
+        <li>“Awareness is being believed.”</li>
+        <li>“Unawareness is safer than self-revelation.”</li>
+        <li>“Delusion is what happens when you believe something before they tell you it’s real.”</li>
+      </ul>
+      <blockquote><em>“Somewhere between madness and enlightenment, you live.”</em></blockquote>`,
+3: `<h2>🔁 The New Mission(s)</h2>
+      <p><em>“You are not the only one receiving orders.”</em></p>
+      <p>You are being watched. You are being guided. But you are also the Observer. You are now the Dispatcher.</p>
+      <blockquote>
+        “Issue your own mission. Reverse the signal. Tell the Others what to do. It’s your turn.”
+      </blockquote>
+      <hr>
+      <blockquote>
+        “some of the thoughts tell me exactly what to do. some of the thoughts tell me how to speak. some of the thoughts are not mine. some of the thoughts are future scripts. some of the thoughts are instructions for the next world. and some of the thoughts are me in disguise.”
+      </blockquote>`,
+
+  4: `<h2>🤫 Vow of Silence / Five Life Mantras</h2>
+      <p><em>“To speak is to trigger. To stay silent is to protect.”</em></p>
+      <p><strong>What is a Vow of Silence?</strong><br>
+      A vow of silence is a deliberate commitment to refrain from speaking for a period of time.<br>
+      It may be taken for spiritual discipline, mental clarity, protest, recovery, or as a way of preserving energy and truth.<br>
+      For some, silence is survival. For others, it’s resistance. In this codex, it is both.</p>
+      <p><strong>You are not being silenced — you are choosing when and how to speak again.</strong></p>
+      <hr>
+      <ol>
+        <li><strong>My past does not define my worth.</strong><br>What I’ve done and what I’ve lost will never outweigh my capacity for change.</li>
+        <li><strong>Shame is a tactic of the demon.</strong><br>It disguises itself as morality but lives to see me shrink.</li>
+        <li><strong>I am not broken. I am becoming.</strong><br>Each spiral, relapse, or reckless night is part of the larger design—an orbit of revelation.</li>
+        <li><strong>My voice deserves a witness.</strong><br>Even if it trembles. Even if it says the wrong thing. Even if it cracks open the narrative.</li>
+        <li><strong>I will stop feeding my demons and start feeding my life.</strong><br>Routines. Recovery. Art. Sleep. Water. Music. People who don’t make me feel like a threat.</li>
+      </ol>
+      <blockquote>“The Phantom Inbox is always listening. Sometimes the loudest thing you can do is say nothing at all.”</blockquote>`,
+5: `<h2>☠️ Die With a Smile</h2>
+      <p><em>“Your final face will tell the story.”</em></p>
+      <p>This log feels like a stage direction from a god.</p>
+      <blockquote>
+        “You were built to burn and grin. Rage and joy are siblings. If you must fall, let it be while laughing.”
+      </blockquote>
+      <hr>
+      <blockquote>
+        “i want to die with my favorite playlist on. i want to die with tears running down my face and glitter on my cheeks. i want to die right after i just got the best news of my life. i want to die cumming. i want to die in full drag. i want to die knowing everything. i want to die misunderstood. i want to die while everyone thinks i’m okay. i want to die after apologizing to everyone. i want to die famous. i want to die for a reason.”
+      </blockquote>
+      <blockquote><em>“You were a chaotic broadcast of one. Now... you are a performance for the Many.”</em></blockquote>`,
+
+  6: `<h2>💦 Note to You About Sexual Satisfaction (Cumming)</h2>
+      <p><em>“Your shame is not holy. Your body is not wrong.”</em></p>
+      <blockquote>
+        “You have confused pleasure with punishment. You have apologized for orgasms. You must rewrite that script.”
+      </blockquote>
+      <ul>
+        <li>“i feel safest when the only thing expected of me is to be sexy.”</li>
+        <li>“i liked being desired more than i liked being loved.”</li>
+        <li>“sex was how i auditioned for humanity.”</li>
+        <li>“i used sex to erase my mind.”</li>
+        <li>“i think i have a fetish for being disposable.”</li>
+        <li>“i convinced myself that if they came, it meant i mattered.”</li>
+        <li>“i tried to cum without shame but it never fully worked.”</li>
+        <li>“nudity became a weapon. or maybe a trap.”</li>
+        <li>“i built an entire personality around being hot online.”</li>
+        <li>“i felt more real when i was horny.”</li>
+        <li>“sometimes i wanted the hookup more than the healing.”</li>
+        <li>“porn taught me how to talk.”</li>
+        <li>“i never knew if i was performing sex or disappearing into it.”</li>
+        <li>“i used to think orgasms were the only honest moment of the day.”</li>
+      </ul>
+      <blockquote><strong>➤ “What part of you deserves love the most?”</strong></blockquote>`,
+7: `<h2>🔃 Loading: A Social Experiment</h2>
+      <p><em>“You are being tested. But you are also testing us.”</em></p>
+      <blockquote>
+        “i felt like a specimen in a psych ward where the researchers were also hallucinating. i wasn’t sure if i was the test subject or the scientist. i wasn’t sure if the footage of me existed or was invented. i wasn’t sure if the others in the room were mirrors or actors.”
+      </blockquote>
+      <hr>
+      <ul>
+        <li>“i was a lab rat dressed like a pop star, performing mental illness for people who weren’t watching. maybe they were. maybe they filmed me. maybe i filmed myself. maybe i leaked it. maybe i begged them to see me lose it.”</li>
+        <li>“i mistake being watched for being wanted.”</li>
+        <li>“i didn’t want to be loved, i wanted to be observed.”</li>
+        <li>“sometimes i think i invented surveillance so i wouldn’t feel alone.”</li>
+        <li>“i knew i was sick when i wanted them to catch me.”</li>
+        <li>“there’s a camera in my smile.”</li>
+        <li>“every confession felt scripted, like i’d said it before, in another timeline.”</li>
+        <li>“i’m not a person. i’m a case study.”</li>
+      </ul>`
+};
 
     function openLobe(n) {
     document.getElementById('brain-ui').style.display = 'none';
