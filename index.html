@@ -170,6 +170,43 @@
   font-family: monospace;
   cursor: pointer;
 }
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+  width: 100%;
+  padding: 10px;
+  justify-items: center;
+}
+
+.video-tile {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 0 12px #000a;
+  transition: transform 0.2s ease;
+  width: 100%;
+  max-width: 180px;
+}
+
+.video-tile:hover {
+  transform: scale(1.04);
+}
+
+.video-tile video {
+  width: 100%;
+  display: block;
+  border-radius: 12px;
+}
+
+.video-label {
+  font-size: 0.8em;
+  text-align: center;
+  color: #FFD700;
+  padding-top: 6px;
+  font-family: monospace;
+}
 
 
   </style>
@@ -820,14 +857,16 @@ function openSoundtrack() {
   area.innerHTML = `
     <div style="display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:30px;">
       <h2 style="color:#FFD700;">HELL-MOUTH — Official Soundtrack</h2>
-      <div class="happy-file-list" style="display:flex;flex-direction:column;align-items:center;gap:10px;">
-        ${soundtrackFiles.map((file, i) => `
-          <button onclick="playSoundtrackTrack('${file}')" 
-                  style="background:#111;color:#FFD700;font-size:1.05em;border:2px solid #FFD700;border-radius:10px;padding:8px 24px;cursor:pointer;min-width:280px;">
-            ${i + 1}. ${file.replace(/_/g, ' ').replace('.mp3','')}
-          </button>
-        `).join('')}
-      </div>
+      <div class="video-grid">
+  ${fileArray.map(f => `
+    <div class="video-tile" onclick="openSingleHappyVideo('${f.replace(/'/g,"\\'")}', '${galleryTitle}')">
+      <video muted loop autoplay playsinline>
+        <source src="${f}" type="video/mp4" />
+      </video>
+      <span class="video-label">${f.replace('.happy.mp4','')}</span>
+    </div>
+  `).join('')}
+</div>
       <audio id="soundtrack-audio" controls style="margin-top:24px;max-width:90vw;border-radius:12px;box-shadow:0 0 12px #0008;"></audio>
     </div>
   `;
