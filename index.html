@@ -208,19 +208,14 @@
     <button class="emotion-btn" onclick="startSite()">Nostalgia</button>
   </div>
   <button id="schiz-btn-top" onclick="playSchizophrenia()" style="display:block; margin:22px auto 0 auto; padding:11px 32px; font-size:1.12em; font-weight:bold; border:2.5px solid #ff5252; border-radius:13px; background:#111; color:#ff5252; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s;">SCHIZOPHRENIA</button>
-  
-<div class="button-bar" style="text-align:center; margin: 20px 0;">
-  <button id="break-the-spiral-button" class="special-button" onclick="breakTheSpiral()">Break the Spiral</button>
-  <button id="schizophrenia-button" class="special-button" onclick="triggerSchizophrenia()">Schizophrenia</button>
-  <button id="golden-brain-button" class="special-button" onclick="startGoldenBrain()">Golden Brain</button>
-</div>
 
+<button id="golden-brain-btn"
+  style="display:block; margin:22px auto 0 auto; padding:11px 32px; font-size:1.12em; font-weight:bold; border:2.5px solid gold; border-radius:13px; background:#111; color:gold; letter-spacing:0.2em; text-transform:uppercase; transition: background .18s;"
+  onclick="startGoldenBrain()">🧠 GOLDEN BRAIN</button>
+  
 <div class="puzzle-grid" id="puzzle-grid">
 
-  <!-- 🧠 Golden Brain Tile -->
-<div class="tile golden-brain" onclick="startGoldenBrain()" title="Golden Brain"></div>
-
-<!-- 🔮 Injected glossary tile container -->
+  <!-- 🔮 Injected glossary tile container -->
 <div id="glossary-grid"></div>
 
 
@@ -634,6 +629,37 @@ function playClickOnce() {
   if (a) { a.currentTime = 0; a.play(); }
 }
 
+function fadeToBlackWithQuote(quote) {
+  const fade = document.createElement('div');
+  fade.id = 'fade-screen';
+  fade.innerHTML = `<div class="fade-quote">${quote}</div>`;
+  Object.assign(fade.style, {
+    position: 'fixed',
+    top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: 'black',
+    color: 'white',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: '1.5em',
+    zIndex: 9999,
+    opacity: 0,
+    transition: 'opacity 2s'
+  });
+  document.body.appendChild(fade);
+  setTimeout(() => fade.style.opacity = 1, 10);
+}
+
+function startGoldenBrain() {
+  fadeToBlackWithQuote("“The mind, once stretched by a new idea, never returns to its original dimensions.”");
+
+  setTimeout(() => {
+    document.getElementById('golden-brain-screen').style.display = 'block';
+  }, 3000);
+}
+
+document.getElementById('golden-brain-btn').addEventListener('click', startGoldenBrain);
+
 // --- SCHIZOPHRENIA BUTTON LOGIC ---
 function playSchizophrenia() {
   if (schizAudio) { schizAudio.pause(); schizAudio = null; }
@@ -1021,20 +1047,7 @@ function playTTS() {
     7: `<h2>🔃 Loading: A Social Experiment</h2><p><em>“You are being tested. But you are also testing us.”</em> Ongoing experiment... RECORD RESPONSE coming soon.</p>`
   };
 
-  function startGoldenBrain() {
-    const overlay = document.getElementById('golden-brain-screen');
-    const fadeText = document.getElementById('brain-fade-text');
-    const ui = document.getElementById('brain-ui');
-    overlay.style.display = 'block';
-    fadeText.style.transition = 'opacity 1s ease-in-out';
-fadeText.style.opacity = 1;
-setTimeout(() => {
-  fadeText.style.opacity = 0;
-  ui.style.display = 'flex';
-}, 2500);
-  }
-
-  function openLobe(n) {
+    function openLobe(n) {
     document.getElementById('brain-ui').style.display = 'none';
     document.getElementById('lobeCodex').style.display = 'block';
     document.getElementById('lobeContent').innerHTML = lobeData[n];
