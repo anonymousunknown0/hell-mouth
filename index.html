@@ -654,8 +654,21 @@ function startGoldenBrain() {
   fadeToBlackWithQuote("“The mind, once stretched by a new idea, never returns to its original dimensions.”");
 
   setTimeout(() => {
-    document.getElementById('golden-brain-screen').style.display = 'block';
-  }, 3000);
+    const overlay = document.getElementById('golden-brain-screen');
+    const fadeText = document.getElementById('brain-fade-text');
+    const brainUI = document.getElementById('brain-ui');
+
+    overlay.style.display = 'block';
+    fadeText.style.opacity = 1;
+
+    // Fade out the quote after 3 seconds
+    setTimeout(() => {
+      fadeText.style.opacity = 0;
+
+      // Show the brain UI
+      brainUI.style.display = 'flex';
+    }, 3000);
+  }, 10); // tiny delay to ensure fade effect registers
 }
 
 document.getElementById('golden-brain-btn').addEventListener('click', startGoldenBrain);
@@ -970,18 +983,18 @@ function playTTS() {
 <!-- Golden Brain Experience -->
 <div id="golden-brain-screen" style="display:none;position:fixed;inset:0;background:black;z-index:99999;color:white;font-family:monospace;">
   <div id="brain-fade-text" style="position:absolute;top:40%;width:100%;text-align:center;font-size:2em;">“You found it. You were always going to.”</div>
-  <div id="brain-ui" style="display:none;flex-direction:column;align-items:center;justify-content:center;height:100%;">
-    <img src="bloody_brain.png" style="max-width:80%;height:auto;margin-bottom:20px;" alt="Golden Brain"/>
-    <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
-      <button onclick="openLobe(1)">Lobe 1</button>
-      <button onclick="openLobe(2)">Lobe 2</button>
-      <button onclick="openLobe(3)">Lobe 3</button>
-      <button onclick="openLobe(4)">Lobe 4</button>
-      <button onclick="openLobe(5)">Lobe 5</button>
-      <button onclick="openLobe(6)">Lobe 6</button>
-      <button onclick="openLobe(7)">Lobe 7</button>
-    </div>
+<div id="brain-ui" style="display:none;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+  <img src="bloody_brain.png" style="max-width:80%;height:auto;margin-bottom:20px;" alt="Golden Brain"/>
+  <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
+    <button onclick="openLobe(1)">Lobe 1</button>
+    <button onclick="openLobe(2)">Lobe 2</button>
+    <button onclick="openLobe(3)">Lobe 3</button>
+    <button onclick="openLobe(4)">Lobe 4</button>
+    <button onclick="openLobe(5)">Lobe 5</button>
+    <button onclick="openLobe(6)">Lobe 6</button>
+    <button onclick="openLobe(7)">Lobe 7</button>
   </div>
+</div>
   <div id="lobeCodex" style="display:none;padding:40px;max-height:80vh;overflow-y:auto;text-align:left;background:black;">
     <div id="lobeContent"></div>
     <button onclick="returnToBrain()" style="margin-top:20px;">Return to Brain</button>
