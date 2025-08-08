@@ -208,6 +208,28 @@
   font-family: monospace;
 }
 
+.audio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  width: 100%;
+  padding: 10px;
+}
+
+.audio-card {
+  border: 2px solid #FFD700;
+  border-radius: 12px;
+  background: #111;
+  padding: 12px;
+  box-shadow: 0 0 12px #000a;
+  cursor: pointer;
+  transition: transform .15s ease, background .15s ease, color .15s ease;
+}
+.audio-card:hover { transform: scale(1.03); }
+.audio-card.active { background: #FFD700; color: #111; }
+
+.audio-index { font-weight: 900; font-size: 1.05em; margin-bottom: 6px; }
+.audio-title { font-size: .9em; word-break: break-word; }
 
   </style>
 </head>
@@ -795,20 +817,38 @@ function openFile(file) {
   // Video
   else {
     area.innerHTML = `
-      <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
-        <video id="main-video" controls autoplay src="${file}" style="max-width:92vw;max-height:74vh;border-radius:12px;"></video>
-        <div>
-          <label>Speed:
-            <select id="video-speed" onchange="setVideoSpeed()">
-              <option value="0.5">0.5x</option>
-              <option value="1" selected>1x</option>
-              <option value="1.5">1.5x</option>
-              <option value="2">2x</option>
-            </select>
-          </label>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:14px;margin:30px 0;">
+    <h2 style="color:#FFD700;">${galleryTitle.replace(/gallery/i,'Happy Gallery')}</h2>
+
+    <!-- 🔳 Floating video grid -->
+    <div class="video-grid">
+      ${fileArray.map(f => `
+        <div class="video-tile" onclick="openSingleHappyVideo('${f.replace(/'/g,"\\'")}', '${galleryTitle}')">
+          <video muted loop autoplay playsinline>
+            <source src="${f}" type="video/mp4" />
+          </video>
+          <span class="video-label">${f.replace('.happy.mp4','')}</span>
         </div>
+      `).join('')}
+    </div>
+
+    <!-- Fullscreen modal player (kept the same) -->
+    <div id="happy-video-modal" style="display:none;position:fixed;inset:0;z-index:5000;background:#000E;align-items:center;justify-content:center;">
+      <video id="happy-modal-video" controls autoplay loop style="max-width:92vw;max-height:78vh;border-radius:16px;"></video>
+      <div style="margin-top:12px;text-align:center;">
+        <label>Speed: 
+          <select id="happy-video-speed" onchange="setHappyVideoSpeed()">
+            <option value="0.5">0.5x</option>
+            <option value="1" selected>1x</option>
+            <option value="1.5">1.5x</option>
+            <option value="2">2x</option>
+          </select>
+        </label>
       </div>
-    `;
+      <button onclick="closeHappyModal()" style="position:absolute;top:30px;right:40px;font-size:2em;padding:8px 24px;background:#FFD700;color:#111;border:none;border-radius:10px;cursor:pointer;">CLOSE</button>
+    </div>
+  </div>
+`;
     const vid = area.querySelector('#main-video');
     if (file === 'do you understand.mp4') {
       vid.loop = false;
@@ -855,21 +895,22 @@ function openSoundtrack() {
   ];
 
   area.innerHTML = `
-    <div style="display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:30px;">
-      <h2 style="color:#FFD700;">HELL-MOUTH — Official Soundtrack</h2>
-      <div class="video-grid">
-  ${fileArray.map(f => `
-    <div class="video-tile" onclick="openSingleHappyVideo('${f.replace(/'/g,"\\'")}', '${galleryTitle}')">
-      <video muted loop autoplay playsinline>
-        <source src="${f}" type="video/mp4" />
-      </video>
-      <span class="video-label">${f.replace('.happy.mp4','')}</span>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:16px;margin-top:30px;">
+    <h2 style="color:#FFD700;">HELL-MOUTH — Official Soundtrack</h2>
+
+    <!-- 🎶 Audio gallery grid -->
+    <div class="audio-grid" id="audio-grid">
+      ${soundtrackFiles.map((file, i) => `
+        <div class="audio-card" data-file="${file}" onclick="playSoundtrackTrack('${file}')">
+          <div class="audio-index">${i + 1}</div>
+          <div class="audio-title">${file.replace(/_/g,' ').replace('.mp3','')}</div>
+        </div>
+      `).join('')}
     </div>
-  `).join('')}
-</div>
-      <audio id="soundtrack-audio" controls style="margin-top:24px;max-width:90vw;border-radius:12px;box-shadow:0 0 12px #0008;"></audio>
-    </div>
-  `;
+
+    <audio id="soundtrack-audio" controls style="margin-top:8px;max-width:90vw;border-radius:12px;box-shadow:0 0 12px #0008;"></audio>
+  </div>
+`;
 
   grid.style.display    = 'none';
   content.style.display = 'flex';
@@ -969,9 +1010,16 @@ function copyScript() {
 
 function playSoundtrackTrack(file) {
   const audio = document.getElementById('soundtrack-audio');
-  if (audio) {
-    audio.src = file;
-    audio.play();
+  if (!audio) return;
+  audio.src = file;
+  audio.play();
+
+  // highlight active card
+  const grid = document.getElementById('audio-grid');
+  if (grid) {
+    grid.querySelectorAll('.audio-card').forEach(c => c.classList.remove('active'));
+    const active = grid.querySelector(`.audio-card[data-file="${CSS.escape(file)}"]`);
+    if (active) active.classList.add('active');
   }
 }
 
@@ -1168,6 +1216,3 @@ function playTTS() {
 
 </body>
 </html>
-
-
-
