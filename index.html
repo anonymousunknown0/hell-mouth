@@ -564,11 +564,11 @@ function displayTiles() {
   }
 
 let mainTiles = files.map((f, i) => `
-  <div class="tile" onclick="openFile('${f.replace(/'/g, "\\'")}')">
-    <div class="tile-number">${i + 1}</div>
-    <img src="${getTileCover(f)}" alt="tile" />
-    <div class="tile-filename">${f}</div>
-  </div>
+  <div class="tile" data-file="${f.replace(/"/g, '&quot;')}">
+  <div class="tile-number">${i + 1}</div>
+  <img src="${getTileCover(f)}" alt="tile" />
+  <div class="tile-filename">${f}</div>
+</div>
 `).join('');
 
 // Add glossary tiles
@@ -1028,6 +1028,26 @@ window.addEventListener('DOMContentLoaded', () => {
   displayTiles();
   document.getElementById('break-btn').onclick  = breakSpiral;
   document.getElementById('random-btn').onclick = openRandom;
+});
+
+// Delegated click: open tiles by data-file
+document.getElementById('puzzle-grid').addEventListener('click', (e) => {
+  const tile = e.target.closest('.tile');
+  if (!tile) return;
+
+  const f = tile.getAttribute('data-file');
+
+  // If it’s one of the special tiles we render without data-file
+  if (!f) {
+    // Soundtrack tile
+    const label = tile.querySelector('.tile-filename')?.textContent || '';
+    if (/Soundtrack/i.test(label)) return openSoundtrack();
+
+    // Glossary tiles already handled by their own onclicks
+    return;
+  }
+
+  openFile(f);
 });
   
 document.getElementById('break-btn').addEventListener('click', () => {
